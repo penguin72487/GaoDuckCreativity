@@ -3,6 +3,10 @@ National University of Kaohsiung Student Creativity Competition Management Syste
 
 
 環境設置
+
+conda create -n GaoDuck python=3.12
+conda activate GaoDuck
+
 pip install Flask
 
 

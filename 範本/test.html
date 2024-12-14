@@ -26,13 +26,18 @@
             width:200px;
             background:#fff;
             border-right:1px solid #ccc;
-            min-height: calc(100vh - 60px);
+            /* 使用flex排版，讓底部的登入連結貼底 */
+            display:flex;
+            flex-direction:column;
+            height: calc(100vh - 60px); /* 扣掉header的高度 */
         }
 
         .sidebar ul {
             list-style:none;
             padding:0;
             margin:0;
+            /* 讓上方選單可以自動向上延展，將底部區塊推到下面 */
+            flex:1 0 auto;
         }
 
         .sidebar ul li {
@@ -51,13 +56,30 @@
             background:#f2f2f2;
         }
 
+        .sidebar-bottom {
+            border-top:1px solid #eee;
+            margin-top:auto;
+        }
+
+        .sidebar-bottom a {
+            display:block;
+            padding:0.75rem 1rem;
+            text-decoration:none;
+            color:#333;
+            cursor:pointer;
+        }
+
+        .sidebar-bottom a:hover {
+            background:#f2f2f2;
+        }
+
         .main-content {
             flex:1;
             padding:1rem;
         }
 
         .page {
-            display:none; /* 預設隱藏，稍後會由JS控制顯示 */
+            display:none; 
             background:#fff;
             padding:1rem;
             border-radius:5px;
@@ -153,11 +175,10 @@
 </head>
 <body>
 
-<header>高雄大學激發學生創意競賽管理系統</header>
+<header>競賽管理系統</header>
 <div class="container">
     <nav class="sidebar">
         <ul>
-            <!-- 加入首頁的連結 -->
             <li><a data-page="page-home">首頁</a></li>
             <li><a data-page="page-account-management">帳號管理</a></li>
             <li><a data-page="page-register-account">註冊帳號</a></li>
@@ -167,6 +188,10 @@
             <li><a data-page="page-scoring-system">評分系統</a></li>
             <li><a data-page="page-previous-works">歷屆作品檢視</a></li>
         </ul>
+        <div class="sidebar-bottom">
+            <!-- 固定於左下角（側邊欄底部） -->
+            <a data-page="page-login">登入</a>
+        </div>
     </nav>
     <div class="main-content">
         <!-- 首頁頁面（預設顯示） -->
@@ -332,11 +357,23 @@
                 <a href="#">查看詳細</a>
             </div>
         </div>
+
+        <!-- 登入頁面 -->
+        <div class="page" id="page-login">
+            <h1>登入</h1>
+            <form>
+                <label>帳號(Email)</label>
+                <input type="email" name="login_email">
+                <label>密碼</label>
+                <input type="password" name="login_password">
+                <button type="submit">登入</button>
+            </form>
+        </div>
     </div>
 </div>
 
 <script>
-    const links = document.querySelectorAll('.sidebar ul li a[data-page]');
+    const links = document.querySelectorAll('.sidebar ul li a[data-page], .sidebar-bottom a[data-page]');
     const pages = document.querySelectorAll('.page');
 
     links.forEach(link => {

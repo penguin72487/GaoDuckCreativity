@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高雄大學激發學生創意競賽管理系統</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Noto Sans TC", sans-serif;
+            background: #f0f2f5;
+        }
+
+        /* 頂部導覽列 */
+        header {
+            background: #003366;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 1rem;
+        }
+
+        header .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        header .user-info {
+            font-size: 0.9rem;
+        }
+
+        /* 左側側欄 */
+        .sidebar {
+            width: 220px;
+            background: #ffffff;
+            border-right: 1px solid #ccc;
+            height: calc(100vh - 50px);
+            overflow-y: auto;
+            position: fixed;
+            top: 50px;
+            left: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar ul li a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .sidebar ul li a:hover {
+            background: #f2f2f2;
+        }
+
+        /* 主內容區 */
+        .main-content {
+            margin-left: 220px;
+            padding: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 2px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        /* 表格樣式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        table th {
+            background: #f7f7f7;
+            font-weight: bold;
+        }
+
+        /* 表單 */
+        form {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        form label {
+            display: block;
+            margin: 0.5rem 0 0.2rem 0;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="file"],
+        form input[type="password"],
+        form select,
+        form textarea {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        form button {
+            background: #003366;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .announcement-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .announcement-list li {
+            border-bottom: 1px dashed #ccc;
+            padding: 0.5rem 0;
+        }
+
+        .announcement-list li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .flex-grid {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .flex-grid .card {
+            flex: 1;
+        }
+
+        .file-upload {
+            border: 2px dashed #ccc;
+            padding: 1rem;
+            text-align: center;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 頂部導覽列 -->
+    <header>
+        <div class="logo">高雄大學激發學生創意競賽管理系統</div>
+        <div class="user-info">
+            使用者：王小明 | <a href="#" style="color:#fff; text-decoration:underline;">登出</a>
+        </div>
+    </header>
+
+    <!-- 左側側欄 -->
+    <nav class="sidebar">
+        <ul>
+            <li><a href="#">首頁</a></li>
+            <li><a href="#">帳號管理系統</a>
+                <ul>
+                    <li><a href="#">註冊帳號</a></li>
+                    <li><a href="#">使用者列表</a></li>
+                </ul>
+            </li>
+            <li><a href="#">報名系統</a>
+                <ul>
+                    <li><a href="#">競賽資訊</a></li>
+                    <li><a href="#">報名表單</a></li>
+                    <li><a href="#">檔案上傳</a></li>
+                </ul>
+            </li>
+            <li><a href="#">作品系統</a>
+                <ul>
+                    <li><a href="#">作品列表</a></li>
+                    <li><a href="#">評分系統</a></li>
+                    <li><a href="#">歷屆作品檢視</a></li>
+                </ul>
+            </li>
+            <li><a href="#">公告管理</a>
+                <ul>
+                    <li><a href="#">公告列表</a></li>
+                    <li><a href="#">發佈公告</a></li>
+                </ul>
+            </li>
+            <li><a href="#">後台管理設定</a></li>
+        </ul>
+    </nav>
+
+    <!-- 主內容區：首頁範例 -->
+    <div class="main-content">
+        <h1 class="section-title">首頁</h1>
+        <div class="flex-grid">
+            <div class="card">
+                <h3>系統概況</h3>
+                <p>目前報名人數：30人</p>
+                <p>已提交作品數：10件</p>
+                <p>評分完成度：2/5 評審完成</p>
+            </div>
+            <div class="card">
+                <h3>重要日期提醒</h3>
+                <p>報名截止：2024/12/31</p>
+                <p>決賽日期：2025/01/15</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>最新公告</h3>
+            <ul class="announcement-list">
+                <li><a href="#">[2024/12/10] 比賽報名截止延長至12/31</a></li>
+                <li><a href="#">[2024/12/05] 新增作品上傳格式說明</a></li>
+                <li><a href="#">[2024/12/01] 評審名單公布</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 帳號管理系統頁面範例 -->
+    <!-- 可在實務中分頁呈現，這裡簡單附上 HTML 結構示意 -->
+    <div class="main-content" style="display:none;">
+        <h1 class="section-title">帳號管理 - 註冊帳號</h1>
+        <form>
+            <label>姓名</label>
+            <input type="text" name="name">
+
+            <label>學號</label>
+            <input type="text" name="student_id">
+
+            <label>Email</label>
+            <input type="email" name="email">
+
+            <label>密碼</label>
+            <input type="password" name="password">
+
+            <label>確認密碼</label>
+            <input type="password" name="password_confirm">
+
+            <label>帳號類別</label>
+            <select name="role">
+                <option value="student">學生</option>
+                <option value="admin">管理者</option>
+                <option value="judge">評審</option>
+            </select>
+
+            <button type="submit">註冊</button>
+        </form>
+
+        <h1 class="section-title">帳號管理 - 使用者列表</h1>
+        <table>
+            <tr>
+                <th>姓名</th>
+                <th>學號</th>
+                <th>Email</th>
+                <th>類別</th>
+                <th>操作</th>
+            </tr>
+            <tr>
+                <td>王小明</td>
+                <td>109123456</td>
+                <td>example@mail.com</td>
+                <td>學生</td>
+                <td><a href="#">編輯</a> | <a href="#">停用</a></td>
+            </tr>
+            <!-- 更多使用者列表... -->
+        </table>
+    </div>
+
+    <!-- 報名系統頁面範例 -->
+    <div class="main-content" style="display:none;">
+        <h1 class="section-title">報名表單</h1>
+        <form>
+            <label>競賽名稱</label>
+            <select name="competition">
+                <option>2025 創意競賽</option>
+            </select>
+
+            <label>姓名</label>
+            <input type="text" name="name">
+
+            <label>學號</label>
+            <input type="text" name="student_id">
+
+            <label>系所</label>
+            <input type="text" name="department">
+
+            <label>Email</label>
+            <input type="email" name="email">
+
+            <label>聯絡電話</label>
+            <input type="text" name="phone">
+
+            <label>隊員資訊 (如有)</label>
+            <textarea name="team_info" placeholder="隊員姓名、學號..."></textarea>
+
+            <div class="file-upload">
+                將作品簡述檔案拖曳至此上傳 (PDF/DOC)
+            </div>
+            
+            <button type="submit">提交報名</button>
+        </form>
+    </div>
+
+    <!-- 作品系統頁面範例 -->
+    <div class="main-content" style="display:none;">
+        <h1 class="section-title">作品列表</h1>
+        <div class="card">
+            <h3>作品A</h3>
+            <p>參賽者：王小明</p>
+            <p>簡述：環保回收新創意</p>
+            <a href="#">查看詳細</a>
+        </div>
+        <div class="card">
+            <h3>作品B</h3>
+            <p>參賽者：李小華</p>
+            <p>簡述：校園智慧導覽系統</p>
+            <a href="#">查看詳細</a>
+        </div>
+    </div>
+
+    <div class="main-content" style="display:none;">
+        <h1 class="section-title">評分系統</h1>
+        <form>
+            <h3>作品A 評分</h3>
+            <label>創意性 (1-10)</label>
+            <input type="text" name="score_creativity">
+
+            <label>實用性 (1-10)</label>
+            <input type="text" name="score_usability">
+
+            <label>美觀度 (1-10)</label>
+            <input type="text" name="score_design">
+
+            <label>完整度 (1-10)</label>
+            <input type="text" name="score_completeness">
+
+            <button type="submit">提交評分</button>
+        </form>
+    </div>
+
+    <div class="main-content" style="display:none;">
+        <h1 class="section-title">歷屆作品檢視</h1>
+        <form>
+            <label>年份</label>
+            <select>
+                <option>2024</option>
+                <option>2023</option>
+            </select>
+            <label>關鍵字搜尋</label>
+            <input type="text" name="keyword">
+            <button type="submit">搜尋</button>
+        </form>
+
+        <div class="card">
+            <h3>2023年度 優勝作品</h3>
+            <p>作品名稱：智慧垃圾分類桶</p>
+            <p>得獎者：張小美</p>
+            <a href="#">查看詳細</a>
+        </div>
+        <!-- 更多歷屆作品... -->
+    </div>
+</body>
+</html>

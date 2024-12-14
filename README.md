@@ -8,6 +8,7 @@ conda create -n GaoDuck python=3.12
 conda activate GaoDuck
 
 pip install Flask
+pip install flask flask-cors
 
 
 

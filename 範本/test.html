@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+    <title>競賽管理系統</title>
+    <style>
+        body {
+            margin:0;
+            font-family:"Noto Sans TC", sans-serif;
+            background:#f0f2f5;
+        }
+
+        header {
+            background:#003366;
+            color:#fff;
+            padding:1rem;
+            font-size:1.2rem;
+        }
+
+        .container {
+            display:flex;
+        }
+
+        .sidebar {
+            width:200px;
+            background:#fff;
+            border-right:1px solid #ccc;
+            min-height: calc(100vh - 60px);
+        }
+
+        .sidebar ul {
+            list-style:none;
+            padding:0;
+            margin:0;
+        }
+
+        .sidebar ul li {
+            border-bottom:1px solid #eee;
+        }
+
+        .sidebar ul li a {
+            display:block;
+            padding:0.75rem 1rem;
+            text-decoration:none;
+            color:#333;
+            cursor:pointer;
+        }
+
+        .sidebar ul li a:hover {
+            background:#f2f2f2;
+        }
+
+        .main-content {
+            flex:1;
+            padding:1rem;
+        }
+
+        .page {
+            display:none; /* 預設隱藏，稍後會由JS控制顯示 */
+            background:#fff;
+            padding:1rem;
+            border-radius:5px;
+            box-shadow:0 0 2px rgba(0,0,0,0.1);
+        }
+
+        .page h1 {
+            margin-top:0;
+        }
+
+        /* 表單與表格基本樣式 */
+        form label {
+            display:block;
+            margin:0.5rem 0 0.2rem 0;
+            font-weight:bold;
+            font-size:0.9rem;
+        }
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="password"],
+        form select,
+        form textarea {
+            width:100%;
+            padding:0.5rem;
+            margin-bottom:1rem;
+            border:1px solid #ccc;
+            border-radius:3px;
+        }
+        form button {
+            background:#003366;
+            color:#fff;
+            padding:0.5rem 1rem;
+            border:none;
+            border-radius:3px;
+            cursor:pointer;
+        }
+
+        table {
+            width:100%;
+            border-collapse:collapse;
+            margin-bottom:1rem;
+        }
+        table th, table td {
+            border-bottom:1px solid #eee;
+            padding:0.75rem;
+            text-align:left;
+            font-size:0.9rem;
+        }
+        table th {
+            background:#f7f7f7;
+        }
+
+        .file-upload {
+            border:2px dashed #ccc;
+            padding:1rem;
+            text-align:center;
+            margin-bottom:1rem;
+            color:#666;
+        }
+
+        /* 首頁佈局樣式 */
+        .home-container {
+            display:flex;
+            gap:1rem;
+        }
+
+        .home-left, .home-right {
+            flex:1;
+            background:#fff;
+            border-radius:5px;
+            box-shadow:0 0 2px rgba(0,0,0,0.1);
+            padding:1rem;
+        }
+
+        .announcement-list {
+            list-style:none;
+            padding:0;
+            margin:0;
+        }
+
+        .announcement-list li {
+            border-bottom:1px dashed #ccc;
+            padding:0.5rem 0;
+        }
+
+        .announcement-list li a {
+            text-decoration:none;
+            color:#333;
+            font-size:0.9rem;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>競賽管理系統</header>
+<div class="container">
+    <nav class="sidebar">
+        <ul>
+            <!-- 加入首頁的連結 -->
+            <li><a data-page="page-home">首頁</a></li>
+            <li><a data-page="page-account-management">帳號管理</a></li>
+            <li><a data-page="page-register-account">註冊帳號</a></li>
+            <li><a data-page="page-enroll-form">報名表單</a></li>
+            <li><a data-page="page-file-upload">檔案上傳</a></li>
+            <li><a data-page="page-work-list">作品列表</a></li>
+            <li><a data-page="page-scoring-system">評分系統</a></li>
+            <li><a data-page="page-previous-works">歷屆作品檢視</a></li>
+        </ul>
+    </nav>
+    <div class="main-content">
+        <!-- 首頁頁面（預設顯示） -->
+        <div class="page" id="page-home" style="display:block;">
+            <h1>首頁</h1>
+            <div class="home-container">
+                <!-- 左側：系統概況與重要日期 -->
+                <div class="home-left">
+                    <h2>系統概況</h2>
+                    <p>目前報名人數：30人</p>
+                    <p>已提交作品數：10件</p>
+                    <p>評分完成度：2/5 評審完成</p>
+
+                    <h2>重要日期</h2>
+                    <p>報名截止：2024/12/31</p>
+                    <p>決賽日期：2025/01/15</p>
+                </div>
+
+                <!-- 右側：公告系統 -->
+                <div class="home-right">
+                    <h2>最新公告</h2>
+                    <ul class="announcement-list">
+                        <li><a href="#">[2024/12/10] 比賽報名截止延長至12/31</a></li>
+                        <li><a href="#">[2024/12/05] 新增作品上傳格式說明</a></li>
+                        <li><a href="#">[2024/12/01] 評審名單公布</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 帳號管理頁面 -->
+        <div class="page" id="page-account-management">
+            <h1>帳號管理</h1>
+            <table>
+                <tr>
+                    <th>姓名</th>
+                    <th>學號</th>
+                    <th>Email</th>
+                    <th>類別</th>
+                    <th>操作</th>
+                </tr>
+                <tr>
+                    <td>王小明</td>
+                    <td>109123456</td>
+                    <td>example@mail.com</td>
+                    <td>學生</td>
+                    <td><a href="#">編輯</a> | <a href="#">停用</a></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 註冊帳號頁面 -->
+        <div class="page" id="page-register-account">
+            <h1>註冊帳號</h1>
+            <form>
+                <label>姓名</label>
+                <input type="text" name="name">
+                <label>學號</label>
+                <input type="text" name="student_id">
+                <label>Email</label>
+                <input type="email" name="email">
+                <label>密碼</label>
+                <input type="password" name="password">
+                <label>確認密碼</label>
+                <input type="password" name="password_confirm">
+                <label>帳號類別</label>
+                <select name="role">
+                    <option value="student">學生</option>
+                    <option value="admin">管理者</option>
+                    <option value="judge">評審</option>
+                </select>
+                <button type="submit">註冊</button>
+            </form>
+        </div>
+
+        <!-- 報名表單頁面 -->
+        <div class="page" id="page-enroll-form">
+            <h1>報名表單</h1>
+            <form>
+                <label>競賽名稱</label>
+                <select name="competition">
+                    <option>2025 創意競賽</option>
+                </select>
+                <label>姓名</label>
+                <input type="text" name="name">
+                <label>學號</label>
+                <input type="text" name="student_id">
+                <label>系所</label>
+                <input type="text" name="department">
+                <label>Email</label>
+                <input type="email" name="email">
+                <label>聯絡電話</label>
+                <input type="text" name="phone">
+                <label>隊員資訊 (如有)</label>
+                <textarea name="team_info"></textarea>
+                <button type="submit">提交報名</button>
+            </form>
+        </div>
+
+        <!-- 檔案上傳頁面 -->
+        <div class="page" id="page-file-upload">
+            <h1>檔案上傳</h1>
+            <form>
+                <div class="file-upload">
+                    將作品檔案拖曳至此或點擊上傳 (PDF/DOC/PPT)
+                </div>
+                <button type="submit">上傳</button>
+            </form>
+        </div>
+
+        <!-- 作品列表頁面 -->
+        <div class="page" id="page-work-list">
+            <h1>作品列表</h1>
+            <div style="background:#fff; padding:1rem; margin-bottom:1rem; border-radius:5px;">
+                <h3>作品A</h3>
+                <p>參賽者：王小明</p>
+                <p>簡述：環保回收新創意</p>
+                <a href="#">查看詳細</a>
+            </div>
+            <div style="background:#fff; padding:1rem; border-radius:5px;">
+                <h3>作品B</h3>
+                <p>參賽者：李小華</p>
+                <p>簡述：校園智慧導覽系統</p>
+                <a href="#">查看詳細</a>
+            </div>
+        </div>
+
+        <!-- 評分系統頁面 -->
+        <div class="page" id="page-scoring-system">
+            <h1>評分系統</h1>
+            <form>
+                <h3>作品A 評分</h3>
+                <label>創意性 (1-10)</label>
+                <input type="text" name="score_creativity">
+                <label>實用性 (1-10)</label>
+                <input type="text" name="score_usability">
+                <label>美觀度 (1-10)</label>
+                <input type="text" name="score_design">
+                <label>完整度 (1-10)</label>
+                <input type="text" name="score_completeness">
+                <button type="submit">提交評分</button>
+            </form>
+        </div>
+
+        <!-- 歷屆作品檢視頁面 -->
+        <div class="page" id="page-previous-works">
+            <h1>歷屆作品檢視</h1>
+            <form style="margin-bottom:1rem;">
+                <label>年份</label>
+                <select>
+                    <option>2024</option>
+                    <option>2023</option>
+                </select>
+                <label>關鍵字搜尋</label>
+                <input type="text" name="keyword">
+                <button type="submit">搜尋</button>
+            </form>
+
+            <div style="background:#fff; padding:1rem; border-radius:5px;">
+                <h3>2023年度 優勝作品</h3>
+                <p>作品名稱：智慧垃圾分類桶</p>
+                <p>得獎者：張小美</p>
+                <a href="#">查看詳細</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const links = document.querySelectorAll('.sidebar ul li a[data-page]');
+    const pages = document.querySelectorAll('.page');
+
+    links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetPage = link.getAttribute('data-page');
+            
+            // 隱藏所有頁面
+            pages.forEach(page => {
+                page.style.display = 'none';
+            });
+
+            // 顯示目標頁面
+            const pageToShow = document.getElementById(targetPage);
+            if(pageToShow) {
+                pageToShow.style.display = 'block';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

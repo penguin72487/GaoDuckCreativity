@@ -4,6 +4,7 @@ National University of Kaohsiung Student Creativity Competition Management Syste
 
 環境設置
 pip install Flask
+pip install flask flask-cors
 
 
 

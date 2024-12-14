@@ -12,3 +12,4 @@ start
 py run.py
 cd react-frontend
 npm start
+# React + Flask + Pymsql

@@ -26,9 +26,14 @@ function App() {
                             <li><Link to="/work-list">作品列表</Link></li>
                             <li><Link to="/scoring-system">評分系統</Link></li>
                             <li><Link to="/previous-works">歷屆作品檢視</Link></li>
-                            <li><Link to="/login">登入</Link></li>
                         </ul>
+
+                        {/* 左下角固定的登入按鈕 */}
+                        <div className="sidebar-bottom">
+                            <Link to="/login">登入</Link>
+                        </div>
                     </nav>
+
 
                     {/* 主要內容 */}
                     <div className="main-content">

@@ -14,7 +14,7 @@ function App() {
     return (
         <Router>
             <div className="App">
-                <header>競賽管理系統</header>
+                <header>高雄大學激發學生創意競賽管理系統</header>
                 <div className="container">
                     {/* 側邊欄 */}
                     <nav className="sidebar">

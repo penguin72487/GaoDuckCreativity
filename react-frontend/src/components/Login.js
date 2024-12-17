@@ -10,7 +10,7 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post("http://127.0.0.1:5000/api/login", formData)
+        axios.post("http://127.0.0.1:5000/api/accounts/login", formData)
             .then(response => alert(response.data.message))
             .catch(error => console.error("Error during login:", error));
     };

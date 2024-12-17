@@ -5,7 +5,7 @@ const AccountManagement = () => {
     const [accounts, setAccounts] = useState([]);
 
     useEffect(() => {
-        axios.get("http://127.0.0.1:5000/api/accounts")
+        axios.get("http://127.0.0.1:5000/api/accounts/edit")
             .then(response => setAccounts(response.data.accounts))
             .catch(error => console.error("Error fetching accounts:", error));
     }, []);

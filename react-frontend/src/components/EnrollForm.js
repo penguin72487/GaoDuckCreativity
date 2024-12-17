@@ -18,7 +18,7 @@ const EnrollForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post("http://127.0.0.1:5000/api/enroll", formData)
+        axios.post("http://127.0.0.1:5000/api/works/register", formData)
             .then(response => alert(response.data.message))
             .catch(error => console.error("Error submitting form:", error));
     };

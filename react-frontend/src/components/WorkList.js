@@ -5,7 +5,7 @@ const WorkList = () => {
     const [works, setWorks] = useState([]);
 
     useEffect(() => {
-        axios.get("http://127.0.0.1:5000/api/works")
+        axios.get("http://127.0.0.1:5000/api/works/list") //
             .then(response => setWorks(response.data.works))
             .catch(error => console.error("Error fetching works:", error));
     }, []);

@@ -30,6 +30,7 @@ class SqlAPI:
         :param id_num: 身份證字號
         :return: True 合法, False 不合法
         """
+        return True #測試環境不驗證身份證合法性，正式上線時把這line去掉
         if len(id_num) != 10 or not id_num[0].isalpha() or not id_num[1:].isdigit():
             return False
 
@@ -162,7 +163,23 @@ class SqlAPI:
 
         return "密碼修改成功"
 
-
+    def groupateam(self,t_name, leader_u_id, teammate_2_u_id, teammate_3_u_id, teammate_4_u_id, teammate_5_u_id, teammate_6_u_id, teacher_u_id):
+        """
+        組織一個團隊，學生人數2~6人，指導老師0~1人
+        隊名大小 varchar（20）
+        t_name,               隊伍名稱
+        leader_u_id,         隊長uid
+        teammate_2_u_id,     隊員2uid
+        teammate_3_u_id,     隊員3uid
+        teammate_4_u_id,     隊員4uid
+        teammate_5_u_id,     隊員5uid
+        teammate_6_u_id,     隊員6uid
+        teacher_u_id         指導老師uid
+        """
+    base_query = """
+                 INSERT INTO `team` ( t_name, leader_u_id, teammate_2_u_id, teammate_3_u_id, teammate_4_u_id, teammate_5_u_id, teammate_6_u_id, teacher_u_id)
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                 """
 
     def close_connection(self):
         """

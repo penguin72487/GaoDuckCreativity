@@ -18,6 +18,20 @@ def get_accounts():
     })
 
 
+@api.route('/api/accounts/check', methods=['POST'])
+def check_account():
+    data = request.json
+    student_id = data.get("student_id")
+
+    # 確認 student_id 是否存在
+    account = next((acc for acc in accounts if acc["student_id"] == student_id), None)
+    if account:
+        return jsonify({"message": "隊員存在", "data": account}), 200
+    else:
+        return jsonify({"message": "該學號未註冊", "error": True}), 404
+
+
+
 @api.route('/api/accounts/edit', methods=['POST'])
 def edit_account():
     data = request.json

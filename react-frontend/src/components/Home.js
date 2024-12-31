@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Announcement from "./Announcement";
 
 const Home = () => {
     const [data, setData] = useState("");
@@ -11,10 +12,15 @@ const Home = () => {
     }, []);
 
     return (
-        <div className="page">
-            <h1>首頁</h1>
-            <p>{data || "Loading..."}</p>
-        </div>
+        <React.Fragment>
+            <div className="page">
+                <h1>首頁</h1>
+                <p>{data || "Loading..."}</p>
+            </div>
+            <div className="page">
+                <Announcement />
+            </div>
+        </React.Fragment>
     );
 };
 

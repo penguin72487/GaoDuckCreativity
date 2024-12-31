@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "./components/Home";
+import Announcement from "./components/Announcement";
 import AccountManagement from "./components/AccountManagement";
 import RegisterAccount from "./components/RegisterAccount";
 import EnrollForm from "./components/EnrollForm";
@@ -39,6 +40,7 @@ function App() {
                     <div className="main-content">
                         <Routes>
                             <Route path="/" element={<Home />} />
+                            <Route path="/announcement" element={<Announcement />} />
                             <Route path="/account-management" element={<AccountManagement />} />
                             <Route path="/register-account" element={<RegisterAccount />} />
                             <Route path="/enroll-form" element={<EnrollForm />} />

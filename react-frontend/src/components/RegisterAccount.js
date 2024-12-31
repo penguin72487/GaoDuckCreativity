@@ -16,6 +16,7 @@ const RegisterAccount = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log("Form Data:", formData); // Debug 用
         axios.post("http://127.0.0.1:5000/api/accounts/register", formData)
             .then(response => alert(response.data.message))
             .catch(error => console.error("Error registering:", error));

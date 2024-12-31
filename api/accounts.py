@@ -11,23 +11,36 @@ accounts = [
 ]
 
 # 查詢帳號資訊
-@api.route('/api/accounts/edit', methods=['GET'])
+@api.route('/api/accounts', methods=['GET'])
+def get_accounts():
+    return jsonify({
+        "accounts": accounts  # 確保返回的 key 與前端一致
+    })
+
+
+@api.route('/api/accounts/edit', methods=['POST'])
 def edit_account():
-    account_id = request.args.get('id', type=int)
+    data = request.json
+    account_id = data.get("id")  # 確保前端傳遞帳號 ID
 
-    # 查找帳號
-    account = next((acc for acc in accounts if acc.get('id') == account_id), None)
+    # 找到目標帳號
+    for account in accounts:
+        if account["id"] == account_id:
+            account.update(data)  # 更新帳號資料
+            return jsonify({"message": "帳號更新成功"})
 
-    if account:
-        return jsonify({
-            "message": "Account found",
-            "data": account
-        })
-    else:
-        return jsonify({
-            "message": "Account not found",
-            "error": True
-        }), 404
+    return jsonify({"message": "帳號未找到", "error": True}), 404
+
+@api.route('/api/accounts/delete', methods=['POST'])
+def delete_account():
+    data = request.json
+    account_id = data.get("id")
+
+    global accounts
+    accounts = [acc for acc in accounts if acc["id"] != account_id]  # 過濾掉目標帳號
+
+    return jsonify({"message": "帳號刪除成功"})
+
 
 @api.route('/api/accounts/login', methods=['GET'])
 def login():
@@ -54,10 +67,11 @@ def register_account():
 
     # 新增帳號資料
     new_account = {
+        "id": len(accounts) + 1,  # 自動生成 ID
         "name": data["name"],
         "student_id": data["student_id"],
         "email": data["email"],
-        "password": data["password"],  # 注意：實際應加密密碼！
+        "password": data["password"],  # 密碼直接存儲（作業中不加密）
         "role": data["role"]
     }
     accounts.append(new_account)

@@ -36,21 +36,22 @@ const AccountManagement = () => {
     const submitEditForm = (e) => {
         e.preventDefault();
         axios
-            .post("http://127.0.0.1:5000/api/update_account", editFormData)
+            .post("http://127.0.0.1:5000/api/accounts/edit", { ...editFormData, id: accounts[editingIndex].id })
             .then(() => {
                 const updatedAccounts = [...accounts];
-                updatedAccounts[editingIndex] = editFormData;
+                updatedAccounts[editingIndex] = { ...editFormData, id: accounts[editingIndex].id };
                 setAccounts(updatedAccounts);
                 setEditingIndex(null);
             })
             .catch(error => console.error("Error updating account:", error));
     };
+    
 
     // Handle delete actions
     const confirmDelete = () => {
         const accountToDelete = accounts[deletingIndex];
         axios
-            .post("http://127.0.0.1:5000/api/delete_account", { student_id: accountToDelete.student_id })
+            .post("http://127.0.0.1:5000/api/accounts/delete", { id: accountToDelete.id })
             .then(() => {
                 const updatedAccounts = accounts.filter((_, index) => index !== deletingIndex);
                 setAccounts(updatedAccounts);
@@ -58,6 +59,7 @@ const AccountManagement = () => {
             })
             .catch(error => console.error("Error deleting account:", error));
     };
+    
 
     const cancelDelete = () => setDeletingIndex(null);
 
@@ -84,10 +86,10 @@ const AccountManagement = () => {
                                     <td><input type="email" name="email" value={editFormData.email} onChange={updateEditForm} /></td>
                                     <td>
                                         <select name="role" value={editFormData.role} onChange={updateEditForm}>
-                                            <option value="學生">學生</option>
-                                            <option value="品審">品審</option>
-                                            <option value="老師">老師</option>
-                                            <option value="管理員">管理員</option>
+                                            <option value="student">student</option>
+                                            <option value="teacher">teacher</option>
+                                            <option value="Rater">Rater</option>
+                                            <option value="admin">admin</option>
                                         </select>
                                     </td>
                                     <td>

@@ -23,25 +23,31 @@ def get_announcement():
 
     return jsonify(test_data)
 
-@api.route('/api/accounts', methods=['GET'])
-def get_accounts():
-    test_data = {
-        "accounts": [
-            { "name": "John", "student_id": "A123456789", "email": "John@gmail.com", "role": "學生" },
-            { "name": "Mary", "student_id": "B123456789", "email": "Mary@gmail,com", "role": "學生" },
-            ]
-    }
-    return jsonify(test_data)
+# @api.route('/api/accounts', methods=['GET'])
+# def get_accounts():
+#     test_data = {
+#         "accounts": [
+#             { "name": "John", "student_id": "A123456789", "email": "John@gmail.com", "role": "學生" },
+#             { "name": "Mary", "student_id": "B123456789", "email": "Mary@gmail,com", "role": "學生" },
+#             ]
+#     }
+#     return jsonify(test_data)
 
-@api.route('/api/update_account', methods=['POST'])
-def add_account():
-    data = request.json
-    print(data)
-    return jsonify({"message": "Account added"})
-#     return jsonify({"message": "Account added", "data": data})
+# @api.route('/api/update_account', methods=['POST'])
+# def add_account():
+#     data = request.json
+#     print(data)
+#     return jsonify({"message": "Account added"})
+# #     return jsonify({"message": "Account added", "data": data})
 
-@api.route('/api/delete_account', methods=['POST'])
-def delete_account():
-    data = request.json
-    print(data)
-    return jsonify({"message": "Account deleted"})
+# @api.route('/api/delete_account', methods=['POST'])
+# def delete_account():
+#     data = request.json
+#     print(data)
+#     return jsonify({"message": "Account deleted"})
+
+# @api.route('/api/accounts/register', methods=['POST'])
+# def accounts_register():
+#     data = request.json
+#     print(data)
+#     return jsonify({"message": "Account registered"})

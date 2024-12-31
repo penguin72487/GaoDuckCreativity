@@ -72,9 +72,7 @@ function App() {
                             {userRole === "admin" && (
                                 <li><Link to="/account-management">帳號管理</Link></li>
                             )}
-                            {isAuthenticated && userRole !== "student" && (
-                                <li><Link to="/rating-system">評分系統</Link></li>
-                            )}
+                            
                             {!isAuthenticated && (
                                 <li><Link to="/register-account">註冊帳號</Link></li>
                             )}
@@ -82,6 +80,9 @@ function App() {
                                 <li><Link to="/enroll-form">報名表單</Link></li>
                             )}
                             <li><Link to="/project-list">作品列表</Link></li>
+                            {isAuthenticated && userRole !== "student" && (
+                                <li><Link to="/rating-system">評分系統</Link></li>
+                            )}
                             <li><Link to="/previous-project">往屆作品</Link></li>
                         </ul>
 

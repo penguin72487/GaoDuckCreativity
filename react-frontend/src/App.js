@@ -46,7 +46,7 @@ function App() {
                         setUserId("");
                     });
             }
-        }, 5000); // 每5秒檢查一次
+        }, 1000); // 每5秒檢查一次
     
         return () => clearInterval(interval); // 清理定時器
     }, []);

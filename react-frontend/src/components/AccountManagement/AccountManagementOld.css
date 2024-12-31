@@ -1,0 +1,69 @@
+.account-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.account-table th, .account-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.account-table th {
+    background-color: #f2f2f2;
+    width: 20%;
+}
+
+.account-table td input {
+    width: 100%;
+    box-sizing: border-box;
+}
+.account-table td select {
+    width: 100%;
+    box-sizing: border-box;
+}
+.account-table td button {
+    background-color: #007bff; /* Default blue for buttons */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.account-table td button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.05); /* Slight zoom effect */
+}
+
+.account-table td button:active {
+    background-color: #004494; /* Even darker blue on click */
+    transform: scale(0.95); /* Slight shrink effect */
+}
+
+.account-table td button.confirm {
+    background-color: #28a745; /* Green for confirm buttons */
+}
+
+.account-table td button.confirm:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.account-table td button.cancel {
+    background-color: #ffc107; /* Yellow for cancel buttons */
+    color: #333; /* Dark text for better contrast */
+}
+
+.account-table td button.cancel:hover {
+    background-color: #e0a800; /* Darker yellow on hover */
+}
+
+.account-table td button.delete {
+    background-color: #dc3545; /* Red for delete buttons */
+}
+
+.account-table td button.delete:hover {
+    background-color: #c82333; /* Darker red on hover */
+}

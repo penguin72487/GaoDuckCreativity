@@ -89,13 +89,13 @@ function App() {
                         {/* 左下角用戶信息與登出按鈕 */}
                         <div className="sidebar-bottom">
                             {isAuthenticated ? (
-                                <>
-                                    <p>ID: {userId}</p>
-                                    <p>身份別: {userRole}</p>
-                                    <button onClick={handleLogout}>登出</button>
-                                </>
+                                <div className="user-card">
+                                    <p className="user-id"><strong>ID:</strong> {userId}</p>
+                                    <p className="user-role"><strong>身份別:</strong> {userRole}</p>
+                                    <button className="logout-button" onClick={handleLogout}>登出</button>
+                                </div>
                             ) : (
-                                <Link to="/login">登入</Link>
+                                <Link className="login-link" to="/login">登入</Link>
                             )}
                         </div>
                     </nav>

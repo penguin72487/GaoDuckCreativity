@@ -106,16 +106,17 @@ const AccountManagement = () => {
                                     <td>
                                         {deletingIndex === index ? (
                                             <>
-                                                <button onClick={confirmDelete}>確認刪除</button>
-                                                <button onClick={cancelDelete}>取消</button>
+                                                <button className="confirm" onClick={confirmDelete}>確認刪除</button>
+                                                <button className="cancel" onClick={cancelDelete}>取消</button>
                                             </>
                                         ) : (
                                             <>
-                                                <button onClick={() => startEditing(index)}>編輯</button>
-                                                <button onClick={() => setDeletingIndex(index)}>停用</button>
+                                                <button className="edit" onClick={() => startEditing(index)}>編輯</button>
+                                                <button className="delete" onClick={() => setDeletingIndex(index)}>停用</button>
                                             </>
                                         )}
                                     </td>
+
                                 </>
                             )}
                         </tr>

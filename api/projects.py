@@ -3,99 +3,228 @@ from api.accounts import accounts
 
 # 定義 Blueprint
 api = Blueprint('projects_api', __name__)
-projects = [
+projects= [
+    # 2025 年專案
     {
         "competition": "2025 創意競賽",
-        "name": "智慧農業隊",
-        "student_id": "S001",
-        "competition_group": "創意發想組",
-        "teacher": {
-            "student_id": "T001",
-            "name": "陳小華",
-            "role": "teacher"
-        },
-        "team_members": [
-            {"student_id": "S002", "name": "李小華", "role": "student"},
-            {"student_id": "S003", "name": "王大明", "role": "student"}
-        ],
-        "description": "path/to/description/file1.pdf",
-        "poster": "path/to/poster/image1.png",
-        "video": "https://youtube.com/demo1",
-        "code": "https://github.com/demo1"
-    },
-    {
-        "competition": "2025 創意競賽",
-        "name": "智慧醫療隊",
-        "student_id": "S004",
+        "name": "智能交通管理隊",
+        "student_id": "S013",
         "competition_group": "創業實作組",
         "teacher": {
-            "student_id": "T002",
-            "name": "黃美英",
+            "student_id": "T006",
+            "name": "高俊傑",
             "role": "teacher"
         },
         "team_members": [
-            {"student_id": "S005", "name": "張小華", "role": "student"},
-            {"student_id": "S006", "name": "林志強", "role": "student"}
+            {"student_id": "S014", "name": "林志玲", "role": "student"},
+            {"student_id": "S015", "name": "陳曉東", "role": "student"}
         ],
-        "description": "path/to/description/file2.pdf",
-        "poster": "path/to/poster/image2.png",
-        "video": "https://youtube.com/demo2",
-        "code": "https://github.com/demo2"
+        "description": "path/to/description/file6.pdf",
+        "poster": "path/to/poster/image6.png",
+        "video": "https://youtube.com/demo6",
+        "code": "https://github.com/demo6"
     },
     {
         "competition": "2025 創意競賽",
-        "name": "智慧家居隊",
-        "student_id": "S007",
+        "name": "智能農業應用隊",
+        "student_id": "S016",
         "competition_group": "創意發想組",
         "teacher": {
-            "student_id": "T003",
-            "name": "林冠華",
+            "student_id": "T007",
+            "name": "陳志明",
             "role": "teacher"
         },
         "team_members": [
-            {"student_id": "S008", "name": "周小龍", "role": "student"},
-            {"student_id": "S009", "name": "鄭美麗", "role": "student"}
+            {"student_id": "S017", "name": "李志豪", "role": "student"},
+            {"student_id": "S018", "name": "王小美", "role": "student"}
         ],
-        "description": "path/to/description/file3.pdf",
-        "poster": "path/to/poster/image3.png",
-        "video": "https://youtube.com/demo3",
+        "description": None,
+        "poster": None,
+        "video": "https://youtube.com/demo7",
         "code": None
     },
     {
         "competition": "2025 創意競賽",
-        "name": "智慧校園隊",
-        "student_id": "S010",
+        "name": "健康管理隊",
+        "student_id": "S019",
         "competition_group": "創業實作組",
         "teacher": {
-            "student_id": "T004",
-            "name": "李建國",
+            "student_id": "T008",
+            "name": "黃淑芬",
             "role": "teacher"
         },
         "team_members": [
-            {"student_id": "S011", "name": "何小芬", "role": "student"}
+            {"student_id": "S020", "name": "張志文", "role": "student"}
         ],
-        "description": None,
-        "poster": "path/to/poster/image4.png",
+        "description": "path/to/description/file7.pdf",
+        "poster": "path/to/poster/image7.png",
         "video": None,
-        "code": "https://github.com/demo4"
+        "code": "https://github.com/demo7"
     },
     {
         "competition": "2025 創意競賽",
-        "name": "環保創新隊",
-        "student_id": "S012",
+        "name": "環保能源管理隊",
+        "student_id": "S021",
         "competition_group": "創意發想組",
         "teacher": {
-            "student_id": "T005",
-            "name": "許志明",
+            "student_id": "T009",
+            "name": "楊志強",
             "role": "teacher"
         },
         "team_members": [],
-        "description": "path/to/description/file5.pdf",
+        "description": None,
         "poster": None,
-        "video": "https://youtube.com/demo5",
-        "code": "https://github.com/demo5"
+        "video": "https://youtube.com/demo8",
+        "code": None
+    },
+
+    # 2024 年專案
+    {
+        "competition": "2024 創意競賽",
+        "name": "智能物流隊",
+        "student_id": "S022",
+        "competition_group": "創業實作組",
+        "teacher": {
+            "student_id": "T010",
+            "name": "吳小明",
+            "role": "teacher"
+        },
+        "team_members": [
+            {"student_id": "S023", "name": "張小華", "role": "student"},
+            {"student_id": "S024", "name": "李大華", "role": "student"}
+        ],
+        "description": "path/to/description/file8.pdf",
+        "poster": None,
+        "video": None,
+        "code": "https://github.com/demo8"
+    },
+    {
+        "competition": "2024 創意競賽",
+        "name": "醫療大數據隊",
+        "student_id": "S025",
+        "competition_group": "創意發想組",
+        "teacher": {
+            "student_id": "T011",
+            "name": "陳小華",
+            "role": "teacher"
+        },
+        "team_members": [
+            {"student_id": "S026", "name": "黃志勇", "role": "student"}
+        ],
+        "description": "path/to/description/file9.pdf",
+        "poster": "path/to/poster/image9.png",
+        "video": "https://youtube.com/demo9",
+        "code": None
+    },
+    {
+        "competition": "2024 創意競賽",
+        "name": "自動化生產隊",
+        "student_id": "S027",
+        "competition_group": "創業實作組",
+        "teacher": {
+            "student_id": "T012",
+            "name": "李建華",
+            "role": "teacher"
+        },
+        "team_members": [
+            {"student_id": "S028", "name": "何美麗", "role": "student"}
+        ],
+        "description": None,
+        "poster": "path/to/poster/image10.png",
+        "video": "https://youtube.com/demo10",
+        "code": "https://github.com/demo10"
+    },
+    {
+        "competition": "2024 創意競賽",
+        "name": "智能社區管理隊",
+        "student_id": "S029",
+        "competition_group": "創意發想組",
+        "teacher": {
+            "student_id": "T013",
+            "name": "高志明",
+            "role": "teacher"
+        },
+        "team_members": [],
+        "description": None,
+        "poster": None,
+        "video": None,
+        "code": None
+    },
+
+    # 2023 年專案
+    {
+        "competition": "2023 創意競賽",
+        "name": "農業機械化隊",
+        "student_id": "S030",
+        "competition_group": "創業實作組",
+        "teacher": {
+            "student_id": "T014",
+            "name": "陳志華",
+            "role": "teacher"
+        },
+        "team_members": [
+            {"student_id": "S031", "name": "吳志強", "role": "student"}
+        ],
+        "description": "path/to/description/file11.pdf",
+        "poster": "path/to/poster/image11.png",
+        "video": None,
+        "code": None
+    },
+    {
+        "competition": "2023 創意競賽",
+        "name": "智慧城市隊",
+        "student_id": "S032",
+        "competition_group": "創意發想組",
+        "teacher": {
+            "student_id": "T015",
+            "name": "黃美華",
+            "role": "teacher"
+        },
+        "team_members": [
+            {"student_id": "S033", "name": "張志偉", "role": "student"},
+            {"student_id": "S034", "name": "林建國", "role": "student"}
+        ],
+        "description": None,
+        "poster": "path/to/poster/image12.png",
+        "video": "https://youtube.com/demo11",
+        "code": "https://github.com/demo11"
+    },
+    {
+        "competition": "2023 創意競賽",
+        "name": "智能家電隊",
+        "student_id": "S035",
+        "competition_group": "創業實作組",
+        "teacher": {
+            "student_id": "T016",
+            "name": "李志偉",
+            "role": "teacher"
+        },
+        "team_members": [],
+        "description": None,
+        "poster": None,
+        "video": "https://youtube.com/demo12",
+        "code": "https://github.com/demo12"
+    },
+    {
+        "competition": "2023 創意競賽",
+        "name": "創意設計隊",
+        "student_id": "S036",
+        "competition_group": "創意發想組",
+        "teacher": {
+            "student_id": "T017",
+            "name": "林小華",
+            "role": "teacher"
+        },
+        "team_members": [
+            {"student_id": "S037", "name": "周小龍", "role": "student"}
+        ],
+        "description": "path/to/description/file12.pdf",
+        "poster": "path/to/poster/image13.png",
+        "video": None,
+        "code": None
     }
 ]
+
 
 @api.route('/api/projects/Enroll', methods=['POST'])
 def register_project():
@@ -103,7 +232,7 @@ def register_project():
     data = request.json
     
     # 檢查必填欄位
-    required_fields = ["competition", "name", "student_id", "competition_group", "department", "email", "phone", "teacher"]
+    required_fields = ["competition", "name", "student_id", "competition_group", "teacher", "team_members"]
     for field in required_fields:
         if field not in data or not data[field]:
             return jsonify({"message": f"缺少必要欄位: {field}", "error": True}), 400
@@ -122,9 +251,9 @@ def register_project():
             return jsonify({"message": f"隊員 {member.get('student_id')} 不存在", "error": True}), 400
         team_members.append(team_account)
 
-    # 模擬文件存儲
+    # 處理選填字段
     description_file = data.get("description")  # 模擬文件存儲
-    poster_file = data.get("poster")  # 模擬文件存儲
+    poster_file = data.get("poster")  # 選填字段
 
     # 構建新項目數據
     new_project = {
@@ -135,7 +264,7 @@ def register_project():
         "teacher": teacher_account,
         "team_members": team_members,
         "description": description_file,  # 模擬存儲文件
-        "poster": poster_file,  # 模擬存儲文件
+        "poster": poster_file,  # 選填字段
         "video": data.get("video"),  # 選填
         "code": data.get("code")  # 選填
     }
@@ -158,12 +287,12 @@ def delete_project():
 def view_project():
     return jsonify({"message": "View project"})
 
-@api.route('/api/projects/list', methods=['GET'])
-def list_project():
-    # 模擬作品列表資料
-    
-    # 返回 JSON 格式的作品資料
-    return jsonify({"projects": projects})
+@api.route('/api/projects/list/<year>', methods=['GET'])
+def list_project(year):
+    # 避免覆蓋全局變數
+    filtered_projects = [project for project in projects if project["competition"].startswith(year)]
+    return jsonify({"projects": filtered_projects})
+
 
 
 @api.route('/api/projects/score', methods=['GET'])

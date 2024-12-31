@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const RatingSystem = ({ tid }) => {
+const RatingCard = ({ tid }) => {
     const [scores, setScores] = useState({ creativity: 0, usability: 0, design: 0, completeness: 0 });
+    const [submitted, setSubmitted] = useState(false);
 
     const handleScoreChange = (category, value) => {
         setScores({ ...scores, [category]: value });
@@ -16,6 +17,7 @@ const RatingSystem = ({ tid }) => {
             .then(response => {
                 alert(response.data.message);
                 setScores({ creativity: 0, usability: 0, design: 0, completeness: 0 });
+                setSubmitted(true); // 標記為已評分
             })
             .catch(error => {
                 console.error("Error submitting scores:", error);
@@ -63,10 +65,12 @@ const RatingSystem = ({ tid }) => {
                     <div>{renderDots("completeness", scores.completeness)}</div>
                 </div>
 
-                <button type="submit">提交評分</button>
+                <button type="submit" disabled={submitted}>
+                    {submitted ? "已提交" : "提交評分"}
+                </button>
             </form>
         </div>
     );
 };
 
-export default RatingSystem;
+export default RatingCard;

@@ -6,7 +6,7 @@ import AccountManagement from "./components/AccountManagement/AccountManagement"
 import RegisterAccount from "./components/RegisterAccount";
 import EnrollForm from "./components/EnrollForm";
 import ProjectList from "./components/ProjectList";
-import RatingSystem from "./components/RatingCard";
+import RatingSystem from "./components/RatingSystem/RatingSystem";
 import PreviousProject from "./components/PreviousProject";
 import Login from "./components/Login";
 import "./App.css";
@@ -25,7 +25,7 @@ function App() {
                             <li><Link to="/register-account">註冊帳號</Link></li>
                             <li><Link to="/enroll-form">報名表單</Link></li>
                             <li><Link to="/project-list">作品列表</Link></li>
-                            {/* <li><Link to="/scoring-system">評分系統</Link></li> */}
+                            <li><Link to="/rating-system">評分系統</Link></li>
                             <li><Link to="/previous-project">往屆作品</Link></li>
                         </ul>
 
@@ -45,7 +45,7 @@ function App() {
                             <Route path="/register-account" element={<RegisterAccount />} />
                             <Route path="/enroll-form" element={<EnrollForm />} />
                             <Route path="/project-list" element={<ProjectList />} />
-                            {/* <Route path="/rating-system" element={<RatingSystem />} /> */}
+                            <Route path="/rating-system" element={<RatingSystem />} />
                             <Route path="/previous-project" element={<PreviousProject />} />
                             <Route path="/login" element={<Login />} />
                         </Routes>

@@ -1,5 +1,5 @@
 import React from "react";
-import RatingSystem from "../RatingCard";
+import RatingSystem from "../RatingSystem/RatingCard";
 
 const ProjectCard = ({ project }) => {
     return (
@@ -47,7 +47,6 @@ const ProjectCard = ({ project }) => {
             ) : (
                 <p>無隊員</p>
             )}
-            <RatingSystem tid={project.tid} />
         </div>
     );
 };

@@ -6,6 +6,7 @@ api = Blueprint('projects_api', __name__)
 projects= [
     # 2025 年專案
     {
+        "tid" : 1,
         "competition": "2025 創意競賽",
         "name": "智能交通管理隊",
         "student_id": "S013",
@@ -25,6 +26,7 @@ projects= [
         "code": "https://github.com/demo6"
     },
     {
+        "tid" : 2,
         "competition": "2025 創意競賽",
         "name": "智能農業應用隊",
         "student_id": "S016",
@@ -44,6 +46,7 @@ projects= [
         "code": None
     },
     {
+        "tid" : 3,
         "competition": "2025 創意競賽",
         "name": "健康管理隊",
         "student_id": "S019",
@@ -62,6 +65,7 @@ projects= [
         "code": "https://github.com/demo7"
     },
     {
+        "tid" : 4,
         "competition": "2025 創意競賽",
         "name": "環保能源管理隊",
         "student_id": "S021",
@@ -80,6 +84,7 @@ projects= [
 
     # 2024 年專案
     {
+        "tid" : 5,
         "competition": "2024 創意競賽",
         "name": "智能物流隊",
         "student_id": "S022",
@@ -99,6 +104,7 @@ projects= [
         "code": "https://github.com/demo8"
     },
     {
+        "tid" : 6,
         "competition": "2024 創意競賽",
         "name": "醫療大數據隊",
         "student_id": "S025",
@@ -117,6 +123,7 @@ projects= [
         "code": None
     },
     {
+        "tid" : 7,
         "competition": "2024 創意競賽",
         "name": "自動化生產隊",
         "student_id": "S027",
@@ -135,6 +142,7 @@ projects= [
         "code": "https://github.com/demo10"
     },
     {
+        "tid" : 8,
         "competition": "2024 創意競賽",
         "name": "智能社區管理隊",
         "student_id": "S029",
@@ -153,6 +161,7 @@ projects= [
 
     # 2023 年專案
     {
+        "tid" : 9,
         "competition": "2023 創意競賽",
         "name": "農業機械化隊",
         "student_id": "S030",
@@ -171,6 +180,7 @@ projects= [
         "code": None
     },
     {
+        "tid" : 10,
         "competition": "2023 創意競賽",
         "name": "智慧城市隊",
         "student_id": "S032",
@@ -190,6 +200,7 @@ projects= [
         "code": "https://github.com/demo11"
     },
     {
+        "tid" : 11,
         "competition": "2023 創意競賽",
         "name": "智能家電隊",
         "student_id": "S035",
@@ -206,6 +217,7 @@ projects= [
         "code": "https://github.com/demo12"
     },
     {
+        "tid" : 12,
         "competition": "2023 創意競賽",
         "name": "創意設計隊",
         "student_id": "S036",
@@ -257,6 +269,7 @@ def register_project():
 
     # 構建新項目數據
     new_project = {
+        "tid" : len(projects) + 1,
         "competition": data["competition"],
         "name": data["name"],
         "student_id": data["student_id"],
@@ -294,7 +307,25 @@ def list_project(year):
     return jsonify({"projects": filtered_projects})
 
 
+ratings = {}  
 
-@api.route('/api/projects/score', methods=['GET'])
+@api.route('/api/projects/score', methods=['POST'])
 def score_project():
-    return jsonify({"message": "Score project"})
+    data = request.json
+    tid = data.get("tid")
+
+    # 檢查必填字段
+    required_fields = ["tid", "creativity", "usability", "design", "completeness"]
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"message": f"缺少必要字段: {field}", "error": True}), 400
+
+    # 保存評分數據
+    ratings[tid] = {
+        "creativity": data["creativity"],
+        "usability": data["usability"],
+        "design": data["design"],
+        "completeness": data["completeness"]
+    }
+
+    return jsonify({"message": "評分提交成功！", "ratings": ratings}), 201

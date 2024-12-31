@@ -1,4 +1,5 @@
 import React from "react";
+import RatingSystem from "../RatingCard";
 
 const ProjectCard = ({ project }) => {
     return (
@@ -12,6 +13,10 @@ const ProjectCard = ({ project }) => {
             }}
         >
             <h3>{project.name}</h3>
+            {/* <p>
+                <strong>項目ID :</strong>
+                {project.tid}
+            </p> */}
             <p>
                 <strong>競賽名稱：</strong>
                 {project.competition}
@@ -42,46 +47,7 @@ const ProjectCard = ({ project }) => {
             ) : (
                 <p>無隊員</p>
             )}
-            <p>
-                <strong>作品說明書：</strong>
-                {project.description ? (
-                    <a href={project.description} target="_blank" rel="noopener noreferrer">
-                        下載
-                    </a>
-                ) : (
-                    "未上傳"
-                )}
-            </p>
-            <p>
-                <strong>作品海報：</strong>
-                {project.poster ? (
-                    <a href={project.poster} target="_blank" rel="noopener noreferrer">
-                        查看
-                    </a>
-                ) : (
-                    "未上傳"
-                )}
-            </p>
-            <p>
-                <strong>作品Demo影片:</strong>
-                {project.video ? (
-                    <a href={project.video} target="_blank" rel="noopener noreferrer">
-                        觀看
-                    </a>
-                ) : (
-                    "未提供"
-                )}
-            </p>
-            <p>
-                <strong>程式碼連結：</strong>
-                {project.code ? (
-                    <a href={project.code} target="_blank" rel="noopener noreferrer">
-                        查看
-                    </a>
-                ) : (
-                    "未提供"
-                )}
-            </p>
+            <RatingSystem tid={project.tid} />
         </div>
     );
 };

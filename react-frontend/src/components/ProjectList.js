@@ -19,7 +19,9 @@ const ProjectList = () => {
         <div className="page">
             <h1>作品列表</h1>
             {projects.length > 0 ? (
-                projects.map((project, index) => <ProjectCard key={index} project={project} />)
+                projects.map(project => (
+                    <ProjectCard key={project.tid} project={project} />
+                ))
             ) : (
                 <p>未找到相關作品。</p>
             )}

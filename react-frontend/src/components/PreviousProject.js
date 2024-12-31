@@ -51,7 +51,9 @@ const PreviousProjects = () => {
             <div style={{ marginTop: "2rem" }}>
                 <h2>搜尋結果</h2>
                 {projects.length > 0 ? (
-                    projects.map((project, index) => <ProjectCard key={index} project={project} />)
+                    projects.map(project => (
+                        <ProjectCard key={project.tid} project={project} />
+                    ))
                 ) : (
                     <p>未找到相關作品。</p>
                 )}

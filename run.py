@@ -2,6 +2,7 @@ import os, sys
 from flask import Flask, request, jsonify
 from flask_cors import CORS  # 匯入 CORS
 from api import api  
+from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
 
@@ -9,6 +10,11 @@ app = Flask(__name__)
 app.register_blueprint(api)
 CORS(app)  # 啟用 CORS
 
+@app.errorhandler(Exception)
+def handle_exception(e):
+    if isinstance(e, HTTPException):
+        return jsonify({"error": e.description}), e.code
+    return jsonify({"error": "伺服器發生未預期的錯誤"}), 500
 
 
 

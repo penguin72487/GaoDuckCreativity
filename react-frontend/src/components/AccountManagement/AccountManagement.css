@@ -1,0 +1,32 @@
+.account-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.account-table th, .account-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.account-table th {
+    background-color: #f2f2f2;
+    width: 20%;
+}
+
+.account-table td input {
+    width: 100%;
+    box-sizing: border-box;
+}
+.account-table td select {
+    width: 100%;
+    box-sizing: border-box;
+}
+.account-table td button {
+    /* width: 100%; */
+    /* padding-left: 10px; */
+    margin-left: 7px;
+    margin-right: 7px;
+
+    box-sizing: border-box;
+}

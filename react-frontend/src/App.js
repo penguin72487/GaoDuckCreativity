@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "./components/Home";
 import Announcement from "./components/Announcement";
-import AccountManagement from "./components/AccountManagement";
+import AccountManagement from "./components/AccountManagement/AccountManagement";
 import RegisterAccount from "./components/RegisterAccount";
 import EnrollForm from "./components/EnrollForm";
 import WorkList from "./components/WorkList";

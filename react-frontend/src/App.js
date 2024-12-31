@@ -27,32 +27,30 @@ function App() {
 
     // 檢查登入狀態
     useEffect(() => {
-        checkAuth(); // 初始化檢查登入狀態
+        const interval = setInterval(() => {
+            const token = localStorage.getItem("authToken");
+    
+            if (token) {
+                axios
+                    .get("http://127.0.0.1:5000/api/auth/protected", {
+                        headers: { Authorization: `Bearer ${token}` },
+                    })
+                    .then((response) => {
+                        setIsAuthenticated(true);
+                        setUserRole(response.data.data.role);
+                        setUserId(response.data.data.student_id);
+                    })
+                    .catch(() => {
+                        setIsAuthenticated(false);
+                        setUserRole("");
+                        setUserId("");
+                    });
+            }
+        }, 5000); // 每5秒檢查一次
+    
+        return () => clearInterval(interval); // 清理定時器
     }, []);
-
-    const checkAuth = () => {
-        const token = localStorage.getItem("authToken");
-        console.log("檢查登入狀態，令牌:", token); // 調試輸出
-
-        if (token) {
-            axios
-                .get("http://127.0.0.1:5000/api/auth/protected", {
-                    headers: { Authorization: `Bearer ${token}` },
-                })
-                .then((response) => {
-                    setIsAuthenticated(true);
-                    setUserRole(response.data.data.role);
-                    setUserId(response.data.data.student_id);
-                    console.log("驗證成功，狀態已更新");
-                })
-                .catch(() => {
-                    setIsAuthenticated(false);
-                    setUserRole("");
-                    setUserId("");
-                    console.log("驗證失敗，狀態已重置");
-                });
-        }
-    };
+    
 
     const handleLogout = () => {
         localStorage.removeItem("authToken"); // 清除令牌

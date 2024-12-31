@@ -1,6 +1,6 @@
 import React from "react";
 
-const PreviousWorks = () => {
+const PreviousProjects = () => {
     return (
         <div className="page">
             <h1>歷屆作品檢視</h1>
@@ -19,4 +19,4 @@ const PreviousWorks = () => {
     );
 };
 
-export default PreviousWorks;
+export default PreviousProjects;

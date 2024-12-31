@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import Announcement from "./components/Announcement";
 import AccountManagement from "./components/AccountManagement/AccountManagement";
@@ -10,8 +10,58 @@ import RatingSystem from "./components/RatingSystem/RatingSystem";
 import PreviousProject from "./components/PreviousProject";
 import Login from "./components/Login";
 import "./App.css";
+import axios from "axios";
+
+// 受保護路由組件
+const ProtectedRoute = ({ children, isAuthenticated }) => {
+    if (!isAuthenticated) {
+        return <Navigate to="/login" />;
+    }
+    return children;
+};
 
 function App() {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [userRole, setUserRole] = useState(""); // 保存用戶角色
+    const [userId, setUserId] = useState(""); // 保存用戶學號
+
+    // 檢查登入狀態
+    useEffect(() => {
+        checkAuth(); // 初始化檢查登入狀態
+    }, []);
+
+    const checkAuth = () => {
+        const token = localStorage.getItem("authToken");
+        console.log("檢查登入狀態，令牌:", token); // 調試輸出
+
+        if (token) {
+            axios
+                .get("http://127.0.0.1:5000/api/auth/protected", {
+                    headers: { Authorization: `Bearer ${token}` },
+                })
+                .then((response) => {
+                    setIsAuthenticated(true);
+                    setUserRole(response.data.data.role);
+                    setUserId(response.data.data.student_id);
+                    console.log("驗證成功，狀態已更新");
+                })
+                .catch(() => {
+                    setIsAuthenticated(false);
+                    setUserRole("");
+                    setUserId("");
+                    console.log("驗證失敗，狀態已重置");
+                });
+        }
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem("authToken"); // 清除令牌
+        setIsAuthenticated(false); // 更新狀態
+        setUserRole("");
+        setUserId("");
+        console.log("已登出");
+    };
+
     return (
         <Router>
             <div className="App">
@@ -21,31 +71,60 @@ function App() {
                     <nav className="sidebar">
                         <ul>
                             <li><Link to="/">首頁</Link></li>
-                            <li><Link to="/account-management">帳號管理</Link></li>
-                            <li><Link to="/register-account">註冊帳號</Link></li>
-                            <li><Link to="/enroll-form">報名表單</Link></li>
+                            {userRole === "admin" && (
+                                <li><Link to="/account-management">帳號管理</Link></li>
+                            )}
+                            {isAuthenticated && userRole !== "student" && (
+                                <li><Link to="/rating-system">評分系統</Link></li>
+                            )}
+                            {!isAuthenticated && (
+                                <li><Link to="/register-account">註冊帳號</Link></li>
+                            )}
+                            {userRole !== "teacher" && (
+                                <li><Link to="/enroll-form">報名表單</Link></li>
+                            )}
                             <li><Link to="/project-list">作品列表</Link></li>
-                            <li><Link to="/rating-system">評分系統</Link></li>
                             <li><Link to="/previous-project">往屆作品</Link></li>
                         </ul>
 
-                        {/* 左下角固定的登入按鈕 */}
+                        {/* 左下角用戶信息與登出按鈕 */}
                         <div className="sidebar-bottom">
-                            <Link to="/login">登入</Link>
+                            {isAuthenticated ? (
+                                <>
+                                    <p>ID: {userId}</p>
+                                    <p>身份別: {userRole}</p>
+                                    <button onClick={handleLogout}>登出</button>
+                                </>
+                            ) : (
+                                <Link to="/login">登入</Link>
+                            )}
                         </div>
                     </nav>
 
-
-                    {/* 主要內容 */}
+                    {/* 主內容區域 */}
                     <div className="main-content">
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/announcement" element={<Announcement />} />
-                            <Route path="/account-management" element={<AccountManagement />} />
+                            <Route
+                                path="/account-management"
+                                element={
+                                    <ProtectedRoute isAuthenticated={isAuthenticated && userRole === "admin"}>
+                                        <AccountManagement />
+                                    </ProtectedRoute>
+                                }
+                            />
                             <Route path="/register-account" element={<RegisterAccount />} />
                             <Route path="/enroll-form" element={<EnrollForm />} />
                             <Route path="/project-list" element={<ProjectList />} />
-                            <Route path="/rating-system" element={<RatingSystem />} />
+                            <Route
+                                path="/rating-system"
+                                element={
+                                    <ProtectedRoute isAuthenticated={isAuthenticated && userRole !== "student"}>
+                                        <RatingSystem />
+                                    </ProtectedRoute>
+                                }
+                            />
                             <Route path="/previous-project" element={<PreviousProject />} />
                             <Route path="/login" element={<Login />} />
                         </Routes>

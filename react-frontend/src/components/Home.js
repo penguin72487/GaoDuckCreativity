@@ -12,7 +12,7 @@ const Home = () => {
     }, []);
 
     return (
-        <React.Fragment>
+        <>
             <div className="page">
                 <h1>首頁</h1>
                 <p>{data || "Loading..."}</p>
@@ -20,7 +20,7 @@ const Home = () => {
             <div className="page">
                 <Announcement />
             </div>
-        </React.Fragment>
+        </>
     );
 };
 

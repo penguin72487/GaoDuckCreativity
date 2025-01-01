@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Announcement from "./Announcement";
+import Announcement from "./Announcement/Announcement";
 
 const Home = () => {
     const [data, setData] = useState("");

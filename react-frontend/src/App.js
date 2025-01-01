@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import Home from "./components/Home";
-import Announcement from "./components/Announcement";
+import Announcement from "./components/Announcement/Announcement";
+import AnnouncementPage from "./components/Announcement/AnnouncementPage";
 import AccountManagement from "./components/AccountManagement/AccountManagement";
 import RegisterAccount from "./components/RegisterAccount";
 import EnrollForm from "./components/EnrollForm";
@@ -69,6 +70,7 @@ function App() {
                     <nav className="sidebar">
                         <ul>
                             <li><Link to="/">首頁</Link></li>
+                            <li><Link to="/announcements">最新公告</Link></li>
                             {userRole === "admin" && (
                                 <li><Link to="/account-management">帳號管理</Link></li>
                             )}
@@ -105,6 +107,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/announcement" element={<Announcement />} />
+                            <Route path="/announcements" element={<AnnouncementPage />} />          
                             <Route
                                 path="/account-management"
                                 element={

@@ -379,7 +379,7 @@ LIMIT {_number} OFFSET {_offset};
 
 
 
-    def submitproject(self, description, poster_file_id, video_link, github_link, t_id):
+    def submitproject(self, p_name,description, poster_file_id, video_link, github_link, t_id):
 
 
         #檢查該隊伍是否已有project
@@ -397,12 +397,47 @@ LIMIT {_number} OFFSET {_offset};
 
 
         base_query = f"""
-                    INSERT INTO `project` ( `description`, `poster_file_id`, `video_link`, `github_link`, `t_id`) 
-                    VALUES ( %s, %s, %s, %s, %s)
+                    INSERT INTO `project` (p_name, `description`, `poster_file_id`, `video_link`, `github_link`, `t_id`) 
+                    VALUES ( %s,%s, %s, %s, %s, %s)
                   """
-        self.cursor.execute(base_query, (description, poster_file_id, video_link, github_link, t_id))
+        self.cursor.execute(base_query, (p_name,description, poster_file_id, video_link, github_link, t_id))
         self.connection.commit()
         return "succ"
+
+    def getproject(self,t_id):
+        base_query = f"""
+        SELECT *
+        FROM `project`
+        where t_id = {t_id};
+             """
+        self.cursor.execute(base_query)
+        result = self.cursor.fetchone()
+
+        return result
+    def modiproject(self, p_name,description, poster_file_id, video_link, github_link, t_id):
+        _p_id=self.getproject(t_id)
+        if _p_id==None:
+            return "你的隊伍沒有提交過project"
+
+
+        base_query = """
+        UPDATE `project`
+        SET p_name = %s,
+            description = %s,
+            poster_file_id = %s,
+            video_link = %s,
+            github_link = %s
+        WHERE p_id = %s;
+                     """
+        self.cursor.execute(
+            base_query,
+            (
+             p_name,description,poster_file_id,video_link,github_link,_p_id[0]
+            ),
+        )
+        self.connection.commit()
+        return "修改成功"
+
     def close_connection(self):
         """
         關閉資料庫連線。
@@ -427,27 +462,37 @@ if __name__ == "__main__":
     db = SqlAPI()
     #print(db.userchangepassword(18,"securepassword","saltedpassword7777"))
     #print(db.userchangepassword(10, "worng_old_pw", "saltedpassword7777"))
+
+
+
+
+
+
+
+###############################
+#########announcement
     #db.postannouncement("標afa題","<br>aaa2<br>","18")
-
     #results_of_getann_list=db.getannouncementlist("2",3)
-
     #for row in results_of_getann:
-    #    print(f"ID: {row[0]}, Title: {row[1]}, Publish Time: {row[2]}")
-
-
-    #results_of_getann_body=db.getannouncementbody("2")
+    #print(f"ID: {row[0]}, Title: {row[1]}, Publish Time: {row[2]}")
+    #results_of_getann_body=db.getannouncementbody("2"
     #print(f"title: {results_of_getann_body[0]}, pubish_u_id: {results_of_getann_body[1]},body: {results_of_getann_body[2]} .Publish Time: {results_of_getann_body[3]} last Update Time: {results_of_getann_body[4]}")
-
-
     #db.modiannouncement(1,"測試修改標題","<br><h1>測試正文</h1><p>abc</p>","18")
 
-    print(db.submitproject("非常有創意的project","3","https://youtube.com/xxx","https://github.com/xxx","5"))
 
 
 
 
+#########################
+########project:
+    #print(db.submitproject("test","非常有創意的project","3","https://youtube.com/xxx","https://github.com/xxx","5"))
+    #print(db.getproject(5))
+    #print(db.modiproject("cesi", "非常SB的project", "3", "https://youtube.com/yyy", "https://github.com/yyy", "5"))
 
 
+
+######################################################
+############team:
     #print(db.createteam("屌爆了","4","10","AWVISAJWNS"))
     #print(db.jointeam("5","7","AWVISAJW2NS"))
 

@@ -78,8 +78,8 @@ class SqlAPI:
 
             # 基本插入查詢
             base_query = """
-            INSERT INTO `user` (ID_num, name, phone, email, password, address, is_admin, is_rater, is_student, is_teacher, admin_type, rater_title, s_t_id, t_t_id)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO `user` (ID_num, name, phone, email, password, address, is_admin, is_rater, is_student, is_teacher, admin_type, rater_title )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
 
             # 根據使用者類型設置對應的值
@@ -90,8 +90,6 @@ class SqlAPI:
 
             admin_type = kwargs.get("admin_type", None)
             rater_title = kwargs.get("rater_title", None)
-            s_t_id = kwargs.get("s_t_id", None)
-            t_t_id = kwargs.get("t_t_id", None)
 
             # 執行插入
             self.cursor.execute(
@@ -108,9 +106,7 @@ class SqlAPI:
                     is_student,
                     is_teacher,
                     admin_type,
-                    rater_title,
-                    s_t_id,
-                    t_t_id,
+                    rater_title
                 ),
             )
             self.connection.commit()
@@ -163,23 +159,127 @@ class SqlAPI:
 
         return "密碼修改成功"
 
-    def groupateam(self,t_name, leader_u_id, teammate_2_u_id, teammate_3_u_id, teammate_4_u_id, teammate_5_u_id, teammate_6_u_id, teacher_u_id):
+    def isstudentinteam(self, u_id):
         """
-        組織一個團隊，學生人數2~6人，指導老師0~1人
-        隊名大小 varchar（20）
-        t_name,               隊伍名稱
-        leader_u_id,         隊長uid
-        teammate_2_u_id,     隊員2uid
-        teammate_3_u_id,     隊員3uid
-        teammate_4_u_id,     隊員4uid
-        teammate_5_u_id,     隊員5uid
-        teammate_6_u_id,     隊員6uid
-        teacher_u_id         指導老師uid
+
+
+        :param u_id: 使用者id
+        :return: 隊伍id，如果uid在隊伍內。如未在隊伍，return -1
         """
-    base_query = """
-                 INSERT INTO `team` ( t_name, leader_u_id, teacher_u_id)
-                 VALUES (%s, %s, %s)
-                 """
+
+        # 查詢是否為隊長的SQL語句
+        check_team_leader_query = f"""
+        SELECT t_id
+        FROM team
+        WHERE leader_u_id = {u_id}
+        """
+
+        # 查詢是否為隊員的SQL語句
+        check_teammate_query = f"""
+        SELECT t_id
+        FROM team_student
+        WHERE teammate_id = {u_id}
+        """
+
+        # 執行查詢以判斷是否為隊長
+        self.cursor.execute(check_team_leader_query)
+        leader_results = self.cursor.fetchall()
+        self.connection.commit()
+        if leader_results:
+            return leader_results[0][0]  # 返回隊伍ID
+
+        # 執行查詢以判斷是否為隊員
+        self.cursor.execute(check_teammate_query)
+        teammate_results = self.cursor.fetchall()
+        self.connection.commit()
+        if teammate_results:
+            return teammate_results[0][0]  # 返回隊伍ID
+
+        return -1  # 既不是隊長也不是隊員
+
+    def createteam(self, t_name, leader_u_id, teacher_u_id,join_team_pass):
+        """
+        組織一個團隊
+
+        t_name: 隊伍名稱varchar（20）
+        leader_u_id: 隊長 uid
+        teacher_u_id: 指導老師 uid
+        join_team_pass: 傳入varchar（10），後續其他學生加入隊伍需要使用此password
+
+        return :
+        result[0]: 1：創建隊伍成功，-1：已存在於隊伍
+        result[1]: 所屬隊伍id
+        """
+        result = [1,0]
+        result[1]=self.isstudentinteam(4)
+        if  result[1]!=-1:
+            result[0]=-1
+            return result
+
+        base_query = """
+                     INSERT INTO `team` (t_name, leader_u_id, teacher_u_id,join_team_pass)
+                     VALUES (%s, %s, %s,%s)
+                     """
+        # 執行插入操作
+        self.cursor.execute(
+            base_query,
+            (t_name, leader_u_id, teacher_u_id,join_team_pass),
+        )
+        # 提交變更到資料庫
+        self.connection.commit()
+
+        # 獲取自增的 t_id
+        result[1] = self.cursor.lastrowid
+        return result
+
+    def jointeam(self, t_id, student_u_id, join_team_pass):
+        """
+        加入隊伍
+        """
+
+
+        #檢查是否存在在team
+        team_id_result =self.isstudentinteam(student_u_id)
+        if  team_id_result!=-1:
+            return f"你已存在於隊伍，隊伍編號：{team_id_result}"
+
+        #檢查授權碼是否正確
+        check_join_team_pass_query = """
+        SELECT t_id
+        FROM team
+        WHERE t_id = %s AND join_team_pass = %s
+        """
+        self.cursor.execute(check_join_team_pass_query, (t_id, join_team_pass))
+        result = self.cursor.fetchone()
+        if not result:
+            return "隊伍編號或隊伍授權碼錯誤"
+
+
+        #檢查隊伍是否滿人
+        query = """
+        SELECT COUNT(*) 
+        FROM team_student
+        WHERE t_id = %s
+        """
+        self.cursor.execute(query, (t_id))
+        count = self.cursor.fetchone()[0]
+        if count>4:
+            return "隊伍人數已滿"
+
+
+        base_query = f"""
+                     INSERT INTO `team_student` ( t_id,teammate_id)
+                     VALUES ({t_id}, {student_u_id})
+                     """
+        # 執行插入操作
+        self.cursor.execute(
+            base_query
+        )
+        # 提交變更到資料庫
+        self.connection.commit()
+
+        # 獲取自增的 t_id
+        return f"成功加入隊伍，隊伍編號：{self.cursor.lastrowid}"
     def postannouncement(self,title,information,publisher_u_id):
         """
     插入公告
@@ -311,7 +411,40 @@ if __name__ == "__main__":
     #print(f"title: {results_of_getann_body[0]}, pubish_u_id: {results_of_getann_body[1]},body: {results_of_getann_body[2]} .Publish Time: {results_of_getann_body[3]} last Update Time: {results_of_getann_body[4]}")
 
 
-    db.modiannouncement(1,"測試修改標題","<br><h1>測試正文</h1><p>abc</p>","18")
+    #db.modiannouncement(1,"測試修改標題","<br><h1>測試正文</h1><p>abc</p>","18")
+
+
+
+
+
+
+    #print(db.createteam("屌爆了","4","10","AWVISAJWNS"))
+    #print(db.jointeam("5","7","AWVISAJW2NS"))
+
+    #print(db.isstudentinteam(4))
+    #print(db.jointeam(5,24,"AWVISAJWNS"))
+    #print(db.jointeam(5,25,"AWVISAJWNS"))
+    #print(db.jointeam(5,26,"AWVISAJWNS"))
+    #print(db.jointeam(5,27,"AWVISAJWNS2")) #pw worng
+    #print(db.jointeam(5,28,"AWVISAJWNS"))
+    #print(db.jointeam(5,29,"AWVISAJWNS"))
+    #print(db.jointeam(5,31,"AWVISAJWNS"))
+    #print(db.jointeam(5,30,"AWVISAJWNS2")) #pw worng
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     #    # 用戶資訊
@@ -323,7 +456,6 @@ if __name__ == "__main__":
     #        password="securepassword",
     #        address="新北市板橋區",
     #        user_type="student",
-    #        s_t_id=None             # None is Null in sql
     #    )
     #
     #
@@ -349,7 +481,6 @@ if __name__ == "__main__":
     #        password="securepassword",
     #        address="高雄市苓雅區",
     #        user_type="teacher",
-    #        t_t_id=None  # 所屬團隊 ID
     #    )
     #    print(result)
     #    result = db.userreg(

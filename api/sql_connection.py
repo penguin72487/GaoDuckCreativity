@@ -177,10 +177,13 @@ class SqlAPI:
         teacher_u_id         指導老師uid
         """
     base_query = """
-                 INSERT INTO `team` ( t_name, leader_u_id, teammate_2_u_id, teammate_3_u_id, teammate_4_u_id, teammate_5_u_id, teammate_6_u_id, teacher_u_id)
-                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                 INSERT INTO `team` ( t_name, leader_u_id, teacher_u_id)
+                 VALUES (%s, %s, %s)
                  """
     def postannouncement(self,title,information,publisher_u_id):
+        """
+    插入公告
+        """
         base_query = """
             INSERT INTO `announcement` (title, information,publisher_u_id)
             VALUES (%s, %s, %s)
@@ -196,6 +199,36 @@ class SqlAPI:
         )
         self.connection.commit()
         return "發佈成功"
+
+
+
+
+
+    def getannouncementlist(self,_number,_offset):
+        """
+    按發佈時間獲取公告
+    偏移_offset筆
+    一共獲取前_number筆
+
+    return 公告id:row[0]，標題:row[1]，發佈者:row[2]
+        """
+        base_query=f"""
+SELECT 
+    announcement_id, 
+    title, 
+    publish_timestamp 
+FROM 
+    `announcement`
+ORDER BY 
+    publish_timestamp DESC
+LIMIT {_number} OFFSET {_offset};
+"""
+        self.cursor.execute(base_query)
+        results = self.cursor.fetchall()
+
+        return results
+
+
 
 
     def close_connection(self):
@@ -222,7 +255,14 @@ if __name__ == "__main__":
     db = SqlAPI()
     #print(db.userchangepassword(18,"securepassword","saltedpassword7777"))
     #print(db.userchangepassword(10, "worng_old_pw", "saltedpassword7777"))
-    db.postannouncement("標題","<br>aaa<br>","18")
+    #db.postannouncement("標afa題","<br>aaa2<br>","18")
+
+    results_of_getann=db.getannouncementlist("2",3)
+
+    for row in results_of_getann:
+        print(f"ID: {row[0]}, Title: {row[1]}, Publish Time: {row[2]}")
+
+
     #    # 用戶資訊
     #    result = db.userreg(
     #        id_num="A147909161",

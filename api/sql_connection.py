@@ -8,7 +8,7 @@ class SqlAPI:
 
         """
         try:
-            with open("api\\sql_config.json", 'r') as file:
+            with open("sql_config.json", 'r') as file:
                 config = json.load(file)
 
             self.connection = pymysql.connect(
@@ -180,6 +180,23 @@ class SqlAPI:
                  INSERT INTO `team` ( t_name, leader_u_id, teammate_2_u_id, teammate_3_u_id, teammate_4_u_id, teammate_5_u_id, teammate_6_u_id, teacher_u_id)
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                  """
+    def postannouncement(self,title,information,publisher_u_id):
+        base_query = """
+            INSERT INTO `announcement` (title, information,publisher_u_id)
+            VALUES (%s, %s, %s)
+             """
+        self.cursor.execute(
+            base_query,
+            (
+                title,
+                information,
+                publisher_u_id
+
+            ),
+        )
+        self.connection.commit()
+        return "發佈成功"
+
 
     def close_connection(self):
         """
@@ -203,9 +220,9 @@ if __name__ == "__main__":
     # https://people.debian.org/~paulliu/ROCid.html
 
     db = SqlAPI()
-    print(db.userchangepassword(18,"securepassword","saltedpassword7777"))
-    print(db.userchangepassword(10, "worng_old_pw", "saltedpassword7777"))
-
+    #print(db.userchangepassword(18,"securepassword","saltedpassword7777"))
+    #print(db.userchangepassword(10, "worng_old_pw", "saltedpassword7777"))
+    db.postannouncement("標題","<br>aaa<br>","18")
     #    # 用戶資訊
     #    result = db.userreg(
     #        id_num="A147909161",

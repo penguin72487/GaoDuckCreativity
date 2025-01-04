@@ -26,8 +26,8 @@ class SqlAPI:
 
     def is_valid_roc_id(id_num):
         """
-        驗證中華民國身份證字號是否合法
-        :param id_num: 身份證字號
+        驗證中華民國身分證字號是否合法
+        :param id_num: 身分證字號
         :return: True 合法, False 不合法
         """
         return True #測試環境不驗證身份證合法性，正式上線時把這line去掉

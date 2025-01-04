@@ -404,6 +404,22 @@ LIMIT {_number} OFFSET {_offset};
         self.connection.commit()
         return "succ"
 
+    def getprojectlist(self, _number, _offset):
+        base_query = f"""
+          SELECT 
+              p_name, 
+              description
+               
+          FROM 
+              `project`
+          ORDER BY 
+              time DESC
+          LIMIT {_number} OFFSET {_offset};
+          """
+        self.cursor.execute(base_query)
+        results = self.cursor.fetchall()
+
+        return results
     def getproject(self,t_id):
         base_query = f"""
         SELECT *

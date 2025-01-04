@@ -10,18 +10,33 @@ server_data = {"message": "Initial data from /api/test endpoint"}
 def get_data():
     return jsonify({"message": "Hello from Flask!1236"})
 
-@api.route('/api/announcements', methods=['GET'])
-def get_announcement():
-    test_data = {
-        "announcements": [
-            { "date": "2024/12/10", "title": "比賽報名截止延長至12/31", "link": "#" },
-            { "date": "2024/12/05", "title": "新增作品上傳格式說明", "link": "#" },
-            { "date": "2024/12/01", "title": "評審名單公布", "link": "#" },
-            { "date": "2024/12/01", "title": "比賽報名開始", "link": "#" }
-        ]
+# 模擬公告資料
+announcements = [
+    {
+        "title": "系統維護公告",
+        "date": "2025-01-05",
+        "content": "系統將於 2025 年 1 月 10 日進行維護，期間可能無法正常使用。",
+        "link": "https://example.com/maintenance"
+    },
+    {
+        "title": "活動通知",
+        "date": "2025-01-01",
+        "content": "我們將於 2025 年 1 月 15 日舉行線上分享會，歡迎參加！",
+        "link": "https://example.com/event"
+    },
+    {
+        "title": "新功能上線",
+        "date": "2024-12-25",
+        "content": "新版功能已上線，請登入系統查看詳細資訊。",
+        "link": None
     }
+]
 
-    return jsonify(test_data)
+# 公告 API
+@api.route('/api/announcements', methods=['GET'])
+def get_announcements():
+    
+    return jsonify({"announcements": announcements})
 
 # @api.route('/api/accounts', methods=['GET'])
 # def get_accounts():

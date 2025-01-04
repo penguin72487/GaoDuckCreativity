@@ -8,7 +8,7 @@ class SqlAPI:
 
         """
         try:
-            with open("cofig/sql_config.json", 'r') as file:
+            with open("sql_config.json", 'r') as file:
                 config = json.load(file)
 
             self.connection = pymysql.connect(
@@ -375,6 +375,34 @@ LIMIT {_number} OFFSET {_offset};
 
         return result
 
+
+
+
+
+    def submitproject(self, description, poster_file_id, video_link, github_link, t_id):
+
+
+        #檢查該隊伍是否已有project
+        check_project_query="""
+        select p_id
+        from `project`
+        where t_id = %s"""
+        self.cursor.execute(check_project_query, (t_id))
+        # 如果該隊伍已有專案，則返回error
+        if self.cursor.fetchone():
+            return f"該隊伍已經有project"
+
+
+
+
+
+        base_query = f"""
+                    INSERT INTO `project` ( `description`, `poster_file_id`, `video_link`, `github_link`, `t_id`) 
+                    VALUES ( %s, %s, %s, %s, %s)
+                  """
+        self.cursor.execute(base_query, (description, poster_file_id, video_link, github_link, t_id))
+        self.connection.commit()
+        return "succ"
     def close_connection(self):
         """
         關閉資料庫連線。
@@ -412,6 +440,8 @@ if __name__ == "__main__":
 
 
     #db.modiannouncement(1,"測試修改標題","<br><h1>測試正文</h1><p>abc</p>","18")
+
+    print(db.submitproject("非常有創意的project","3","https://youtube.com/xxx","https://github.com/xxx","5"))
 
 
 

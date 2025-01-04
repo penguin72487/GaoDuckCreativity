@@ -418,7 +418,6 @@ LIMIT {_number} OFFSET {_offset};
           """
         self.cursor.execute(base_query)
         results = self.cursor.fetchall()
-
         return results
     def getprojectdetail(self,t_id):
         base_query = f"""

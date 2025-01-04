@@ -353,7 +353,7 @@ LIMIT {_number} OFFSET {_offset};
         return results
 
 
-    def getannouncementbody(self,announcement_id):
+    def getannouncementdetail(self,announcement_id):
         """
     按獲取公告id=announcement_id的公告
 
@@ -420,7 +420,7 @@ LIMIT {_number} OFFSET {_offset};
         results = self.cursor.fetchall()
 
         return results
-    def getproject(self,t_id):
+    def getprojectdetail(self,t_id):
         base_query = f"""
         SELECT *
         FROM `project`
@@ -491,7 +491,7 @@ if __name__ == "__main__":
     #results_of_getann_list=db.getannouncementlist("2",3)
     #for row in results_of_getann:
     #print(f"ID: {row[0]}, Title: {row[1]}, Publish Time: {row[2]}")
-    #results_of_getann_body=db.getannouncementbody("2"
+    #results_of_getann_body=db.getannouncementdetail("2"
     #print(f"title: {results_of_getann_body[0]}, pubish_u_id: {results_of_getann_body[1]},body: {results_of_getann_body[2]} .Publish Time: {results_of_getann_body[3]} last Update Time: {results_of_getann_body[4]}")
     #db.modiannouncement(1,"測試修改標題","<br><h1>測試正文</h1><p>abc</p>","18")
 
@@ -502,7 +502,7 @@ if __name__ == "__main__":
 #########################
 ########project:
     #print(db.submitproject("test","非常有創意的project","3","https://youtube.com/xxx","https://github.com/xxx","5"))
-    #print(db.getproject(5))
+    #print(db.getprojectdetail(5))
     #print(db.modiproject("cesi", "非常SB的project", "3", "https://youtube.com/yyy", "https://github.com/yyy", "5"))
 
 

@@ -200,6 +200,30 @@ class SqlAPI:
         self.connection.commit()
         return "發佈成功"
 
+    def modiannouncement(self,a_id,title,information,publisher_u_id):
+        """
+    修改公告
+    傳入： 公告id，標題，正文，發佈者id
+        """
+        base_query = """
+UPDATE `announcement`
+SET title = %s, 
+    information = %s,
+    publisher_u_id = %s
+WHERE announcement_id = %s;
+             """
+        self.cursor.execute(
+            base_query,
+            (
+                title,
+                information,
+                publisher_u_id,
+                a_id
+            ),
+        )
+        self.connection.commit()
+        return "修改成功"
+
 
 
 
@@ -283,11 +307,11 @@ if __name__ == "__main__":
     #    print(f"ID: {row[0]}, Title: {row[1]}, Publish Time: {row[2]}")
 
 
-    results_of_getann_body=db.getannouncementbody("2")
-    print(f"title: {results_of_getann_body[0]}, pubish_u_id: {results_of_getann_body[1]},body: {results_of_getann_body[2]} .Publish Time: {results_of_getann_body[3]} last Update Time: {results_of_getann_body[4]}")
+    #results_of_getann_body=db.getannouncementbody("2")
+    #print(f"title: {results_of_getann_body[0]}, pubish_u_id: {results_of_getann_body[1]},body: {results_of_getann_body[2]} .Publish Time: {results_of_getann_body[3]} last Update Time: {results_of_getann_body[4]}")
 
 
-
+    db.modiannouncement(1,"測試修改標題","<br><h1>測試正文</h1><p>abc</p>","18")
 
 
     #    # 用戶資訊

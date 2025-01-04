@@ -200,6 +200,30 @@ class SqlAPI:
         self.connection.commit()
         return "發佈成功"
 
+    def modiannouncement(self,a_id,title,information,publisher_u_id):
+        """
+    修改公告
+    傳入： 公告id，標題，正文，發佈者id
+        """
+        base_query = """
+UPDATE `announcement`
+SET title = %s, 
+    information = %s,
+    publisher_u_id = %s
+WHERE announcement_id = %s;
+             """
+        self.cursor.execute(
+            base_query,
+            (
+                title,
+                information,
+                publisher_u_id,
+                a_id
+            ),
+        )
+        self.connection.commit()
+        return "修改成功"
+
 
 
 
@@ -229,7 +253,27 @@ LIMIT {_number} OFFSET {_offset};
         return results
 
 
+    def getannouncementbody(self,announcement_id):
+        """
+    按獲取公告id=announcement_id的公告
 
+    return：
+    row[0]:公告標題
+    row[1]:發佈者u_id
+    row[2]:內文
+    row[3]:發佈時間
+    row[4]:最後修改時間
+
+        """
+        base_query = f"""
+        SELECT title,publisher_u_id, information, publish_timestamp,last_update_timestamp
+        FROM `announcement`
+        where announcement_id = {announcement_id};
+             """
+        self.cursor.execute(base_query)
+        result = self.cursor.fetchone()
+
+        return result
 
     def close_connection(self):
         """
@@ -257,10 +301,17 @@ if __name__ == "__main__":
     #print(db.userchangepassword(10, "worng_old_pw", "saltedpassword7777"))
     #db.postannouncement("標afa題","<br>aaa2<br>","18")
 
-    results_of_getann=db.getannouncementlist("2",3)
+    #results_of_getann_list=db.getannouncementlist("2",3)
 
-    for row in results_of_getann:
-        print(f"ID: {row[0]}, Title: {row[1]}, Publish Time: {row[2]}")
+    #for row in results_of_getann:
+    #    print(f"ID: {row[0]}, Title: {row[1]}, Publish Time: {row[2]}")
+
+
+    #results_of_getann_body=db.getannouncementbody("2")
+    #print(f"title: {results_of_getann_body[0]}, pubish_u_id: {results_of_getann_body[1]},body: {results_of_getann_body[2]} .Publish Time: {results_of_getann_body[3]} last Update Time: {results_of_getann_body[4]}")
+
+
+    db.modiannouncement(1,"測試修改標題","<br><h1>測試正文</h1><p>abc</p>","18")
 
 
     #    # 用戶資訊

@@ -726,13 +726,13 @@ if __name__ == "__main__":
         stu_id="A1154444"
     )
     result = db.userreg(
-        ID_num="Q144909351",
-        name="評委X",
-        phone="0922344420",
-        email="rt222t@example.com",
+        ID_num="Q144902351",
+        name="評委B",
+        phone="0922343330",
+        email="rt2BBBBBBBB@example.com",
         password="securepassword",
         address="新北市板橋區",
-        role="student",
+        role="rater",
         admin_type=None,
         rater_title="臺師大",
         stu_id=None
@@ -742,7 +742,7 @@ if __name__ == "__main__":
 
 
     #
-    #
+
     print(result)  # 輸出註冊結果
     #
     #result = db.userreg(

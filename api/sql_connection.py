@@ -325,15 +325,28 @@ class SqlAPI:
         self.cursor.execute(base_query)
         results = self.cursor.fetchall()
         return results
-    def getprojectdetail(self,p_id):
-        base_query = f"""
+    def getprojectdetail(self,p_id=None,u_id=None):
+        """
+        可選根據project id或學生u_id獲取project詳情
+        :param p_id: 二選一
+        :param u_id: 二選一
+        :return: project詳情
+        """
+        pid=0
+        if u_id:
+            if self.getprojectpidfromuid(u_id) ==-1:
+                return "該學生沒有project"
+            pid=self.getprojectpidfromuid(u_id)[0]
+        else:
+            pid=p_id
+
+
+        base_query = """
         SELECT *
         FROM `project`
-        where p_id = {p_id};
-             """
-        self.cursor.execute(base_query)
+        where p_id = %s;"""
+        self.cursor.execute(base_query,(pid,))
         result = self.cursor.fetchone()
-
         return result
     def getprojectpidfromuid(self,u_id):
         """
@@ -553,18 +566,25 @@ if __name__ == "__main__":
     #print(db.getprojectdetail(5))
 
 
-with open(r"C:\Users\user\Documents\ShareX\Screenshots\2025-01\pycharm64_fWuLkl3JDY.png", "rb") as image_file:
-    image_data = image_file.read()
-# result=db.submitproject(leader_id="42",teammate2_id=21,teammate3_id=22,teammate4_id=None,teammate5_id=None,teammate6_id=None
-#                        ,teacher_id=39,p_name="sbproject",description_file=image_data,poster_file=image_data,video_link="ytyt",github_link="gayhub")
+    #with open(r"C:\Users\user\Documents\ShareX\Screenshots\2025-01\pycharm64_fWuLkl3JDY.png", "rb") as image_file:
+    #    image_data = image_file.read()
+    ## result=db.submitproject(leader_id="42",teammate2_id=21,teammate3_id=22,teammate4_id=None,teammate5_id=None,teammate6_id=None
+    ##                        ,teacher_id=39,p_name="sbproject",description_file=image_data,poster_file=image_data,video_link="ytyt",github_link="gayhub")
+    #
+    #
+    #result = db.modiproject(std_id=21, p_name="AI飛行棋", description_file=image_data, poster_file=image_data,
+    #                        video_link="newyt", github_link="new_gh")
+    #
+    #print(result)  # 輸出註冊結果
 
+    res= db.getprojectdetail(u_id=42)
+    print(res)
 
-result = db.modiproject(std_id=21, p_name="AI飛行棋", description_file=image_data, poster_file=image_data,
-                        video_link="newyt", github_link="new_gh")
+    res= db.getprojectdetail(p_id=6)
+    print(res)
 
-print(result)  # 輸出註冊結果
-
-
+    res= db.getprojectdetail(u_id=55)
+    print(res)
 
 
 

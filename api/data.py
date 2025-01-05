@@ -1,35 +1,18 @@
 from flask import Blueprint, jsonify, request
 from api.sql_connection import SqlAPI
+
 # 定義 Blueprint
 api = Blueprint('data_api', __name__)
 db = SqlAPI()
+
 # 模擬的伺服器資料
 server_data = {"message": "Initial data from /api/test endpoint"}
 
 @api.route('/api/data', methods=['GET'])
 def get_data():
     return jsonify({"message": "Hello from Flask!1236"})
-# 公告 API
-@api.route('/api/announcements', methods=['GET'])
-def get_announcements():
-    db = SqlAPI()  # 每次請求時重新建立資料庫連線
-    try:
-        # 執行查詢
-        db.cursor.execute("SELECT title, information FROM announcement")
-        results = db.cursor.fetchall()
 
-        # 處理結果
-        announcements = [{"title": row[0], "information": row[1]} for row in results]
-        print(announcements)
-        return jsonify({"announcements": announcements})
-    except Exception as e:
-        print(f"查詢失敗: {e}")
-        return []
-    finally:
-        db.connection.close()  # 確保連線在請求結束後關閉
-
-    
-
+# 其他 API 路由
 # @api.route('/api/accounts', methods=['GET'])
 # def get_accounts():
 #     test_data = {
@@ -45,7 +28,6 @@ def get_announcements():
 #     data = request.json
 #     print(data)
 #     return jsonify({"message": "Account added"})
-# #     return jsonify({"message": "Account added", "data": data})
 
 # @api.route('/api/delete_account', methods=['POST'])
 # def delete_account():

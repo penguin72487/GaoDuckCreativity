@@ -65,6 +65,8 @@ function App() {
         console.log("已登出");
     };
 
+    const currentUser = { id: uId, role: userRole, userId: userId }; // 構建 currentUser 對象
+
     return (
         <Router>
             <div className="App">
@@ -140,7 +142,7 @@ function App() {
                                 path="/manage-announcements"
                                 element={
                                     <ProtectedRoute isAuthenticated={isAuthenticated && userRole === "admin"}>
-                                        <ManageAnnouncement />
+                                        <ManageAnnouncement currentUser={currentUser} />
                                     </ProtectedRoute>
                                 }
                             />

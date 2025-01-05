@@ -204,29 +204,20 @@ class SqlAPI:
         return "succ"
 
 
-    def getannouncementlist(self,_number,_offset):
+    def getannouncementlist(self, _number, _offset):
+        base_query = """
+            SELECT announcement_id, title, information, publish_timestamp 
+            FROM `announcement`
+            ORDER BY publish_timestamp DESC
+            LIMIT %s OFFSET %s;
         """
-    按發佈時間獲取公告
-    偏移_offset筆
-    一共獲取前_number筆
-
-    return 公告id:row[0]，標題:row[1]，發佈者:row[2]
-        """
-        base_query=f"""
-                                    SELECT 
-                        announcement_id, 
-                        title, 
-                        publish_timestamp 
-                    FROM            
-                        `announcement`
-                    ORDER BY 
-                        publish_timestamp DESC
-                    LIMIT {_number} OFFSET {_offset};
-            """
-        self.cursor.execute(base_query)
+        self.cursor.execute(base_query, (_number, _offset))
         results = self.cursor.fetchall()
 
-        return results
+        # 確保 JSON key 包含 `content`
+        return [{"id": row[0], "title": row[1], "content": row[2], "publish_timestamp": row[3]} for row in results]
+
+
 
 
     def getannouncementdetail(self,announcement_id):

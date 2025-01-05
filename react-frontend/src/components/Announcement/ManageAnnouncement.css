@@ -52,3 +52,9 @@
 .announcement-item p {
     margin: 5px 0;
 }
+
+.message {
+    color: green;
+    font-weight: bold;
+    margin-bottom: 20px;
+}

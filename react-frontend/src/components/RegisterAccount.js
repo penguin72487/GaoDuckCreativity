@@ -3,11 +3,16 @@ import axios from "axios";
 
 const RegisterAccount = () => {
     const [formData, setFormData] = useState({
+        ID_num: "",
+        stu_id: "",
         name: "",
-        student_id: "",
+        phone: "",
         email: "",
         password: "",
-        role: "student"
+        address: "",
+        admin_type: "",
+        rater_title: "",
+        role: "1" // 預設為學生
     });
 
     const handleChange = (e) => {
@@ -26,11 +31,18 @@ const RegisterAccount = () => {
         <div className="page">
             <h1>註冊帳號</h1>
             <form onSubmit={handleSubmit}>
-                <label>姓名</label>
+
+                <label>身份證字號</label>
+                <input type="text" name="ID_num" onChange={handleChange} />
+                
+                <label>學號</label>
+                <input type="text" name="stu_id" onChange={handleChange} />
+
+                <label>中文名</label>
                 <input type="text" name="name" onChange={handleChange} />
 
-                <label>學號</label>
-                <input type="text" name="student_id" onChange={handleChange} />
+                <label>電話號碼</label>
+                <input type="text" name="phone" onChange={handleChange} />
 
                 <label>Email</label>
                 <input type="email" name="email" onChange={handleChange} />
@@ -38,11 +50,21 @@ const RegisterAccount = () => {
                 <label>密碼</label>
                 <input type="password" name="password" onChange={handleChange} />
 
+                <label>住址</label>
+                <input type="text" name="address" onChange={handleChange} />
+
+                <label>管理者類型</label>
+                <input type="text" name="admin_type" onChange={handleChange} />
+
+                <label>評審標題</label>
+                <input type="text" name="rater_title" onChange={handleChange} />
+
                 <label>帳號類別</label>
                 <select name="role" onChange={handleChange}>
-                    <option value="student">學生</option>
-                    <option value="admin">管理者</option>
-                    <option value="judge">評審</option>
+                    <option value="1">學生</option>
+                    <option value="2">老師</option>
+                    <option value="3">評委</option>
+                    <option value="999">管理者</option>
                 </select>
 
                 <button type="submit">註冊</button>

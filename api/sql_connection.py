@@ -49,7 +49,6 @@ class SqlAPI:
         :param role: 使用者類型 ('admin', 'rater', 'student', 'teacher') 1=學生，2=老師，3=評委，99=admin
         :param stu_id: 學號（僅學生需要輸入）
         :return: 註冊結果訊息
-        資料庫內已對 身份證號丶email丶電話設置 unique，判斷重複註冊無需在python內處理
 
         """
         try:
@@ -751,8 +750,10 @@ if __name__ == "__main__":
     #    stu_id=None
     #)
 
+    with open(r"C:\Users\user\Documents\ShareX\Screenshots\2025-01\pycharm64_fWuLkl3JDY.png", "rb") as image_file:
+        image_data = image_file.read()
     result=db.submitproject(leader_id="42",teammate2_id=21,teammate3_id=22,teammate4_id=None,teammate5_id=None,teammate6_id=None
-                            ,teacher_id=39,p_name="sbproject",description_file=None,poster_file=None,video_link="ytyt",github_link="gayhub")
+                            ,teacher_id=39,p_name="sbproject",description_file=image_data,poster_file=image_data,video_link="ytyt",github_link="gayhub")
     print(result)  # 輸出註冊結果
     #
     #result = db.userreg(

@@ -30,7 +30,7 @@ const RegisterAccount = () => {
             <h1>註冊帳號</h1>
             <form onSubmit={handleSubmit}>
 
-                <label>身份證字號</label>
+                <label>使用者名稱</label>
                 <input type="text" name="ID_num" onChange={handleChange} />
 
                 {formData.role === "1" && (

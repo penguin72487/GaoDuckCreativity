@@ -168,3 +168,4 @@ cython_debug/
 *.vscode/*
 package-lock.json
 package.json
+.codegpt

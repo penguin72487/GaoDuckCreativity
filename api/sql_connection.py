@@ -46,7 +46,7 @@ class SqlAPI:
         :param phone: 電話號碼
         :param email: email
         :param password: 密碼
-        :param role: 使用者類型 ('admin', 'rater', 'student'#, 'teacher') 1=學生，2=老師，3=評委，99=admin
+        :param role: 使用者類型 ('admin', 'rater', 'student', 'teacher') 1=學生，2=老師，3=評委，99=admin
         :param stu_id: 學號（僅學生需要輸入）
         :return: 註冊結果訊息
         資料庫內已對 身份證號丶email丶電話設置 unique，判斷重複註冊無需在python內處理

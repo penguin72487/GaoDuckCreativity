@@ -412,7 +412,7 @@ class SqlAPI:
 
         base_query = f"""
                     INSERT INTO `project` ( p_id,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
                   """
         self.cursor.execute(base_query, ( p_id,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link))
         self.connection.commit()

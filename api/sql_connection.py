@@ -44,6 +44,7 @@ class SqlAPI:
             print(f"資料庫連線失敗或配置檔案錯誤: {e}")
 
     def is_valid_roc_id(id_num):
+
         """
         驗證中華民國身分證字號是否合法
         :param id_num: 身分證字號
@@ -472,6 +473,31 @@ LIMIT {_number} OFFSET {_offset};
         self.connection.commit()
         return "修改成功"
 
+    def uploadfile(self,path,uploader_t_id):
+        """
+        檔案保存到伺服器後，保存檔案的路徑
+
+        :param path: 檔案保存的路徑
+        :param uploader_t_id: 學生上傳：隊伍id，管理員上傳：None
+        :return:檔案id
+        """
+
+        base_query = """
+                  INSERT INTO `file` ( file_path, uploader_t_id)
+                  VALUES (%s, %s)
+                   """
+        self.cursor.execute(
+            base_query,
+            (
+               path,
+                uploader_t_id
+
+            ),
+        )
+        self.connection.commit()
+        return self.cursor.lastrowid
+
+
     def close_connection(self):
         """
         關閉資料庫連線。
@@ -543,7 +569,10 @@ if __name__ == "__main__":
 
 
 
-
+#############################
+########file:
+    print(db.uploadfile("apic_awubd.webp",None))
+    print(db.uploadfile("apic_awubd.webp","5"))
 
 
 

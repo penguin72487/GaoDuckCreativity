@@ -62,57 +62,44 @@ class SqlAPI:
 
         return total % 10 == 0
 
-    def userreg(self, id_num, name, phone, email, password, address, user_type, **kwargs):
+    def userreg(self,ID_num, name, phone, email, password, address, role,admin_type, rater_title,stu_id):
         """
         註冊新用戶。
-        :param id_num: 身份證字號
+        :param ID_num: 身份證字號
         :param name: 中文名
         :param phone: 電話號碼
         :param email: email
         :param password: 密碼
         :param address: 住址
-        :param user_type: 使用者類型 ('admin', 'rater', 'student', 'teacher')
-        :param kwargs: 額外的參數
+        :param role: 使用者類型 ('admin', 'rater', 'student', 'teacher') 1=學生，2=老師，3=評委，99=admin
+        :param stu_id: 學號（僅學生需要輸入）
         :return: 註冊結果訊息
         資料庫內已對 身份證號丶email丶電話設置 unique，判斷重複註冊無需在python內處理
 
         """
         try:
             # 驗證身份證字號合法性
-            if not SqlAPI.is_valid_roc_id(id_num):
+            if not SqlAPI.is_valid_roc_id(ID_num):
                 return "身份證字號不合法，請確認後重新輸入。"
-
+            role_code=0
+            if role=="student":
+                role_code=1
+            elif role=="teacher":
+                role_code=2
+            elif role=="rater":
+                role_code=3
+            elif role=="admin":
+                role_code=99
             # 基本插入查詢
             base_query = """
-            INSERT INTO `user` (ID_num, name, phone, email, password, address, is_admin, is_rater, is_student, is_teacher, admin_type, rater_title )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO `user` (ID_num, name, phone, email, password, address, role,admin_type, rater_title,stu_id )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)
             """
-
-            # 根據使用者類型設置對應的值
-            is_admin = 1 if user_type == "admin" else 0
-            is_rater = 1 if user_type == "rater" else 0
-            is_student = 1 if user_type == "student" else 0
-            is_teacher = 1 if user_type == "teacher" else 0
-
-            admin_type = kwargs.get("admin_type", None)
-            rater_title = kwargs.get("rater_title", None)
 
             # 執行插入
             self.cursor.execute(
                 base_query,
-                (
-                    id_num,
-                    name,
-                    phone,
-                    email,
-                    password,
-                    address,
-                    is_admin,
-                    is_rater,
-                    is_student,
-                    is_teacher,
-                    admin_type,
-                    rater_title
+                (ID_num, name, phone, email, password, address, role_code,admin_type, rater_title,stu_id
                 ),
             )
             self.connection.commit()
@@ -726,33 +713,37 @@ if __name__ == "__main__":
 
     #print(db.getavgrate(1))
 
+    result = db.userreg(
+        ID_num="Q144909361",
+        name="學生2",
+        phone="0922344450",
+        email="studen222t@example.com",
+        password="securepassword",
+        address="新北市板橋區",
+        role="student",
+        admin_type=None,
+        rater_title=None,
+        stu_id="A1154444"
+    )
+    result = db.userreg(
+        ID_num="Q144909351",
+        name="評委X",
+        phone="0922344420",
+        email="rt222t@example.com",
+        password="securepassword",
+        address="新北市板橋區",
+        role="student",
+        admin_type=None,
+        rater_title="臺師大",
+        stu_id=None
+    )
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-    #    # 用戶資訊
-    #    result = db.userreg(
-    #        id_num="A147909161",
-    #        name="學生1",
-    #        phone="0922334455",
-    #        email="student@example.com",
-    #        password="securepassword",
-    #        address="新北市板橋區",
-    #        user_type="student",
-    #    )
     #
     #
-    #    print(result)  # 輸出註冊結果
+    print(result)  # 輸出註冊結果
     #
     #result = db.userreg(
     #        id_num="A102954775",

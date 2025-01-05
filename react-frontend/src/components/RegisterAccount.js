@@ -45,12 +45,16 @@ const RegisterAccount = () => {
 
                 <label>使用者名稱</label>
                 <input type="text" name="ID_num" onChange={handleChange} />
+                {formData.role === "student" && (
+                    <>
+                        <label>{getRoleSpecificLabel()}</label>
+                        <input type="text" name="stu_id" onChange={handleChange}/>
+                    </>
+                )}
 
-                <label>{getRoleSpecificLabel()}</label>
-                <input type="text" name="stu_id" onChange={handleChange} />
 
                 <label>中文名</label>
-                <input type="text" name="name" onChange={handleChange} />
+                <input type="text" name="name" onChange={handleChange}/>
 
                 <label>電話號碼</label>
                 <input type="text" name="phone" onChange={handleChange} />

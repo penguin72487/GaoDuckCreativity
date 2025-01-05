@@ -55,7 +55,7 @@ const EnrollForm = () => {
         axios.post("http://127.0.0.1:5000/api/accounts/check", { student_id: teacherId })
             .then(response => {
                 const teacher = response.data.data;
-                if (teacher.role !== "admin" && teacher.role !== "teacher") {
+                if (teacher.role !== 99 && teacher.role !== 3) {
                     alert("該使用者不是教授，請輸入有效教授學號！");
                     return;
                 }

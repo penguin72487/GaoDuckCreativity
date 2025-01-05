@@ -42,14 +42,28 @@ def get_accounts():
 @api.route('/api/accounts/check', methods=['POST'])
 def check_account():
     data = request.json
-    student_id = data.get("student_id")
+    student_id = data.get("student_id")  # 獲取前端傳來的 student_id
+    if not student_id:
+        return jsonify({"message": "缺少 student_id 欄位", "error": True}), 400
 
-    # 確認 student_id 是否存在
-    account = next((acc for acc in accounts if acc["student_id"] == student_id), None)
-    if account:
-        return jsonify({"message": "隊員存在", "data": account}), 200
-    else:
-        return jsonify({"message": "該學號未註冊", "error": True}), 404
+    try:
+        # 查詢資料庫，確認是否存在該 student_id
+        query = """
+        SELECT stu_id, role FROM `user` WHERE ID_num = %s
+        """
+        db.cursor.execute(query, (student_id,))
+        result = db.cursor.fetchone()  # 獲取第一條符合的記錄
+        print(result)
+        if result:
+            stu_id, role = result
+            return jsonify({"message": "隊員存在", "data": {"stu_id": stu_id, "role": role}}), 200
+        else:
+            return jsonify({"message": "該學號未註冊", "error": True}), 404
+
+    except Exception as e:
+        print("檢查帳號時發生錯誤:", e)
+        return jsonify({"message": "伺服器錯誤，請稍後再試", "error": True}), 500
+
 
 
 

@@ -489,7 +489,7 @@ LIMIT {_number} OFFSET {_offset};
         獲取檔案在伺服器上的路徑
         :param file_id:
         :param viewer:已登入情況下：使用者u_id；未登入情況下：None
-        :return:文件路徑
+        :return:檔案路徑 / 403非法存取
         """
 
 

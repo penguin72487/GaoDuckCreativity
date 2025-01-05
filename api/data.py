@@ -12,6 +12,7 @@ def get_data():
 # 公告 API
 @api.route('/api/announcements', methods=['GET'])
 def get_announcements():
+    db = SqlAPI()  # 每次請求時重新建立資料庫連線
     try:
         # 執行查詢
         db.cursor.execute("SELECT title, information FROM announcement")
@@ -25,7 +26,7 @@ def get_announcements():
         print(f"查詢失敗: {e}")
         return []
     finally:
-        db.close()
+        db.connection.close()  # 確保連線在請求結束後關閉
 
     
 

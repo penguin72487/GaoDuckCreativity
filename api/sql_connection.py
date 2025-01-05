@@ -416,54 +416,7 @@ class SqlAPI:
         )
         self.connection.commit()
         return self.cursor.lastrowid
-    def getfile(self,file_id):
-        self.getfile(file_id,None)
-    def getfile(self,file_id,viewer):
-        """
-        獲取檔案在伺服器上的路徑
-        :param file_id:
-        :param viewer:已登入情況下：使用者u_id；未登入情況下：None
-        :return:檔案路徑 / 403非法存取
-        """
 
-
-        base_query="""
-        select * from `file`
-        where file_id = %s
-        """
-        self.cursor.execute(base_query,(file_id))
-        result = self.cursor.fetchone()
-        #如果是管理員上傳的檔案，任何人都能存取
-        if result[2] ==None:
-            return result[1]
-        if viewer == None:
-            return "403"
-        #如果非管理員上傳，只能由上傳者所屬隊伍的學生和老師丶評審委員丶管理員讀取
-        check_if_admin_or_rater_or_admin = """
-        select u_id
-        from   `user`
-        where (u_id = %s) and(is_admin = 1 or is_rater = 1)"""
-
-        self.cursor.execute(check_if_admin_or_rater_or_admin,(viewer))
-        result_of_check_if_admin_or_rater_or_admin = self.cursor.fetchone()
-        #print(result_of_check_if_admin_or_rater_or_admin)
-        if not result_of_check_if_admin_or_rater_or_admin == None: #是管理員/評審委員
-            return result[1]
-
-        #不是管理員/評審委員，判斷是否是檔案上傳隊伍的所屬學生/老師
-        check_if_teacher_or_teammate_in_team="""
-                                    select t_id from `team`
-                                    where leader_u_id=%s or teacher_u_id=%s
-                                    union
-                                    select t_id from `team_student`
-                                    where teammate_id=%s"""
-        self.cursor.execute(check_if_teacher_or_teammate_in_team,(viewer,viewer,viewer))
-        result_of_check_if_teacher_or_teammate_in_team = self.cursor.fetchone()
-
-        if not result_of_check_if_teacher_or_teammate_in_team == None: #檔案上傳隊伍的所屬學生/老師
-            return result[1]
-
-        return "403"
     def rateproject(self,rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness):
         """
 

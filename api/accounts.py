@@ -85,6 +85,7 @@ def delete_account():
 
 @api.route('/api/accounts/register', methods=['POST'])
 def register_account():
+    role = ["student","teacher","judge","admin"]
     # 從請求中取得 JSON 資料
     data = request.json
     print(data)
@@ -100,7 +101,7 @@ def register_account():
             return jsonify({"message": "學號已被註冊", "error": True}), 400
         if account["email"] == data["email"]:
             return jsonify({"message": "Email 已被註冊", "error": True}), 400
-
+    db.userreg(data["name"] ,data["student_id"], data["email"], data["password"], role.index(data["role"]))
     # 新增帳號資料
     new_account = {
         "id": len(accounts) + 1,  # 自動生成 ID

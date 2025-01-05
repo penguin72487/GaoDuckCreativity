@@ -41,8 +41,9 @@ const RegisterAccount = () => {
                 <label>帳號類別</label>
                 <select name="role" onChange={handleChange}>
                     <option value="student">學生</option>
-                    <option value="admin">管理者</option>
+                    <option value="teacher">老師</option>
                     <option value="judge">評審</option>
+                    <option value="admin">管理者</option>
                 </select>
 
                 <button type="submit">註冊</button>

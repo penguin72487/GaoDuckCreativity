@@ -89,29 +89,8 @@ def register_account():
     # 從請求中取得 JSON 資料
     data = request.json
     print(data)
-    # 檢查必填欄位
-    required_fields = ["name", "student_id", "email", "password", "role"]
-    for field in required_fields:
-        if field not in data:
-            return jsonify({"message": f"缺少必要欄位: {field}", "error": True}), 400
-
-    # 模擬檢查是否學號或 email 已存在
-    for account in accounts:
-        if account["student_id"] == data["student_id"]:
-            return jsonify({"message": "學號已被註冊", "error": True}), 400
-        if account["email"] == data["email"]:
-            return jsonify({"message": "Email 已被註冊", "error": True}), 400
-    db.userreg(data["name"] ,data["student_id"], data["email"], data["password"], role.index(data["role"]))
-    # 新增帳號資料
-    new_account = {
-        "id": len(accounts) + 1,  # 自動生成 ID
-        "name": data["name"],
-        "student_id": data["student_id"],
-        "email": data["email"],
-        "password": data["password"],  # 密碼直接存儲（作業中不加密）
-        "role": data["role"]
-    }
-    accounts.append(new_account)
+    
+    db.userreg(data["ID_num"],data["name"] , data["phone"], data["email"],data["password"], data["role"],data["rater_title"],data["stu_id"])
 
     # 回傳成功訊息
-    return jsonify({"message": "註冊成功", "data": new_account}), 201
+    return jsonify({"message": "註冊成功", "data": data}), 201

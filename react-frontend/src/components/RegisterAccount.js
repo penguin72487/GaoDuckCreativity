@@ -9,7 +9,7 @@ const RegisterAccount = () => {
         phone: "",
         email: "",
         password: "",
-        rater_title: "None",
+        rater_title: "",
         role: "student" // 預設為學生
     });
 
@@ -43,14 +43,18 @@ const RegisterAccount = () => {
             <h1>註冊帳號</h1>
             <form onSubmit={handleSubmit}>
 
-                <label>身份證字號</label>
+                <label>使用者名稱</label>
                 <input type="text" name="ID_num" onChange={handleChange} />
+                {formData.role === "student" && (
+                    <>
+                        <label>{getRoleSpecificLabel()}</label>
+                        <input type="text" name="stu_id" onChange={handleChange}/>
+                    </>
+                )}
 
-                <label>{getRoleSpecificLabel()}</label>
-                <input type="text" name="stu_id" onChange={handleChange} />
 
                 <label>中文名</label>
-                <input type="text" name="name" onChange={handleChange} />
+                <input type="text" name="name" onChange={handleChange}/>
 
                 <label>電話號碼</label>
                 <input type="text" name="phone" onChange={handleChange} />
@@ -63,7 +67,7 @@ const RegisterAccount = () => {
 
                 {formData.role === "rater" && (
                     <>
-                        <label>評審標題</label>
+                        <label>評審頭銜</label>
                         <input type="text" name="rater_title" onChange={handleChange} />
                     </>
                 )}

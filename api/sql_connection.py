@@ -313,8 +313,13 @@ class SqlAPI:
         self.connection.commit()
         return "修改成功"
 
-
-
+    def deleteannouncement(self,a_id):
+        base_query="""
+        DELETE FROM `announcement`
+        where announcement_id = %s;"""
+        self.cursor.execute(base_query, (a_id,))
+        self.connection.commit()
+        return "succ"
 
 
     def getannouncementlist(self,_number,_offset):
@@ -412,9 +417,9 @@ class SqlAPI:
 
         base_query = f"""
                     INSERT INTO `project` ( p_id,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
                   """
-        self.cursor.execute(base_query, ( p_id,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link))
+        self.cursor.execute(base_query, (p_id,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link))
         self.connection.commit()
         return "succ"
 

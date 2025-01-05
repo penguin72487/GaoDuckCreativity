@@ -9,8 +9,6 @@ const RegisterAccount = () => {
         phone: "",
         email: "",
         password: "",
-        address: "",
-        admin_type: "",
         rater_title: "",
         role: "1" // 預設為學生
     });
@@ -32,11 +30,15 @@ const RegisterAccount = () => {
             <h1>註冊帳號</h1>
             <form onSubmit={handleSubmit}>
 
-                <label>身份證字號</label>
+                <label>使用者名稱</label>
                 <input type="text" name="ID_num" onChange={handleChange} />
-                
-                <label>學號</label>
-                <input type="text" name="stu_id" onChange={handleChange} />
+
+                {formData.role === "1" && (
+                    <>
+                        <label>學號</label>
+                        <input type="text" name="stu_id" onChange={handleChange} />
+                    </>
+                )}
 
                 <label>中文名</label>
                 <input type="text" name="name" onChange={handleChange} />
@@ -50,14 +52,12 @@ const RegisterAccount = () => {
                 <label>密碼</label>
                 <input type="password" name="password" onChange={handleChange} />
 
-                <label>住址</label>
-                <input type="text" name="address" onChange={handleChange} />
-
-                <label>管理者類型</label>
-                <input type="text" name="admin_type" onChange={handleChange} />
-
-                <label>評審標題</label>
-                <input type="text" name="rater_title" onChange={handleChange} />
+                {formData.role === "3" && (
+                    <>
+                        <label>評審標題</label>
+                        <input type="text" name="rater_title" onChange={handleChange} />
+                    </>
+                )}
 
                 <label>帳號類別</label>
                 <select name="role" onChange={handleChange}>

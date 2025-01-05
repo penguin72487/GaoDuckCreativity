@@ -29,48 +29,15 @@ class SqlAPI:
 
             print(f"資料庫連線失敗或配置檔案錯誤: {e}")
 
-    def is_valid_roc_id(id_num):
 
-        """
-        驗證中華民國身分證字號是否合法
-        :param id_num: 身分證字號
-        :return: True 合法, False 不合法
-        """
-        return True #測試環境不驗證身份證合法性，正式上線時把這line去掉
-        if len(id_num) != 10 or not id_num[0].isalpha() or not id_num[1:].isdigit():
-            return False
-
-        # 第一個字母轉換為數字
-        first_letter = id_num[0].upper()
-        if not ('A' <= first_letter <= 'Z'):
-            return False
-
-        # 使用 ASCII Code 與 Offset 計算
-        ascii_offset = ord(first_letter) - 65  # 'A' 的 ASCII 是 65
-        converted_letter = 10 + ascii_offset  # 對應的數字：A -> 10, B -> 11, ..., Z -> 33
-
-        if first_letter == 'I':  # 特殊處理 I -> 34
-            converted_letter = 34
-        elif first_letter == 'O':  # 特殊處理 O -> 35
-            converted_letter = 35
-
-        # 計算檢查碼
-        total = (converted_letter // 10) + (converted_letter % 10) * 9
-        for i, digit in enumerate(id_num[1:9]):
-            total += int(digit) * (8 - i)
-        total += int(id_num[-1])  # 加上最後一碼
-
-        return total % 10 == 0
-
-    def userreg(self,ID_num, name, phone, email, password, address, role,admin_type, rater_title,stu_id):
+    def userreg(self,ID_num, name, phone, email, password, role,admin_type, rater_title,stu_id):
         """
         註冊新用戶。
-        :param ID_num: 身份證字號
+        :param ID_num: username
         :param name: 中文名
         :param phone: 電話號碼
         :param email: email
         :param password: 密碼
-        :param address: 住址
         :param role: 使用者類型 ('admin', 'rater', 'student', 'teacher') 1=學生，2=老師，3=評委，99=admin
         :param stu_id: 學號（僅學生需要輸入）
         :return: 註冊結果訊息
@@ -78,9 +45,6 @@ class SqlAPI:
 
         """
         try:
-            # 驗證身份證字號合法性
-            if not SqlAPI.is_valid_roc_id(ID_num):
-                return "身份證字號不合法，請確認後重新輸入。"
             role_code=0
             if role=="student":
                 role_code=1
@@ -92,14 +56,14 @@ class SqlAPI:
                 role_code=99
             # 基本插入查詢
             base_query = """
-            INSERT INTO `user` (ID_num, name, phone, email, password, address, role,admin_type, rater_title,stu_id )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)
+            INSERT INTO `user` (ID_num, name, phone, email, password, role,admin_type, rater_title,stu_id )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
 
             # 執行插入
             self.cursor.execute(
                 base_query,
-                (ID_num, name, phone, email, password, address, role_code,admin_type, rater_title,stu_id
+                (ID_num, name, phone, email, password, role_code,admin_type, rater_title,stu_id
                 ),
             )
             self.connection.commit()
@@ -109,7 +73,7 @@ class SqlAPI:
             # 處理唯一性約束錯誤
             if "Duplicate entry" in str(e):
                 if "ID_num" in str(e):
-                    return "身份證字號已存在，請確認或使用其他身份證字號。"
+                    return "使用者名稱已存在，請確認或使用其他使用者名稱。"
                 elif "phone" in str(e):
                     return "電話號碼已存在，請確認或使用其他電話號碼。"
                 elif "email" in str(e):
@@ -719,7 +683,6 @@ if __name__ == "__main__":
         phone="0922344450",
         email="studen222t@example.com",
         password="securepassword",
-        address="新北市板橋區",
         role="student",
         admin_type=None,
         rater_title=None,
@@ -731,7 +694,6 @@ if __name__ == "__main__":
         phone="0922343330",
         email="rt2BBBBBBBB@example.com",
         password="securepassword",
-        address="新北市板橋區",
         role="rater",
         admin_type=None,
         rater_title="臺師大",

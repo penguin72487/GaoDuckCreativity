@@ -217,7 +217,7 @@ class SqlAPI:
         result[1]: 所屬隊伍id
         """
         result = [1,0]
-        result[1]=self.isstudentinteam(4)
+        result[1]=self.isstudentinteam(leader_u_id)
         if  result[1]!=-1:
             result[0]=-1
             return result
@@ -465,7 +465,7 @@ LIMIT {_number} OFFSET {_offset};
 
         :param path: 檔案保存的路徑
         :param uploader_t_id: 學生上傳：隊伍id，管理員上傳：None
-        :return:檔案id
+        :return:檔案id file_id
         """
 
         base_query = """
@@ -482,7 +482,54 @@ LIMIT {_number} OFFSET {_offset};
         )
         self.connection.commit()
         return self.cursor.lastrowid
+    def getfile(self,file_id):
+        self.getfile(file_id,None)
+    def getfile(self,file_id,viewer):
+        """
+        獲取檔案在伺服器上的路徑
+        :param file_id:
+        :param viewer:已登入情況下：使用者u_id；未登入情況下：None
+        :return:文件路徑
+        """
 
+
+        base_query="""
+        select * from `file`
+        where file_id = %s
+        """
+        self.cursor.execute(base_query,(file_id))
+        result = self.cursor.fetchone()
+        #如果是管理員上傳的檔案，任何人都能存取
+        if result[2] ==None:
+            return result[1]
+        if viewer == None:
+            return "403"
+        #如果非管理員上傳，只能由上傳者所屬隊伍的學生和老師丶評審委員丶管理員讀取
+        check_if_admin_or_rater_or_admin = """
+        select u_id
+        from   `user`
+        where (u_id = %s) and(is_admin = 1 or is_rater = 1)"""
+
+        self.cursor.execute(check_if_admin_or_rater_or_admin,(viewer))
+        result_of_check_if_admin_or_rater_or_admin = self.cursor.fetchone()
+        #print(result_of_check_if_admin_or_rater_or_admin)
+        if not result_of_check_if_admin_or_rater_or_admin == None: #是管理員/評審委員
+            return result[1]
+
+        #不是管理員/評審委員，判斷是否是檔案上傳隊伍的所屬學生/老師
+        check_if_teacher_or_teammate_in_team="""
+select t_id from `team`
+where leader_u_id=%s or teacher_u_id=%s
+union
+select t_id from `team_student`
+where teammate_id=%s"""
+        self.cursor.execute(check_if_teacher_or_teammate_in_team,(viewer,viewer,viewer))
+        result_of_check_if_teacher_or_teammate_in_team = self.cursor.fetchone()
+
+        if not result_of_check_if_teacher_or_teammate_in_team == None: #檔案上傳隊伍的所屬學生/老師
+            return result[1]
+
+        return "403"
 
     def close_connection(self):
         """
@@ -498,9 +545,6 @@ LIMIT {_number} OFFSET {_offset};
 
 # 使用範例
 if __name__ == "__main__":
-
-
-
 
     # 中華民國身分證產生器
     # https://people.debian.org/~paulliu/ROCid.html
@@ -557,15 +601,20 @@ if __name__ == "__main__":
 
 #############################
 ########file:
-    print(db.uploadfile("apic_awubd.webp",None))
-    print(db.uploadfile("apic_awubd.webp","5"))
+    #print(db.uploadfile("apic_awubd.webp",None))
+    #print(db.uploadfile("apic_awubd.webp","5"))
 
 
 
 
 
-
-
+    print(db.getfile(6,7)) #評審
+    print(db.getfile(6,18)) #admin
+    print(db.getfile(6,4)) #學生：隊長
+    print(db.getfile(6,28)) #學生：隊員
+    print(db.getfile(6,38)) #學生：非該隊學生
+    print(db.getfile(6,39)) #老師：非指導老師
+    print(db.getfile(6,10)) #老師：指導老師
 
 
 
@@ -585,27 +634,27 @@ if __name__ == "__main__":
     #
     #    print(result)  # 輸出註冊結果
     #
-    #    result = db.userreg(
+    #result = db.userreg(
     #        id_num="A102954995",
     #        name="評分者1",
-    #        phone="0912345678",
+    #        phone="0912345678#",
     #        email="rater@example.com",
     #        password="securepassword",
     #        address="台北市大安區",
     #        user_type="rater",
     #        rater_title="筑波大學電腦科學系副教授"
     #    )
-    #    print(result)
+    #print(result)
     #
-    #    result = db.userreg(
-    #        id_num="C117528249",
-    #        name="教師1",
-    #        phone="0933445566",
-    #        email="teacher@example.com",
-    #        password="securepassword",
-    #        address="高雄市苓雅區",
-    #        user_type="teacher",
-    #    )
+    #result = db.userreg(
+    #    id_num="Z117528222",
+    #    name="教師2",
+    #    phone="0922222222",
+    #    email="two@222.com",
+    #    password="securepassword",
+    #    address="高雄市三民區",
+    #    user_type="teacher",
+    #)
     #    print(result)
     #    result = db.userreg(
     #        id_num="C114437590",

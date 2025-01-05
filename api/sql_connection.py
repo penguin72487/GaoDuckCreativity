@@ -46,7 +46,7 @@ class SqlAPI:
         :param phone: 電話號碼
         :param email: email
         :param password: 密碼
-        :param role: 使用者類型 ('admin', 'rater', 'student', 'teacher') 1=學生，2=老師，3=評委，99=admin
+        :param role: 使用者類型 ('admin', 'rater', 'student'#, 'teacher') 1=學生，2=老師，3=評委，99=admin
         :param stu_id: 學號（僅學生需要輸入）
         :return: 註冊結果訊息
         資料庫內已對 身份證號丶email丶電話設置 unique，判斷重複註冊無需在python內處理
@@ -700,10 +700,10 @@ if __name__ == "__main__":
     #print(db.modirate(p_id=1,rater_u_id=40,s_creativity=9,s_usability=8,s_design=7,s_completeness=6))
     #print(db.getrate(rater_u_id=40,p_id=1))
 
-    print(db.getusertype(4))
-    print(db.getusertype(7))
-    print(db.getusertype(10))
-    print(db.getusertype(18))
+    #print(db.getusertype(4))
+    #print(db.getusertype(7))
+    #print(db.getusertype(10))
+    #print(db.getusertype(18))
     #print(db.getavgrate(1))
 
     #result = db.userreg(
@@ -716,23 +716,18 @@ if __name__ == "__main__":
     #    rater_title=None,
     #    stu_id="A1154444"
     #)
-    #result = db.userreg(
-    #    ID_num="Q144902351",
-    #    name="評委B",
-    #    phone="0922343330",
-    #    email="rt2BBBBBBBB@example.com",
-    #    password="securepassword",
-    #    role="rater",
-    #    rater_title="臺師大",
-    #    stu_id=None
-    #)
+    result = db.userreg(
+        ID_num="banana",
+        name="評委Banana",
+        phone="0955888777",
+        email="banananananana@example.com",
+        password="securepassword",
+        role="rater",
+        rater_title="臺師大校長",
+        stu_id=None
+    )
 
-
-
-
-    #
-
-    #print(result)  # 輸出註冊結果
+    print(result)  # 輸出註冊結果
     #
     #result = db.userreg(
     #        id_num="A102954775",

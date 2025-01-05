@@ -75,7 +75,7 @@ class SqlAPI:
                 ),
             )
             self.connection.commit()
-            return "用戶註冊成功！"
+            return "ok"
 
         except pymysql.IntegrityError as e:
             # 處理唯一性約束錯誤

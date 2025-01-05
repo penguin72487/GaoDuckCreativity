@@ -103,20 +103,16 @@ def protected_route():
     return jsonify({"message": "授權成功", "data": valid_tokens[token]}), 200
 
 
-def role_type(role):
+def role_type(account):
+    role = account["is_admin"]
     ro = ""
-    if role.get("is_admin") == 1:
-        # 如果是管理員且 admin_type 有值，返回 "管理員 + admin_type"
-        if role.get("admin_type"):
-            ro =  f"管理員,{role.get('admin_type')}"
-        # 如果 admin_type 為 None，僅返回 "管理員"
-        ro =  "管理員"
-    elif role.get("is_teacher") == 1:
-        ro += ",教師"
-    elif role.get("is_student") == 1:
-        ro += ",學生"
-    elif role.get("is_rater") == 1:
-        ro += ",評審"
-    else:
-        return "未分類角色"
+    if role == 1:
+        ro = "student"
+    elif role == 2:
+        ro = "teacher"
+    elif role == 3:
+        ro = "rater"
+    elif role == 99:
+        ro = "admin"
+
     return ro

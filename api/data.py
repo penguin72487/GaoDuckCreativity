@@ -1,42 +1,32 @@
 from flask import Blueprint, jsonify, request
-
+from api.sql_connection import SqlAPI
 # 定義 Blueprint
 api = Blueprint('data_api', __name__)
-
+db = SqlAPI()
 # 模擬的伺服器資料
 server_data = {"message": "Initial data from /api/test endpoint"}
 
 @api.route('/api/data', methods=['GET'])
 def get_data():
     return jsonify({"message": "Hello from Flask!1236"})
-
-# 模擬公告資料
-announcements = [
-    {
-        "title": "系統維護公告",
-        "date": "2025-01-05",
-        "content": "系統將於 2025 年 1 月 10 日進行維護，期間可能無法正常使用。",
-        "link": "https://example.com/maintenance"
-    },
-    {
-        "title": "活動通知",
-        "date": "2025-01-01",
-        "content": "我們將於 2025 年 1 月 15 日舉行線上分享會，歡迎參加！",
-        "link": "https://example.com/event"
-    },
-    {
-        "title": "新功能上線",
-        "date": "2024-12-25",
-        "content": "新版功能已上線，請登入系統查看詳細資訊。",
-        "link": None
-    }
-]
-
 # 公告 API
 @api.route('/api/announcements', methods=['GET'])
 def get_announcements():
+    try:
+        # 執行查詢
+        db.cursor.execute("SELECT title, information FROM announcement")
+        results = db.cursor.fetchall()
+
+        # 處理結果
+        announcements = [{"title": row[0], "information": row[1]} for row in results]
+        return jsonify({"announcements": announcements})
+    except Exception as e:
+        print(f"查詢失敗: {e}")
+        return []
+    finally:
+        db.close()
+
     
-    return jsonify({"announcements": announcements})
 
 # @api.route('/api/accounts', methods=['GET'])
 # def get_accounts():

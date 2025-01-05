@@ -1,6 +1,6 @@
 import pymysql
 import json
-
+import os
 class SqlAPI:
     def __init__(self ):
         """
@@ -8,7 +8,7 @@ class SqlAPI:
 
         """
         try:
-            with open("config/sql_config.json", 'r') as file:
+            with open(os.path.join(os.path.dirname(__file__), "config/sql_config.json"), 'r') as file:
                 config = json.load(file)
 
             self.connection = pymysql.connect(

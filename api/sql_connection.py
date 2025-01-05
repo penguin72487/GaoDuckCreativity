@@ -313,8 +313,13 @@ class SqlAPI:
         self.connection.commit()
         return "修改成功"
 
-
-
+    def deleteannouncement(self,a_id):
+        base_query="""
+        DELETE FROM `announcement`
+        where announcement_id = %s;"""
+        self.cursor.execute(base_query, (a_id,))
+        self.connection.commit()
+        return "succ"
 
 
     def getannouncementlist(self,_number,_offset):

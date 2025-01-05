@@ -32,14 +32,21 @@ const EnrollForm = () => {
         }
 
         const teamMemberIds = [
-            formData.team_member1, 
-            formData.team_member2, 
-            formData.team_member3,
-            formData.team_member4,
-            formData.team_member5
-        ].filter(Boolean);
+            formData.team_member1 || null, 
+            formData.team_member2 || null, 
+            formData.team_member3 || null,
+            formData.team_member4 || null,
+            formData.team_member5 || null
+        ];
 
-        if (teamMemberIds.length > 5) {
+        const validTeamMemberIds = teamMemberIds.filter(Boolean);
+
+        if (validTeamMemberIds.length === 0) {
+            alert("請至少新增一名隊員！");
+            return;
+        }
+
+        if (validTeamMemberIds.length > 5) {
             alert("最多只能新增5名隊員！");
             return;
         }
@@ -48,18 +55,18 @@ const EnrollForm = () => {
         axios.post("http://127.0.0.1:5000/api/accounts/check", { ID_num: teacherId })
             .then(response => {
                 const teacher = response.data.data;
-                if (teacher.role !== "admin" && teacher.role !== "teacher") {
+                if (teacher.role !== 2 && teacher.role !== 3) { // 將 role 與整數進行比較
                     alert("該使用者不是教授，請輸入有效教授帳號！");
                     return;
                 }
 
                 // 檢查隊員帳號
-                const checkTeamMembers = teamMemberIds.map(id => 
+                const checkTeamMembers = validTeamMemberIds.map(id => 
                     axios.post("http://127.0.0.1:5000/api/accounts/check", { ID_num: id })
                         .then(response => response.data.data)
                         .catch(error => {
                             if (error.response) {
-                                alert(`錯誤：${error.response.data.message}`);
+                                alert(`錯誤：${error.response.data.message || "未知錯誤"}`);
                             } else {
                                 console.error("Error checking team member:", error);
                                 alert("檢查失敗，請稍後再試");
@@ -76,7 +83,7 @@ const EnrollForm = () => {
                             team_members: members 
                         };
 
-                        axios.post("http://127.0.0.1:5000/api/projects/Enroll", finalFormData)
+                        axios.post("http://127.0.0.1:5000/api/submit_project", finalFormData) // 更新 API 路由
                             .then(response => {
                                 alert(response.data.message);
                                 setFormData({
@@ -97,7 +104,7 @@ const EnrollForm = () => {
                             })
                             .catch(error => {
                                 if (error.response) {
-                                    alert(`提交失敗：${error.response.data.message}`);
+                                    alert(`提交失敗：${error.response.data.message || "未知錯誤"}`);
                                 } else {
                                     console.error("Error submitting form:", error);
                                     alert("提交失敗，請稍後再試");
@@ -110,7 +117,7 @@ const EnrollForm = () => {
             })
             .catch(error => {
                 if (error.response) {
-                    alert(`錯誤：${error.response.data.message}`);
+                    alert(`錯誤：${error.response.data.message || "未知錯誤"}`);
                 } else {
                     console.error("Error checking teacher:", error);
                     alert("檢查失敗，請稍後再試");
@@ -123,7 +130,7 @@ const EnrollForm = () => {
             <h1>報名表單</h1>
             <form onSubmit={handleSubmit}>
                 <label>競賽名稱</label>
-                <select name="competition" onChange={handleChange}>
+                <select name="competition" value={formData.competition} onChange={handleChange}>
                     <option>2025 創意競賽</option>
                 </select>
 
@@ -133,7 +140,7 @@ const EnrollForm = () => {
                 <label>隊長帳號</label>
                 <input type="text" name="student_id" placeholder="輸入隊長帳號" value={formData.student_id} onChange={handleChange} />
                 <label>競賽組別</label>
-                <select name="competition_group" onChange={handleChange}>
+                <select name="competition_group" value={formData.competition_group} onChange={handleChange}>
                     <option>創意發想組</option>
                     <option>創業實作組</option>
                 </select>
@@ -159,7 +166,7 @@ const EnrollForm = () => {
                     onChange={handleChange}
                 />
                 {formData.teacher && (
-                    <p>已確認指導教授：{formData.teacher.name} ({formData.teacher.student_id})</p>
+                    <p>已確認指導教授：{formData.teacher.name} ({formData.teacher.ID_num})</p>
                 )}
 
                 <label>隊員1帳號</label>

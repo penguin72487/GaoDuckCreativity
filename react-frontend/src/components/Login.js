@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const [formData, setFormData] = useState({ mail: "", password: "" });
+    const [formData, setFormData] = useState({ ID_num: "", password: "" });
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const navigate = useNavigate();
@@ -43,7 +43,7 @@ const Login = () => {
             <h1>登入</h1>
             <form onSubmit={handleSubmit}>
                 <label>學號</label>
-                <input type="text" name="mail" onChange={handleChange} required />
+                <input type="text" name="ID_num" onChange={handleChange} required />
 
                 <label>密碼</label>
                 <input type="password" name="password" onChange={handleChange} required />

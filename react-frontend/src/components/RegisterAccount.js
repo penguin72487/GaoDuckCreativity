@@ -33,7 +33,7 @@ const RegisterAccount = () => {
                 <label>使用者名稱</label>
                 <input type="text" name="ID_num" onChange={handleChange} />
 
-                {formData.role === "1" && (
+                {formData.role === "student" && (
                     <>
                         <label>學號</label>
                         <input type="text" name="stu_id" onChange={handleChange} />

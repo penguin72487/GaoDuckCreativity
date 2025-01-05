@@ -373,11 +373,10 @@ class SqlAPI:
 
 
 
-    def submitproject(self, p_id,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link):
+    def submitproject(self,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link):
         """
 
 
-        :param p_id:
         :param leader_id:
         :param teammate2_id:
         :param teammate3_id:非必填
@@ -416,10 +415,10 @@ class SqlAPI:
 
 
         base_query = f"""
-                    INSERT INTO `project` ( p_id,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+                    INSERT INTO `project` ( leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
                   """
-        self.cursor.execute(base_query, (p_id,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link))
+        self.cursor.execute(base_query, (leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link))
         self.connection.commit()
         return "succ"
 
@@ -741,17 +740,18 @@ if __name__ == "__main__":
     #    rater_title=None,
     #    stu_id="A1154444"
     #)
-    result = db.userreg(
-        ID_num="banana2",
-        name="評委Banana2",
-        phone="0955882277",
-        email="bananana222na@example.com",
-        password="securepassword",
-        role="rater",
-        rater_title="交大校長",
-        stu_id=None
-    )
+    #result = db.userreg(
+    #    ID_num="banana2",
+    #    name="評委Banana2",
+    #    phone="0955882277",
+    #    email="bananana222na@example.com",
+    #    password="securepassword",
+    #    role="rater",
+    #    rater_title="交大校長",
+    #    stu_id=None
+    #)
 
+    result=db.submitproject(p_id=1)
     print(result)  # 輸出註冊結果
     #
     #result = db.userreg(

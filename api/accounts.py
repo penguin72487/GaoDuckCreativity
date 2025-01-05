@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
-
+# import uuid
+from api.sql_connection import SqlAPI
+db = SqlAPI()
 # 定義 Blueprint
 api = Blueprint('accounts_api', __name__)
 
@@ -75,26 +77,9 @@ def delete_account():
     return jsonify({"message": "帳號刪除成功"})
 
 
-# import uuid
 
-# @api.route('/api/accounts/login', methods=['POST'])
-# def login():
-#     data = request.json
-#     student_id = data.get("student_id")
-#     password = data.get("password")
 
-#     # 檢查必填字段
-#     if not student_id or not password:
-#         return jsonify({"message": "學號或密碼缺失", "error": True}), 400
 
-#     # 驗證帳號和密碼
-#     account = next((acc for acc in accounts if acc["student_id"] == student_id and acc["password"] == password), None)
-#     if account:
-#         # 模擬生成簡單令牌
-#         token = str(uuid.uuid4())  # 使用 UUID 作為令牌
-#         return jsonify({"message": "登入成功", "data": {"name": account["name"], "role": account["role"], "token": token}}), 200
-#     else:
-#         return jsonify({"message": "學號或密碼錯誤", "error": True}), 401
 
 
 

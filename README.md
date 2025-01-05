@@ -25,7 +25,7 @@ npm start
 
 
 
-# database connect
+# database connect (server run MySQL 8.0.35)
 copy `/api/sql_config.sample.json` to `/api/sql_config.json`
 
 fill in IP, username, password, dbname

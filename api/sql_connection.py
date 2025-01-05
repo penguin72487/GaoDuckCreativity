@@ -8,7 +8,7 @@ class SqlAPI:
 
         """
         try:
-            with open("sql_config.json", 'r') as file:
+            with open("config/sql_config.json", 'r') as file:
                 config = json.load(file)
 
             self.connection = pymysql.connect(

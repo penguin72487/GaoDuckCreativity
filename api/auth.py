@@ -103,17 +103,19 @@ def protected_route():
 
 
 def role_type(role):
+    ro = ""
     if role.get("is_admin") == 1:
         # 如果是管理員且 admin_type 有值，返回 "管理員 + admin_type"
         if role.get("admin_type"):
-            return f"管理員{role.get('admin_type')}"
+            ro =  f"管理員,{role.get('admin_type')}"
         # 如果 admin_type 為 None，僅返回 "管理員"
-        return "管理員"
+        ro =  "管理員"
     elif role.get("is_teacher") == 1:
-        return "教師"
+        ro += ",教師"
     elif role.get("is_student") == 1:
-        return "學生"
+        ro += ",學生"
     elif role.get("is_rater") == 1:
-        return "評審"
+        ro += ",評審"
     else:
         return "未分類角色"
+    return ro

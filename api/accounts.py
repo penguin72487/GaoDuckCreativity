@@ -87,7 +87,7 @@ def delete_account():
 def register_account():
     # 從請求中取得 JSON 資料
     data = request.json
-    
+    print(data)
     # 檢查必填欄位
     required_fields = ["name", "student_id", "email", "password", "role"]
     for field in required_fields:

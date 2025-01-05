@@ -255,11 +255,10 @@ class SqlAPI:
 
 
 
-    def submitproject(self, p_id, leader_id, teammate2_id, teammate3_id, teammate4_id, teammate5_id, teammate6_id, teacher_id, p_name, description_file, poster_file, video_link, github_link):
+    def submitproject(self, leader_id, teammate2_id, teammate3_id, teammate4_id, teammate5_id, teammate6_id, teacher_id, p_name, description_file, poster_file, video_link, github_link):
         """
         提交項目
 
-        :param p_id:
         :param leader_id:
         :param teammate2_id:
         :param teammate3_id:非必填

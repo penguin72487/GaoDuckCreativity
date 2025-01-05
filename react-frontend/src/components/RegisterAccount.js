@@ -9,8 +9,8 @@ const RegisterAccount = () => {
         phone: "",
         email: "",
         password: "",
-        rater_title: "",
-        role: "1" // 預設為學生
+        rater_title: "None",
+        role: "student" // 預設為學生
     });
 
     const handleChange = (e) => {
@@ -33,7 +33,7 @@ const RegisterAccount = () => {
                 <label>使用者名稱</label>
                 <input type="text" name="ID_num" onChange={handleChange} />
 
-                {formData.role === "1" && (
+                {formData.role === "student" && (
                     <>
                         <label>學號</label>
                         <input type="text" name="stu_id" onChange={handleChange} />

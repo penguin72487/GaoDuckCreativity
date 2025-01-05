@@ -39,7 +39,7 @@ function App() {
                     .then((response) => {
                         setIsAuthenticated(true);
                         setUserRole(response.data.data.role);
-                        setUserId(response.data.data.student_id);
+                        setUserId(response.data.data.ID_num);
                     })
                     .catch(() => {
                         setIsAuthenticated(false);

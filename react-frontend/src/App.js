@@ -26,6 +26,7 @@ function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userRole, setUserRole] = useState(""); // 保存用戶角色
     const [userId, setUserId] = useState(""); // 保存用戶學號
+    const [uId, setUId] = useState(""); // 保存用戶 u_id
 
     // 檢查登入狀態
     useEffect(() => {
@@ -41,11 +42,13 @@ function App() {
                         setIsAuthenticated(true);
                         setUserRole(response.data.data.role);
                         setUserId(response.data.data.ID_num);
+                        setUId(response.data.data.u_id); // 假設 u_id 是從後端獲取的數據之一
                     })
                     .catch(() => {
                         setIsAuthenticated(false);
                         setUserRole("");
                         setUserId("");
+                        setUId("");
                     });
             }
         }, 1000); // 每秒檢查一次
@@ -58,6 +61,7 @@ function App() {
         setIsAuthenticated(false); // 更新狀態
         setUserRole("");
         setUserId("");
+        setUId("");
         console.log("已登出");
     };
 
@@ -96,6 +100,7 @@ function App() {
                                 <div className="user-card">
                                     <p className="user-id"><strong>ID:</strong> {userId}</p>
                                     <p className="user-role"><strong>身份別:</strong> {userRole}</p>
+                                    <p className="user-id"><strong>u_id:</strong> {uId}</p>
                                     <button className="logout-button" onClick={handleLogout}>登出</button>
                                 </div>
                             ) : (

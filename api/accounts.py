@@ -1,11 +1,9 @@
 from flask import Blueprint, jsonify, request
-# import uuid
 from api.sql_connection import SqlAPI
 db = SqlAPI()
 # 定義 Blueprint
 api = Blueprint('accounts_api', __name__)
 
-# 模擬帳號資料庫
 # 模擬帳號資料庫
 accounts = [
     {"id": 1, "name": "王小明", "student_id": "S001", "email": "wsm@example.com", "password": "123456", "role": "student"},
@@ -30,7 +28,6 @@ accounts = [
     {"id": 20, "name": "謝忠誠", "student_id": "S020", "email": "xzc@example.com", "password": "123456", "role": "admin"},
 ]
 
-
 # 查詢帳號資訊
 @api.route('/api/accounts', methods=['GET'])
 def get_accounts():
@@ -38,34 +35,30 @@ def get_accounts():
         "accounts": accounts  # 確保返回的 key 與前端一致
     })
 
-
 @api.route('/api/accounts/check', methods=['POST'])
 def check_account():
     data = request.json
-    ID_num = data.get("ID_num")  # 獲取前端傳來的 ID_num
-    if not ID_num:
-        return jsonify({"message": "缺少 ID_num 欄位", "error": True}), 400
+    u_id = data.get("u_id")  # 獲取前端傳來的 u_id
+    if not u_id:
+        return jsonify({"message": "缺少 u_id 欄位", "error": True}), 400
 
     try:
-        # 查詢資料庫，確認是否存在該 ID_num
+        # 查詢資料庫，確認是否存在該 u_id
         query = """
-        SELECT ID_num, role FROM `user` WHERE ID_num = %s
+        SELECT u_id, role FROM `user` WHERE u_id = %s
         """
-        db.cursor.execute(query, (ID_num,))
+        db.cursor.execute(query, (u_id,))
         result = db.cursor.fetchone()  # 獲取第一條符合的記錄
         print(result)
         if result:
-            ID_num, role = result
-            return jsonify({"message": "帳號存在", "data": {"ID_num": ID_num, "role": role}}), 200
+            u_id, role = result
+            return jsonify({"message": "帳號存在", "data": {"u_id": u_id, "role": role}}), 200
         else:
-            return jsonify({"message": "該學號未註冊", "error": True}), 404
+            return jsonify({"message": "該帳號未註冊", "error": True}), 404
 
     except Exception as e:
         print("檢查帳號時發生錯誤:", e)
         return jsonify({"message": "伺服器錯誤，請稍後再試", "error": True}), 500
-
-
-
 
 @api.route('/api/accounts/edit', methods=['POST'])
 def edit_account():
@@ -90,26 +83,19 @@ def delete_account():
 
     return jsonify({"message": "帳號刪除成功"})
 
-
-
-
-
-
-
-
 @api.route('/api/accounts/register', methods=['POST'])
 def register_account():
     # 從請求中取得 JSON 資料
     data = request.json
     print(data)
-    if data["rater_title"]=="":
-        data["rater_title"]=None
-    if data["stu_id"]=="":
-        data["stu_id"]=None
+    if data["rater_title"] == "":
+        data["rater_title"] = None
+    if data["stu_id"] == "":
+        data["stu_id"] = None
 
-    m = db.userreg(data["ID_num"],data["name"] , data["phone"], data["email"],data["password"], data["role"],data["rater_title"],data["stu_id"])
+    m = db.userreg(data["ID_num"], data["name"], data["phone"], data["email"], data["password"], data["role"], data["rater_title"], data["stu_id"])
     print(m)
     if m == "ok":
         return jsonify({"message": "註冊成功", "data": data}), 201
     else:
-        return jsonify({"message": m , "error": True}), 201
+        return jsonify({"message": m, "error": True}), 201

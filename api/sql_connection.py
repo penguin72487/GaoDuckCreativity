@@ -266,7 +266,9 @@ class SqlAPI:
         self.connection.commit()
 
         # 獲取自增的 t_id
-        return f"成功加入隊伍，隊伍編號：{self.cursor.lastrowid}"
+        return 'succ'
+        #return f"成功加入隊伍，隊伍編號：{self.cursor.lastrowid}"
+
     def postannouncement(self,title,information,publisher_u_id):
         """
     插入公告
@@ -366,45 +368,61 @@ class SqlAPI:
 
 
 
-    def submitproject(self, p_name,description, poster_file_id, video_link, github_link, t_id):
+    def submitproject(self, p_id,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link):
         """
 
-        :param p_name: project name
-        :param description: project description
-        :param poster_file_id:海報的file id
+
+        :param p_id:
+        :param leader_id:
+        :param teammate2_id:
+        :param teammate3_id:非必填
+        :param teammate4_id:非必填
+        :param teammate5_id:非必填
+        :param teammate6_id:非必填
+        :param teacher_id:
+        :param p_name:
+        :param description_file:
+        :param poster_file:
         :param video_link:
         :param github_link:
-        :param t_id: 隊伍id
-        :return:成功或失敗
+        :return:
         """
+        #檢查該學生是否已有project
+        student_ids = [leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id]
+        student_ids = [stuno for stuno in student_ids if stuno is not None]
 
-        #檢查該隊伍是否已有project
-        check_project_query="""
+        check_project_query=f"""
         select p_id
         from `project`
-        where t_id = %s"""
-        self.cursor.execute(check_project_query, (t_id))
+            WHERE leader_id IN ({', '.join(map(str, student_ids))})
+       OR teammate2_id IN ({', '.join(map(str, student_ids))})
+       OR teammate3_id IN ({', '.join(map(str, student_ids))})
+       OR teammate4_id IN ({', '.join(map(str, student_ids))})
+       OR teammate5_id IN ({', '.join(map(str, student_ids))})
+       OR teammate6_id IN ({', '.join(map(str, student_ids))});
+        """
+        self.cursor.execute(check_project_query)
         # 如果該隊伍已有專案，則返回error
         if self.cursor.fetchone():
-            return f"該隊伍已經有project"
+            return f"其中一位/隊長隊員已上傳project"
 
 
 
 
 
         base_query = f"""
-                    INSERT INTO `project` (p_name, `description`, `poster_file_id`, `video_link`, `github_link`, `t_id`) 
+                    INSERT INTO `project` ( p_id,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link)
                     VALUES ( %s,%s, %s, %s, %s, %s)
                   """
-        self.cursor.execute(base_query, (p_name,description, poster_file_id, video_link, github_link, t_id))
+        self.cursor.execute(base_query, ( p_id,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link))
         self.connection.commit()
         return "succ"
 
     def getprojectlist(self, _number, _offset):
         base_query = f"""
           SELECT 
-              p_name, 
-              description
+              p_name, p_id
+              
                
           FROM 
               `project`
@@ -415,11 +433,11 @@ class SqlAPI:
         self.cursor.execute(base_query)
         results = self.cursor.fetchall()
         return results
-    def getprojectdetail(self,t_id):
+    def getprojectdetail(self,p_id):
         base_query = f"""
         SELECT *
         FROM `project`
-        where t_id = {t_id};
+        where p_id = {p_id};
              """
         self.cursor.execute(base_query)
         result = self.cursor.fetchone()
@@ -719,13 +737,13 @@ if __name__ == "__main__":
     #    stu_id="A1154444"
     #)
     result = db.userreg(
-        ID_num="banana",
-        name="評委Banana",
-        phone="0955888777",
-        email="banananananana@example.com",
+        ID_num="banana2",
+        name="評委Banana2",
+        phone="0955882277",
+        email="bananana222na@example.com",
         password="securepassword",
         role="rater",
-        rater_title="臺師大校長",
+        rater_title="交大校長",
         stu_id=None
     )
 

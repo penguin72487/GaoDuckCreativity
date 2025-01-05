@@ -25,20 +25,29 @@ const RegisterAccount = () => {
             .catch(error => console.error("Error registering:", error));
     };
 
+    const getRoleSpecificLabel = () => {
+        switch (formData.role) {
+            case "student":
+                return "學號";
+            case "teacher":
+                return "老師ID";
+            case "rater":
+                return "評審ID";
+            default:
+                return "管理者ID";
+        }
+    };
+
     return (
         <div className="page">
             <h1>註冊帳號</h1>
             <form onSubmit={handleSubmit}>
 
-                <label>使用者名稱</label>
+                <label>身份證字號</label>
                 <input type="text" name="ID_num" onChange={handleChange} />
 
-                {formData.role === "student" && (
-                    <>
-                        <label>學號</label>
-                        <input type="text" name="stu_id" onChange={handleChange} />
-                    </>
-                )}
+                <label>{getRoleSpecificLabel()}</label>
+                <input type="text" name="stu_id" onChange={handleChange} />
 
                 <label>中文名</label>
                 <input type="text" name="name" onChange={handleChange} />
@@ -52,7 +61,7 @@ const RegisterAccount = () => {
                 <label>密碼</label>
                 <input type="password" name="password" onChange={handleChange} />
 
-                {formData.role === "3" && (
+                {formData.role === "rater" && (
                     <>
                         <label>評審標題</label>
                         <input type="text" name="rater_title" onChange={handleChange} />

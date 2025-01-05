@@ -312,12 +312,12 @@ class SqlAPI:
     傳入： 公告id，標題，正文，發佈者id
         """
         base_query = """
-UPDATE `announcement`
-SET title = %s, 
-    information = %s,
-    publisher_u_id = %s
-WHERE announcement_id = %s;
-             """
+                UPDATE `announcement`
+                SET title = %s, 
+                    information = %s,
+                    publisher_u_id = %s
+                WHERE announcement_id = %s;
+                             """
         self.cursor.execute(
             base_query,
             (
@@ -343,16 +343,16 @@ WHERE announcement_id = %s;
     return 公告id:row[0]，標題:row[1]，發佈者:row[2]
         """
         base_query=f"""
-SELECT 
-    announcement_id, 
-    title, 
-    publish_timestamp 
-FROM 
-    `announcement`
-ORDER BY 
-    publish_timestamp DESC
-LIMIT {_number} OFFSET {_offset};
-"""
+                                    SELECT 
+                        announcement_id, 
+                        title, 
+                        publish_timestamp 
+                    FROM            
+                        `announcement`
+                    ORDER BY 
+                        publish_timestamp DESC
+                    LIMIT {_number} OFFSET {_offset};
+            """
         self.cursor.execute(base_query)
         results = self.cursor.fetchall()
 
@@ -518,11 +518,11 @@ LIMIT {_number} OFFSET {_offset};
 
         #不是管理員/評審委員，判斷是否是檔案上傳隊伍的所屬學生/老師
         check_if_teacher_or_teammate_in_team="""
-select t_id from `team`
-where leader_u_id=%s or teacher_u_id=%s
-union
-select t_id from `team_student`
-where teammate_id=%s"""
+                                    select t_id from `team`
+                                    where leader_u_id=%s or teacher_u_id=%s
+                                    union
+                                    select t_id from `team_student`
+                                    where teammate_id=%s"""
         self.cursor.execute(check_if_teacher_or_teammate_in_team,(viewer,viewer,viewer))
         result_of_check_if_teacher_or_teammate_in_team = self.cursor.fetchone()
 
@@ -567,7 +567,6 @@ where teammate_id=%s"""
         result = self.cursor.fetchone()
         return result
 
-
     def modirate(self,rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness):
         base_query="""
         update `review`
@@ -580,6 +579,23 @@ where teammate_id=%s"""
         self.cursor.execute(base_query,(s_creativity,s_usability,s_design,s_completeness,p_id,rater_u_id))
         self.connection.commit()
         return "success"
+
+
+    def getavgrate(self,p_id):
+        base_query ="""
+                            SELECT 
+                        p_id, 
+                        AVG(s_creativity) AS avg_creativity,
+                        AVG(s_usability) AS avg_usability,
+                        AVG(s_design) AS avg_design,
+                        AVG(s_completeness) AS avg_completeness
+                    FROM review
+                    where p_id = %s
+                    GROUP BY p_id;
+                            """
+        self.cursor.execute(base_query,(p_id))
+        result = self.cursor.fetchone()
+        return result
 
 
     def close_connection(self):
@@ -669,14 +685,14 @@ if __name__ == "__main__":
 
 ##############################################
 ########評分：
-    print(db.rateproject(p_id=1,rater_u_id=40,s_creativity=4,s_usability=5,s_design=6,s_completeness=8))
-    #print(db.rateproject(p_id=1,rater_u_id=41,s_creativity=4,s_usability=5,s_design=7,s_completeness=9))
-    print(db.getrate(rater_u_id=40,p_id=1))
-    print(db.modirate(p_id=1,rater_u_id=40,s_creativity=9,s_usability=8,s_design=7,s_completeness=6))
-    print(db.getrate(rater_u_id=40,p_id=1))
+    #print(db.rateproject(p_id=1,rater_u_id=40,s_creativity=4,s_usability=5,s_design=6,s_completeness=8))
+    ##print(db.rateproject(p_id=1,rater_u_id=41,s_creativity=4,s_usability=5,s_design=7,s_completeness=9))
+    #print(db.getrate(rater_u_id=40,p_id=1))
+    #print(db.modirate(p_id=1,rater_u_id=40,s_creativity=9,s_usability=8,s_design=7,s_completeness=6))
+    #print(db.getrate(rater_u_id=40,p_id=1))
 
 
-
+    print(db.getavgrate(1))
 
 
 

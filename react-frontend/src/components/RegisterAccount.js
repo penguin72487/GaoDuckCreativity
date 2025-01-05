@@ -9,7 +9,7 @@ const RegisterAccount = () => {
         phone: "",
         email: "",
         password: "",
-        rater_title: "",
+        rater_title: "None",
         role: "student" // 預設為學生
     });
 

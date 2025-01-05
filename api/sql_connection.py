@@ -30,7 +30,7 @@ class SqlAPI:
             print(f"資料庫連線失敗或配置檔案錯誤: {e}")
 
 
-    def userreg(self,ID_num, name, phone, email, password, role,admin_type, rater_title,stu_id):
+    def userreg(self,ID_num, name, phone, email, password, role, rater_title,stu_id):
         """
         註冊新用戶。
         :param ID_num: username
@@ -56,14 +56,14 @@ class SqlAPI:
                 role_code=99
             # 基本插入查詢
             base_query = """
-            INSERT INTO `user` (ID_num, name, phone, email, password, role,admin_type, rater_title,stu_id )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO `user` (ID_num, name, phone, email, password, role, rater_title,stu_id )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """
 
             # 執行插入
             self.cursor.execute(
                 base_query,
-                (ID_num, name, phone, email, password, role_code,admin_type, rater_title,stu_id
+                (ID_num, name, phone, email, password, role_code, rater_title,stu_id
                 ),
             )
             self.connection.commit()
@@ -684,7 +684,6 @@ if __name__ == "__main__":
         email="studen222t@example.com",
         password="securepassword",
         role="student",
-        admin_type=None,
         rater_title=None,
         stu_id="A1154444"
     )
@@ -695,7 +694,6 @@ if __name__ == "__main__":
         email="rt2BBBBBBBB@example.com",
         password="securepassword",
         role="rater",
-        admin_type=None,
         rater_title="臺師大",
         stu_id=None
     )

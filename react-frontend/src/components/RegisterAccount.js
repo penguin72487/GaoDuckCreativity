@@ -10,7 +10,7 @@ const RegisterAccount = () => {
         email: "",
         password: "",
         rater_title: "",
-        role: "1" // 預設為學生
+        role: "student" // 預設為學生
     });
 
     const handleChange = (e) => {

@@ -85,7 +85,6 @@ def delete_account():
 
 @api.route('/api/accounts/register', methods=['POST'])
 def register_account():
-    role = ["student","teacher","rater","admin"]
     # 從請求中取得 JSON 資料
     data = request.json
     print(data)

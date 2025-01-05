@@ -22,9 +22,15 @@ class SqlAPI:
             print("資料庫連線成功！")
         except (pymysql.MySQLError, FileNotFoundError, KeyError) as e:
 
+
+            print(f"檔案無法讀取: {e}")
+
+        except (pymysql.MySQLError, FileNotFoundError, KeyError) as e:
+
             print(f"資料庫連線失敗或配置檔案錯誤: {e}")
 
     def is_valid_roc_id(id_num):
+
         """
         驗證中華民國身分證字號是否合法
         :param id_num: 身分證字號
@@ -211,7 +217,7 @@ class SqlAPI:
         result[1]: 所屬隊伍id
         """
         result = [1,0]
-        result[1]=self.isstudentinteam(4)
+        result[1]=self.isstudentinteam(leader_u_id)
         if  result[1]!=-1:
             result[0]=-1
             return result
@@ -306,12 +312,12 @@ class SqlAPI:
     傳入： 公告id，標題，正文，發佈者id
         """
         base_query = """
-UPDATE `announcement`
-SET title = %s, 
-    information = %s,
-    publisher_u_id = %s
-WHERE announcement_id = %s;
-             """
+                UPDATE `announcement`
+                SET title = %s, 
+                    information = %s,
+                    publisher_u_id = %s
+                WHERE announcement_id = %s;
+                             """
         self.cursor.execute(
             base_query,
             (
@@ -337,16 +343,16 @@ WHERE announcement_id = %s;
     return 公告id:row[0]，標題:row[1]，發佈者:row[2]
         """
         base_query=f"""
-SELECT 
-    announcement_id, 
-    title, 
-    publish_timestamp 
-FROM 
-    `announcement`
-ORDER BY 
-    publish_timestamp DESC
-LIMIT {_number} OFFSET {_offset};
-"""
+                                    SELECT 
+                        announcement_id, 
+                        title, 
+                        publish_timestamp 
+                    FROM            
+                        `announcement`
+                    ORDER BY 
+                        publish_timestamp DESC
+                    LIMIT {_number} OFFSET {_offset};
+            """
         self.cursor.execute(base_query)
         results = self.cursor.fetchall()
 
@@ -380,7 +386,16 @@ LIMIT {_number} OFFSET {_offset};
 
 
     def submitproject(self, p_name,description, poster_file_id, video_link, github_link, t_id):
+        """
 
+        :param p_name: project name
+        :param description: project description
+        :param poster_file_id:海報的file id
+        :param video_link:
+        :param github_link:
+        :param t_id: 隊伍id
+        :return:成功或失敗
+        """
 
         #檢查該隊伍是否已有project
         check_project_query="""
@@ -453,6 +468,168 @@ LIMIT {_number} OFFSET {_offset};
         self.connection.commit()
         return "修改成功"
 
+    def uploadfile(self,path,uploader_t_id):
+        """
+        檔案保存到伺服器後，保存檔案的路徑
+
+        :param path: 檔案保存的路徑
+        :param uploader_t_id: 學生上傳：隊伍id，管理員上傳：None
+        :return:檔案id file_id
+        """
+
+        base_query = """
+                  INSERT INTO `file` ( file_path, uploader_t_id)
+                  VALUES (%s, %s)
+                   """
+        self.cursor.execute(
+            base_query,
+            (
+               path,
+                uploader_t_id
+
+            ),
+        )
+        self.connection.commit()
+        return self.cursor.lastrowid
+    def getfile(self,file_id):
+        self.getfile(file_id,None)
+    def getfile(self,file_id,viewer):
+        """
+        獲取檔案在伺服器上的路徑
+        :param file_id:
+        :param viewer:已登入情況下：使用者u_id；未登入情況下：None
+        :return:檔案路徑 / 403非法存取
+        """
+
+
+        base_query="""
+        select * from `file`
+        where file_id = %s
+        """
+        self.cursor.execute(base_query,(file_id))
+        result = self.cursor.fetchone()
+        #如果是管理員上傳的檔案，任何人都能存取
+        if result[2] ==None:
+            return result[1]
+        if viewer == None:
+            return "403"
+        #如果非管理員上傳，只能由上傳者所屬隊伍的學生和老師丶評審委員丶管理員讀取
+        check_if_admin_or_rater_or_admin = """
+        select u_id
+        from   `user`
+        where (u_id = %s) and(is_admin = 1 or is_rater = 1)"""
+
+        self.cursor.execute(check_if_admin_or_rater_or_admin,(viewer))
+        result_of_check_if_admin_or_rater_or_admin = self.cursor.fetchone()
+        #print(result_of_check_if_admin_or_rater_or_admin)
+        if not result_of_check_if_admin_or_rater_or_admin == None: #是管理員/評審委員
+            return result[1]
+
+        #不是管理員/評審委員，判斷是否是檔案上傳隊伍的所屬學生/老師
+        check_if_teacher_or_teammate_in_team="""
+                                    select t_id from `team`
+                                    where leader_u_id=%s or teacher_u_id=%s
+                                    union
+                                    select t_id from `team_student`
+                                    where teammate_id=%s"""
+        self.cursor.execute(check_if_teacher_or_teammate_in_team,(viewer,viewer,viewer))
+        result_of_check_if_teacher_or_teammate_in_team = self.cursor.fetchone()
+
+        if not result_of_check_if_teacher_or_teammate_in_team == None: #檔案上傳隊伍的所屬學生/老師
+            return result[1]
+
+        return "403"
+    def rateproject(self,rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness):
+        """
+
+        :param rater_u_id:  評審委員u_id
+        :param p_id:    project id
+        :param s_creativity:  創意性評分 int 1~10
+        :param s_usability:  可用性評分 int 1~10
+        :param s_design:    設計評分 int 1~10
+        :param s_completeness:   完成度評分 int 1~10
+        :return: 成功or失敗
+        """
+        #檢查是否已經評價過
+        check_rate_history="""
+        select water_id from `review`
+        where p_id=%s and rater_u_id=%s"""
+        self.cursor.execute(check_rate_history,(p_id,rater_u_id))
+        result_of_check_rate_history = self.cursor.fetchone()
+        if not  result_of_check_rate_history == None:
+            return "failed 該評委已對該作品進行評價"
+
+
+
+        base_query="""
+        insert into `review`(rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness)
+            values (%s,%s,%s,%s,%s,%s)
+        """
+        self.cursor.execute(base_query,(rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness))
+        self.connection.commit()
+        return "success"
+    def getrate(self,p_id,rater_u_id):
+        """
+
+
+        :param p_id:
+        :param rater_u_id:
+        :return:
+        """
+        base_query="""
+        select * from `review`
+        where p_id = %s and rater_u_id = %s"""
+        self.cursor.execute(base_query,(p_id,rater_u_id))
+        result = self.cursor.fetchone()
+        return result
+
+    def modirate(self,rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness):
+        """
+        評委修改評分
+
+        :param rater_u_id:  評審委員u_id
+        :param p_id:    project id
+        :param s_creativity:  創意性評分 int 1~10
+        :param s_usability:  可用性評分 int 1~10
+        :param s_design:    設計評分 int 1~10
+        :param s_completeness:   完成度評分 int 1~10
+        :return:成功
+        """
+        base_query="""
+        update `review`
+        set s_creativity = %s,
+        s_usability = %s,
+        s_design = %s,
+        s_completeness = %s
+        where p_id = %s and rater_u_id = %s
+        """
+        self.cursor.execute(base_query,(s_creativity,s_usability,s_design,s_completeness,p_id,rater_u_id))
+        self.connection.commit()
+        return "success"
+
+
+    def getavgrate(self,p_id):
+        """
+        獲取project平均分
+        :param p_id: project id
+        :return: 該project的四項得分的評委平均分
+        """
+        base_query ="""
+                            SELECT 
+                        p_id, 
+                        AVG(s_creativity) AS avg_creativity,
+                        AVG(s_usability) AS avg_usability,
+                        AVG(s_design) AS avg_design,
+                        AVG(s_completeness) AS avg_completeness
+                    FROM review
+                    where p_id = %s
+                    GROUP BY p_id;
+                            """
+        self.cursor.execute(base_query,(p_id))
+        result = self.cursor.fetchone()
+        return result
+
+
     def close_connection(self):
         """
         關閉資料庫連線。
@@ -467,9 +644,6 @@ LIMIT {_number} OFFSET {_offset};
 
 # 使用範例
 if __name__ == "__main__":
-
-
-
 
     # 中華民國身分證產生器
     # https://people.debian.org/~paulliu/ROCid.html
@@ -524,6 +698,35 @@ if __name__ == "__main__":
 
 
 
+#############################
+########file:
+    #print(db.uploadfile("apic_awubd.webp",None))
+    #print(db.uploadfile("apic_awubd.webp","5"))
+
+    #print(db.getfile(6,7)) #評審
+    #print(db.getfile(6,18)) #admin
+    #print(db.getfile(6,4)) #學生：隊長
+    #print(db.getfile(6,28)) #學生：隊員
+    #print(db.getfile(6,38)) #學生：非該隊學生
+    #print(db.getfile(6,39)) #老師：非指導老師
+    #print(db.getfile(6,10)) #老師：指導老師
+
+
+
+
+
+##############################################
+########評分：
+    #print(db.rateproject(p_id=1,rater_u_id=40,s_creativity=4,s_usability=5,s_design=6,s_completeness=8))
+    ##print(db.rateproject(p_id=1,rater_u_id=41,s_creativity=4,s_usability=5,s_design=7,s_completeness=9))
+    #print(db.getrate(rater_u_id=40,p_id=1))
+    #print(db.modirate(p_id=1,rater_u_id=40,s_creativity=9,s_usability=8,s_design=7,s_completeness=6))
+    #print(db.getrate(rater_u_id=40,p_id=1))
+
+
+    #print(db.getavgrate(1))
+
+
 
 
 
@@ -551,27 +754,37 @@ if __name__ == "__main__":
     #
     #    print(result)  # 輸出註冊結果
     #
-    #    result = db.userreg(
-    #        id_num="A102954995",
-    #        name="評分者1",
-    #        phone="0912345678",
-    #        email="rater@example.com",
+    #result = db.userreg(
+    #        id_num="A102954775",
+    #        name="評分者2",
+    #        phone="0966444555",
+    #        email="rater2@example.com",
     #        password="securepassword",
-    #        address="台北市大安區",
+    #        address="福建省連江縣",
     #        user_type="rater",
-    #        rater_title="筑波大學電腦科學系副教授"
+    #        rater_title="金門大學電機工程學系教授"
     #    )
-    #    print(result)
-    #
-    #    result = db.userreg(
-    #        id_num="C117528249",
-    #        name="教師1",
-    #        phone="0933445566",
-    #        email="teacher@example.com",
+    #result = db.userreg(
+    #        id_num="K52156#6325",
+    #        name="評分者3",
+    #        phone="0966777555",
+    #        email="rater3@example.co.kr",
     #        password="securepassword",
-    #        address="高雄市苓雅區",
-    #        user_type="teacher",
+    #        address="korea",
+    #        user_type="rater",
+    #        rater_title="韓國科學技術院信息和通訊工程系講座教授"
     #    )
+    #print(result)
+    #
+    #result = db.userreg(
+    #    id_num="Z117528222",
+    #    name="教師2",
+    #    phone="0922222222",
+    #    email="two@222.com",
+    #    password="securepassword",
+    #    address="高雄市三民區",
+    #    user_type="teacher",
+    #)
     #    print(result)
     #    result = db.userreg(
     #        id_num="C114437590",

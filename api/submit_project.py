@@ -7,7 +7,7 @@ api = Blueprint('submit_project_api', __name__)
 @api.route('/api/submit_project', methods=['POST'])
 def submit_project():
     data = request.json
-    p_id = data.get("project_id")
+
     leader_id = data.get("student_id")
     teammate2_id = data.get("team_member1")
     teammate3_id = data.get("team_member2")
@@ -21,7 +21,7 @@ def submit_project():
     video_link = data.get("video")
     github_link = data.get("code")
 
-    result = db.submitproject(p_id, leader_id, teammate2_id, teammate3_id, teammate4_id, teammate5_id, teammate6_id, teacher_id, p_name, description_file, poster_file, video_link, github_link)
+    result = db.submitproject(leader_id, teammate2_id, teammate3_id, teammate4_id, teammate5_id, teammate6_id, teacher_id, p_name, description_file, poster_file, video_link, github_link)
     
     if result == "succ":
         return jsonify({"message": "項目提交成功"}), 200

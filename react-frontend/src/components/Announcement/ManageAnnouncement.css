@@ -1,0 +1,54 @@
+.page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.add-announcement,
+.announcement-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.add-announcement input,
+.add-announcement textarea,
+.announcement-item input,
+.announcement-item textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.add-announcement button,
+.announcement-item button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.add-announcement button:hover,
+.announcement-item button:hover {
+    background-color: #0056b3;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.announcement-item h3 {
+    margin-top: 0;
+}
+
+.announcement-item p {
+    margin: 5px 0;
+}

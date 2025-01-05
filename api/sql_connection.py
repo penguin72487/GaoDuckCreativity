@@ -373,10 +373,11 @@ class SqlAPI:
 
 
 
-    def submitproject(self,leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link):
+    def submitproject(self, p_id, leader_id, teammate2_id, teammate3_id, teammate4_id, teammate5_id, teammate6_id, teacher_id, p_name, description_file, poster_file, video_link, github_link):
         """
+        提交項目
 
-
+        :param p_id:
         :param leader_id:
         :param teammate2_id:
         :param teammate3_id:非必填
@@ -391,37 +392,43 @@ class SqlAPI:
         :param github_link:
         :return:
         """
-        #檢查該學生是否已有project
-        student_ids = [leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id]
-        student_ids = [stuno for stuno in student_ids if stuno is not None]
+        try:
+            # 檢查該學生是否已有project
+            student_ids = [leader_id, teammate2_id, teammate3_id, teammate4_id, teammate5_id, teammate6_id]
+            student_ids = [stuno for stuno in student_ids if stuno]  # 過濾掉空值或 None 值
 
-        check_project_query=f"""
-        select p_id
-        from `project`
+            if not student_ids:
+                return "沒有有效的學生 ID"
+
+            check_project_query = f"""
+            SELECT p_id
+            FROM `project`
             WHERE leader_id IN ({', '.join(map(str, student_ids))})
-       OR teammate2_id IN ({', '.join(map(str, student_ids))})
-       OR teammate3_id IN ({', '.join(map(str, student_ids))})
-       OR teammate4_id IN ({', '.join(map(str, student_ids))})
-       OR teammate5_id IN ({', '.join(map(str, student_ids))})
-       OR teammate6_id IN ({', '.join(map(str, student_ids))});
-        """
-        self.cursor.execute(check_project_query)
-        # 如果該隊伍已有專案，則返回error
-        if self.cursor.fetchone():
-            return f"其中一位/隊長隊員已上傳project"
+            OR teammate2_id IN ({', '.join(map(str, student_ids))})
+            OR teammate3_id IN ({', '.join(map(str, student_ids))})
+            OR teammate4_id IN ({', '.join(map(str, student_ids))})
+            OR teammate5_id IN ({', '.join(map(str, student_ids))})
+            OR teammate6_id IN ({', '.join(map(str, student_ids))});
+            """
+            print("執行的查詢:", check_project_query)  # 添加日誌記錄
+            self.cursor.execute(check_project_query)
+            # # 如果該隊伍已有專案，則返回error
+            if self.cursor.fetchone():
+                return "其中一位/隊長隊員已上傳project"
 
-
-
-
-
-        base_query = f"""
-                    INSERT INTO `project` ( leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
-                  """
-        self.cursor.execute(base_query, (leader_id,teammate2_id,teammate3_id,teammate4_id,teammate5_id,teammate6_id,teacher_id,p_name,description_file,poster_file,video_link,github_link))
-        self.connection.commit()
-        return "succ"
-
+            base_query = """
+            INSERT INTO `project` (leader_id, teammate2_id, teammate3_id, teammate4_id, teammate5_id, teammate6_id, teacher_id, p_name, description_file, poster_file, video_link, github_link)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            print("執行的插入查詢:", base_query)  # 添加日誌記錄
+            print("插入的值:", (leader_id, teammate2_id, teammate3_id or None, teammate4_id or None, teammate5_id or None, teammate6_id or None, teacher_id, p_name, description_file, poster_file, video_link, github_link))  # 添加日誌記錄
+            self.cursor.execute(base_query, (leader_id, teammate2_id, teammate3_id or None, teammate4_id or None, teammate5_id or None, teammate6_id or None, teacher_id, p_name, description_file, poster_file, video_link, github_link))
+            self.connection.commit()
+            return "succ"
+        except Exception as e:
+            print("提交項目時發生錯誤:", e)
+            return f"提交失敗：{str(e)}"
+        
     def getprojectlist(self, _number, _offset):
         base_query = f"""
           SELECT 

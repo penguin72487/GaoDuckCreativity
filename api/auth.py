@@ -48,6 +48,7 @@ def login():
     ]
     # 將 accounts 轉換為字典列表
     accounts = [dict(zip(columns, account)) for account in accounts]
+    print("轉換後的帳戶資料:", accounts)
     account = next(
         (acc for acc in accounts if acc.get("ID_num") == ID_num and acc.get("password") == password),
         None
@@ -60,13 +61,18 @@ def login():
 
         # 生成令牌
         token = f"token-{ID_num}-{role}"
-        valid_tokens[token] = {"ID_num": ID_num, "role": role}
+        valid_tokens[token] = {"ID_num": ID_num, "role": role, "u_id": account["u_id"]}
         save_tokens(valid_tokens)  # 保存令牌
         print("存儲的令牌:", valid_tokens)
 
         return jsonify({
             "message": "登入成功",
-            "data": {"name": account["name"], "role": role, "token": token}
+            "data": {
+                "name": account["name"],
+                "role": role,
+                "token": token,
+                "u_id": account["u_id"]
+            }
         }), 200
 
     print("找不到匹配的帳戶")

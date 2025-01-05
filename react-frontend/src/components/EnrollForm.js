@@ -52,7 +52,7 @@ const EnrollForm = () => {
         }
 
         // 檢查指導教授帳號
-        axios.post("http://127.0.0.1:5000/api/accounts/check", { ID_num: teacherId })
+        axios.post("http://127.0.0.1:5000/api/accounts/check", { u_id: teacherId })
             .then(response => {
                 const teacher = response.data.data;
                 if (teacher.role !== 2 && teacher.role !== 3) { // 將 role 與整數進行比較
@@ -62,7 +62,7 @@ const EnrollForm = () => {
 
                 // 檢查隊員帳號
                 const checkTeamMembers = validTeamMemberIds.map(id => 
-                    axios.post("http://127.0.0.1:5000/api/accounts/check", { ID_num: id })
+                    axios.post("http://127.0.0.1:5000/api/accounts/check", { u_id: id })
                         .then(response => response.data.data)
                         .catch(error => {
                             if (error.response) {
@@ -166,7 +166,7 @@ const EnrollForm = () => {
                     onChange={handleChange}
                 />
                 {formData.teacher && (
-                    <p>已確認指導教授：{formData.teacher.name} ({formData.teacher.ID_num})</p>
+                    <p>已確認指導教授：{formData.teacher.name} ({formData.teacher.u_id})</p>
                 )}
 
                 <label>隊員1帳號</label>

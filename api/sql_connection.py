@@ -93,6 +93,22 @@ class SqlAPI:
             self.connection.rollback()
             return f"註冊失敗: {e}"
 
+
+
+    def userlogin(self,account,password):
+        """
+        登入
+        :param account: ID_num/email/phone
+        :param password: password
+        :return: succ:u_id; fail:-1
+        """
+        base_query = """select u_id from user 
+        where (phone=%s or ID_num=%s or email=%s )and password=%s
+        """
+
+
+
+
     def userchangepassword(self, u_id, old_password, new_password):
         """
         使用者已知密碼情況下改密碼。

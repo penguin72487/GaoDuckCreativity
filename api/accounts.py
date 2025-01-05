@@ -90,7 +90,7 @@ def register_account():
     data = request.json
     print(data)
     
-    db.userreg(data["ID_num"],data["name"] , data["phone"], data["email"],data["password"], data["role"],data["rater_title"],data["stu_id"])
+    print(db.userreg(data["ID_num"],data["name"] , data["phone"], data["email"],data["password"], data["role"],data["rater_title"],data["stu_id"]))
 
     # 回傳成功訊息
     return jsonify({"message": "註冊成功", "data": data}), 201

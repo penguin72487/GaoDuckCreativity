@@ -105,7 +105,11 @@ class SqlAPI:
         base_query = """select u_id from user 
         where (phone=%s or ID_num=%s or email=%s )and password=%s
         """
-
+        self.cursor.execute(base_query, (account, account, account, password))
+        result = self.cursor.fetchone()
+        if result:
+            return result[0]
+        return -1
 
 
 

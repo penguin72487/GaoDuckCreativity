@@ -102,6 +102,11 @@ def register_account():
     # 從請求中取得 JSON 資料
     data = request.json
     print(data)
+    if data["rater_title"]=="":
+        data["rater_title"]=None
+    if data["stu_id"]=="":
+        data["stu_id"]=None
+
     m = db.userreg(data["ID_num"],data["name"] , data["phone"], data["email"],data["password"], data["role"],data["rater_title"],data["stu_id"])
     print(m)
     if m == "ok":

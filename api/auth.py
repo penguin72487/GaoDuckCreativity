@@ -27,7 +27,7 @@ valid_tokens = load_tokens()
 @auth_api.route('/login', methods=['POST'])
 def login():
     data = request.json
-    mail = data.get("mail")
+    ID_num = data.get("ID_num")
     password = data.get("password")
     try:
         query = "SELECT * FROM user"
@@ -39,7 +39,7 @@ def login():
             print("資料表中沒有數據")
     except Exception as e:
         print("資料庫查詢失敗:", str(e))
-    if not mail or not password:
+    if not ID_num or not password:
         return jsonify({"message": "學號或密碼缺失", "error": True}), 400
     columns = [
     "u_id", "ID_num", "name", "phone", "email", "password", "address",
@@ -48,7 +48,7 @@ def login():
     # 將 accounts 轉換為字典列表
     accounts = [dict(zip(columns, account)) for account in accounts]
     account = next(
-        (acc for acc in accounts if acc.get("email") == mail and acc.get("password") == password),
+        (acc for acc in accounts if acc.get("ID_num") == ID_num and acc.get("password") == password),
         None
     )
     # 輸出結果
@@ -58,8 +58,8 @@ def login():
         print("角色:", role)
 
         # 生成令牌
-        token = f"token-{mail}-{role}"
-        valid_tokens[token] = {"mail": mail, "role": role}
+        token = f"token-{ID_num}-{role}"
+        valid_tokens[token] = {"ID_num": ID_num, "role": role}
         save_tokens(valid_tokens)  # 保存令牌
         print("存儲的令牌:", valid_tokens)
 
@@ -103,17 +103,19 @@ def protected_route():
 
 
 def role_type(role):
+    ro = ""
     if role.get("is_admin") == 1:
         # 如果是管理員且 admin_type 有值，返回 "管理員 + admin_type"
         if role.get("admin_type"):
-            return f"管理員{role.get('admin_type')}"
+            ro =  f"管理員,{role.get('admin_type')}"
         # 如果 admin_type 為 None，僅返回 "管理員"
-        return "管理員"
+        ro =  "管理員"
     elif role.get("is_teacher") == 1:
-        return "教師"
+        ro += ",教師"
     elif role.get("is_student") == 1:
-        return "學生"
+        ro += ",學生"
     elif role.get("is_rater") == 1:
-        return "評審"
+        ro += ",評審"
     else:
         return "未分類角色"
+    return ro

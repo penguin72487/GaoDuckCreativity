@@ -19,6 +19,7 @@ def get_announcements():
 
         # 處理結果
         announcements = [{"title": row[0], "information": row[1]} for row in results]
+        print(announcements)
         return jsonify({"announcements": announcements})
     except Exception as e:
         print(f"查詢失敗: {e}")

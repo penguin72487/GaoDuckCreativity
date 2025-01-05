@@ -28,6 +28,14 @@ class SqlAPI:
         except (pymysql.MySQLError, FileNotFoundError, KeyError) as e:
 
             print(f"資料庫連線失敗或配置檔案錯誤: {e}")
+    def getusertype(self,u_id):
+        base_query = "select role from user where u_id=%s"
+        self.cursor.execute(base_query, (u_id,))
+        result = self.cursor.fetchone()
+        if result:
+            return result[0]
+        else:
+            return None
 
 
     def userreg(self,ID_num, name, phone, email, password, role, rater_title,stu_id):
@@ -595,9 +603,7 @@ class SqlAPI:
 
 # 使用範例
 if __name__ == "__main__":
-
-    # 中華民國身分證產生器
-    # https://people.debian.org/~paulliu/ROCid.html
+#
 
     db = SqlAPI()
     #print(db.userchangepassword(18,"securepassword","saltedpassword7777"))
@@ -674,36 +680,39 @@ if __name__ == "__main__":
     #print(db.modirate(p_id=1,rater_u_id=40,s_creativity=9,s_usability=8,s_design=7,s_completeness=6))
     #print(db.getrate(rater_u_id=40,p_id=1))
 
-
+    print(db.getusertype(4))
+    print(db.getusertype(7))
+    print(db.getusertype(10))
+    print(db.getusertype(18))
     #print(db.getavgrate(1))
 
-    result = db.userreg(
-        ID_num="Q144909361",
-        name="學生2",
-        phone="0922344450",
-        email="studen222t@example.com",
-        password="securepassword",
-        role="student",
-        rater_title=None,
-        stu_id="A1154444"
-    )
-    result = db.userreg(
-        ID_num="Q144902351",
-        name="評委B",
-        phone="0922343330",
-        email="rt2BBBBBBBB@example.com",
-        password="securepassword",
-        role="rater",
-        rater_title="臺師大",
-        stu_id=None
-    )
+    #result = db.userreg(
+    #    ID_num="Q144909361",
+    #    name="學生2",
+    #    phone="0922344450",
+    #    email="studen222t@example.com",
+    #    password="securepassword",
+    #    role="student",
+    #    rater_title=None,
+    #    stu_id="A1154444"
+    #)
+    #result = db.userreg(
+    #    ID_num="Q144902351",
+    #    name="評委B",
+    #    phone="0922343330",
+    #    email="rt2BBBBBBBB@example.com",
+    #    password="securepassword",
+    #    role="rater",
+    #    rater_title="臺師大",
+    #    stu_id=None
+    #)
 
 
 
 
     #
 
-    print(result)  # 輸出註冊結果
+    #print(result)  # 輸出註冊結果
     #
     #result = db.userreg(
     #        id_num="A102954775",

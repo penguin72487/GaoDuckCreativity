@@ -30,11 +30,15 @@ const RegisterAccount = () => {
             <h1>註冊帳號</h1>
             <form onSubmit={handleSubmit}>
 
-                <label>身份證字號</label>
+                <label>使用者名稱</label>
                 <input type="text" name="ID_num" onChange={handleChange} />
 
-                <label>學號</label>
-                <input type="text" name="stu_id" onChange={handleChange} />
+                {formData.role === "1" && (
+                    <>
+                        <label>學號</label>
+                        <input type="text" name="stu_id" onChange={handleChange} />
+                    </>
+                )}
 
                 <label>中文名</label>
                 <input type="text" name="name" onChange={handleChange} />

@@ -386,7 +386,16 @@ class SqlAPI:
 
 
     def submitproject(self, p_name,description, poster_file_id, video_link, github_link, t_id):
+        """
 
+        :param p_name: project name
+        :param description: project description
+        :param poster_file_id:海報的file id
+        :param video_link:
+        :param github_link:
+        :param t_id: 隊伍id
+        :return:成功或失敗
+        """
 
         #檢查該隊伍是否已有project
         check_project_query="""
@@ -560,6 +569,13 @@ class SqlAPI:
         self.connection.commit()
         return "success"
     def getrate(self,p_id,rater_u_id):
+        """
+
+
+        :param p_id:
+        :param rater_u_id:
+        :return:
+        """
         base_query="""
         select * from `review`
         where p_id = %s and rater_u_id = %s"""
@@ -568,6 +584,17 @@ class SqlAPI:
         return result
 
     def modirate(self,rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness):
+        """
+        評委修改評分
+
+        :param rater_u_id:  評審委員u_id
+        :param p_id:    project id
+        :param s_creativity:  創意性評分 int 1~10
+        :param s_usability:  可用性評分 int 1~10
+        :param s_design:    設計評分 int 1~10
+        :param s_completeness:   完成度評分 int 1~10
+        :return:成功
+        """
         base_query="""
         update `review`
         set s_creativity = %s,
@@ -582,6 +609,11 @@ class SqlAPI:
 
 
     def getavgrate(self,p_id):
+        """
+        獲取project平均分
+        :param p_id: project id
+        :return: 該project的四項得分的評委平均分
+        """
         base_query ="""
                             SELECT 
                         p_id, 
@@ -692,7 +724,7 @@ if __name__ == "__main__":
     #print(db.getrate(rater_u_id=40,p_id=1))
 
 
-    print(db.getavgrate(1))
+    #print(db.getavgrate(1))
 
 
 

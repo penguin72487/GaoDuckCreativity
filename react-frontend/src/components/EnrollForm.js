@@ -23,11 +23,11 @@ const EnrollForm = () => {
         e.preventDefault();
         const studentId = formData.team_info.trim();
         if (!studentId) {
-            alert("請輸入隊員學號！");
+            alert("請輸入隊員帳號！");
             return;
         }
 
-        axios.post("http://127.0.0.1:5000/api/accounts/check", { student_id: studentId })
+        axios.post("http://127.0.0.1:5000/api/accounts/check", { ID_num: studentId })
             .then(response => {
                 const newMember = response.data.data;
                 setTeamMembers([...teamMembers, newMember]);
@@ -48,7 +48,7 @@ const EnrollForm = () => {
         e.preventDefault();
         const teacherId = formData.teacher_id.trim();
         if (!teacherId) {
-            alert("請輸入指導教授學號！");
+            alert("請輸入指導教授帳號！");
             return;
         }
 
@@ -56,7 +56,7 @@ const EnrollForm = () => {
             .then(response => {
                 const teacher = response.data.data;
                 if (teacher.role !== "admin" && teacher.role !== "teacher") {
-                    alert("該使用者不是教授，請輸入有效教授學號！");
+                    alert("該使用者不是教授，請輸入有效教授帳號！");
                     return;
                 }
                 setFormData({ ...formData, teacher });
@@ -122,8 +122,8 @@ const EnrollForm = () => {
                 <label>隊伍名稱</label>
                 <input type="text" name="name" placeholder="輸入隊伍名稱" value={formData.name} onChange={handleChange} />
 
-                <label>隊長學號</label>
-                <input type="text" name="student_id" placeholder="輸入隊長學號" value={formData.student_id} onChange={handleChange} />
+                <label>隊長帳號</label>
+                <input type="text" name="student_id" placeholder="輸入隊長帳號" value={formData.student_id} onChange={handleChange} />
                 <label>競賽組別</label>
                 <select name="competition_group" onChange={handleChange}>
                     <option>創意發想組</option>
@@ -143,11 +143,11 @@ const EnrollForm = () => {
                 <input type="text" name="code" placeholder="輸入Github連結" value={formData.code} onChange={handleChange} />
 
 
-                <label>指導教授學號</label>
+                <label>指導教授帳號</label>
                 <input
                     type="text"
                     name="teacher_id"
-                    placeholder="輸入指導教授學號"
+                    placeholder="輸入指導教授帳號"
                     value={formData.teacher_id}
                     onChange={handleChange}
                 />
@@ -160,7 +160,7 @@ const EnrollForm = () => {
                 <input
                     type="text"
                     name="team_info"
-                    placeholder="輸入隊員學號"
+                    placeholder="輸入隊員帳號"
                     value={formData.team_info}
                     onChange={handleChange}
                 />

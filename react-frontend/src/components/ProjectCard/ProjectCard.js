@@ -26,12 +26,12 @@ const ProjectCard = ({ project }) => {
                 {project.competition_group}
             </p>
             <p>
-                <strong>隊長學號：</strong>
-                {project.student_id}
+                <strong>隊長帳號：</strong>
+                {project.ID_num}
             </p>
             <p>
                 <strong>指導教授：</strong>
-                {project.teacher.name} ({project.teacher.student_id})
+                {project.teacher.name} ({project.teacher.ID_num})
             </p>
             <p>
                 <strong>隊員列表：</strong>
@@ -40,7 +40,7 @@ const ProjectCard = ({ project }) => {
                 <ul>
                     {project.team_members.map((member, idx) => (
                         <li key={idx}>
-                            {member.name} ({member.student_id})
+                            {member.name} ({member.ID_num})
                         </li>
                     ))}
                 </ul>

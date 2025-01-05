@@ -246,11 +246,10 @@ class SqlAPI:
 
 
 
-    def submitproject(self, p_id, leader_id, teammate2_id, teammate3_id, teammate4_id, teammate5_id, teammate6_id, teacher_id, p_name, description_file, poster_file, video_link, github_link):
+    def submitproject(self, leader_id, teammate2_id, teammate3_id, teammate4_id, teammate5_id, teammate6_id, teacher_id, p_name, description_file, poster_file, video_link, github_link):
         """
         提交項目
 
-        :param p_id:
         :param leader_id:
         :param teammate2_id:
         :param teammate3_id:非必填
@@ -317,35 +316,82 @@ class SqlAPI:
         self.cursor.execute(base_query)
         results = self.cursor.fetchall()
         return results
-    def getprojectdetail(self,p_id):
-        base_query = f"""
+    def getprojectdetail(self,p_id=None,u_id=None):
+        """
+        可選根據project id或學生u_id獲取project詳情
+        :param p_id: 二選一
+        :param u_id: 二選一
+        :return: project詳情
+        """
+        pid=0
+        if u_id:
+            if self.getprojectpidfromuid(u_id) ==-1:
+                return "該學生沒有project"
+            pid=self.getprojectpidfromuid(u_id)[0]
+        else:
+            pid=p_id
+
+
+        base_query = """
         SELECT *
         FROM `project`
-        where p_id = {p_id};
-             """
-        self.cursor.execute(base_query)
+        where p_id = %s;"""
+        self.cursor.execute(base_query,(pid,))
         result = self.cursor.fetchone()
-
         return result
-    def modiproject(self, p_name,description, poster_file_id, video_link, github_link, t_id):
-        _p_id=self.getproject(t_id)
-        if _p_id==None:
+    def getprojectpidfromuid(self,u_id):
+        """
+
+        :param u_id:
+        :return: 如果該使用者有提交過project，返回p_id；如非，返回-1
+        """
+        base_query="""
+                    select p_id
+                    from project
+              WHERE leader_id = %s
+             OR teammate2_id = %s
+             OR teammate3_id = %s
+             OR teammate4_id = %s
+             OR teammate5_id = %s
+             OR teammate6_id = %s
+            """
+
+        self.cursor.execute(base_query, (u_id, u_id, u_id, u_id, u_id, u_id))
+        result = self.cursor.fetchone()
+        if result:
+            return result
+        return -1
+    def modiproject(self, std_id, p_name, description_file, poster_file, video_link, github_link):
+        """
+
+        :param std_id:任何一個隊長/隊員的u_id
+
+        :param teacher_id:
+        :param p_name:
+        :param description_file:
+        :param poster_file:
+        :param video_link:
+        :param github_link:
+        :return:
+        """
+        _p_id=self.getprojectpidfromuid(std_id)
+        if _p_id==-1:
             return "你的隊伍沒有提交過project"
 
 
         base_query = """
         UPDATE `project`
-        SET p_name = %s,
-            description = %s,
-            poster_file_id = %s,
-            video_link = %s,
-            github_link = %s
+        SET  p_name =%s
+        , description_file=%s
+        , poster_file=%s
+        , video_link=%s
+        , github_link=%s
         WHERE p_id = %s;
                      """
         self.cursor.execute(
             base_query,
             (
-             p_name,description,poster_file_id,video_link,github_link,_p_id[0]
+             p_name, description_file, poster_file, video_link, github_link,_p_id[0]
             ),
         )
         self.connection.commit()
@@ -374,54 +420,7 @@ class SqlAPI:
         )
         self.connection.commit()
         return self.cursor.lastrowid
-    def getfile(self,file_id):
-        self.getfile(file_id,None)
-    def getfile(self,file_id,viewer):
-        """
-        獲取檔案在伺服器上的路徑
-        :param file_id:
-        :param viewer:已登入情況下：使用者u_id；未登入情況下：None
-        :return:檔案路徑 / 403非法存取
-        """
 
-
-        base_query="""
-        select * from `file`
-        where file_id = %s
-        """
-        self.cursor.execute(base_query,(file_id))
-        result = self.cursor.fetchone()
-        #如果是管理員上傳的檔案，任何人都能存取
-        if result[2] ==None:
-            return result[1]
-        if viewer == None:
-            return "403"
-        #如果非管理員上傳，只能由上傳者所屬隊伍的學生和老師丶評審委員丶管理員讀取
-        check_if_admin_or_rater_or_admin = """
-        select u_id
-        from   `user`
-        where (u_id = %s) and(is_admin = 1 or is_rater = 1)"""
-
-        self.cursor.execute(check_if_admin_or_rater_or_admin,(viewer))
-        result_of_check_if_admin_or_rater_or_admin = self.cursor.fetchone()
-        #print(result_of_check_if_admin_or_rater_or_admin)
-        if not result_of_check_if_admin_or_rater_or_admin == None: #是管理員/評審委員
-            return result[1]
-
-        #不是管理員/評審委員，判斷是否是檔案上傳隊伍的所屬學生/老師
-        check_if_teacher_or_teammate_in_team="""
-                                    select t_id from `team`
-                                    where leader_u_id=%s or teacher_u_id=%s
-                                    union
-                                    select t_id from `team_student`
-                                    where teammate_id=%s"""
-        self.cursor.execute(check_if_teacher_or_teammate_in_team,(viewer,viewer,viewer))
-        result_of_check_if_teacher_or_teammate_in_team = self.cursor.fetchone()
-
-        if not result_of_check_if_teacher_or_teammate_in_team == None: #檔案上傳隊伍的所屬學生/老師
-            return result[1]
-
-        return "403"
     def rateproject(self,rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness):
         """
 
@@ -555,9 +554,28 @@ if __name__ == "__main__":
 
 #########################
 ########project:
-    #print(db.submitproject("test","非常有創意的project","3","https://youtube.com/xxx","https://github.com/xxx","5"))
     #print(db.getprojectdetail(5))
-    #print(db.modiproject("cesi", "非常SB的project", "3", "https://youtube.com/yyy", "https://github.com/yyy", "5"))
+
+
+    #with open(r"C:\Users\user\Documents\ShareX\Screenshots\2025-01\pycharm64_fWuLkl3JDY.png", "rb") as image_file:
+    #    image_data = image_file.read()
+    ## result=db.submitproject(leader_id="42",teammate2_id=21,teammate3_id=22,teammate4_id=None,teammate5_id=None,teammate6_id=None
+    ##                        ,teacher_id=39,p_name="sbproject",description_file=image_data,poster_file=image_data,video_link="ytyt",github_link="gayhub")
+    #
+    #
+    #result = db.modiproject(std_id=21, p_name="AI飛行棋", description_file=image_data, poster_file=image_data,
+    #                        video_link="newyt", github_link="new_gh")
+    #
+    #print(result)  # 輸出註冊結果
+
+    res= db.getprojectdetail(u_id=42)
+    print(res)
+
+    res= db.getprojectdetail(p_id=6)
+    print(res)
+
+    res= db.getprojectdetail(u_id=55)
+    print(res)
 
 
 
@@ -616,11 +634,7 @@ if __name__ == "__main__":
     #    stu_id=None
     #)
 
-    with open(r"C:\Users\user\Documents\ShareX\Screenshots\2025-01\pycharm64_fWuLkl3JDY.png", "rb") as image_file:
-        image_data = image_file.read()
-    result=db.submitproject(leader_id="42",teammate2_id=21,teammate3_id=22,teammate4_id=None,teammate5_id=None,teammate6_id=None
-                            ,teacher_id=39,p_name="sbproject",description_file=image_data,poster_file=image_data,video_link="ytyt",github_link="gayhub")
-    print(result)  # 輸出註冊結果
+
     #
     #result = db.userreg(
     #        id_num="A102954775",

@@ -751,7 +751,8 @@ if __name__ == "__main__":
     #    stu_id=None
     #)
 
-    result=db.submitproject(p_id=1)
+    result=db.submitproject(leader_id="42",teammate2_id=21,teammate3_id=22,teammate4_id=None,teammate5_id=None,teammate6_id=None
+                            ,teacher_id=39,p_name="sbproject",description_file=None,poster_file=None,video_link="ytyt",github_link="gayhub")
     print(result)  # 輸出註冊結果
     #
     #result = db.userreg(

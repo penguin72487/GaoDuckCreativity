@@ -19,13 +19,7 @@ const AnnouncementPage = () => {
                     announcements.map((announcement, index) => (
                         <li key={index}>
                             <h3>{announcement.title}</h3>
-                            <p>發布日期：{announcement.date}</p>
-                            <p>{announcement.content}</p>
-                            {announcement.link && (
-                                <a href={announcement.link} target="_blank" rel="noopener noreferrer">
-                                    查看更多
-                                </a>
-                            )}
+                            <p>{announcement.information}</p>
                         </li>
                     ))
                 ) : (

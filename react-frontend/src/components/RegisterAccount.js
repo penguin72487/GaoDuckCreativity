@@ -43,7 +43,7 @@ const RegisterAccount = () => {
             <h1>註冊帳號</h1>
             <form onSubmit={handleSubmit}>
 
-                <label>身份證字號</label>
+                <label>使用者名稱</label>
                 <input type="text" name="ID_num" onChange={handleChange} />
 
                 <label>{getRoleSpecificLabel()}</label>
@@ -63,7 +63,7 @@ const RegisterAccount = () => {
 
                 {formData.role === "rater" && (
                     <>
-                        <label>評審標題</label>
+                        <label>評審頭銜</label>
                         <input type="text" name="rater_title" onChange={handleChange} />
                     </>
                 )}

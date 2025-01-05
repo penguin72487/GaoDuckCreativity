@@ -42,7 +42,7 @@ const Login = () => {
         <div className="page">
             <h1>登入</h1>
             <form onSubmit={handleSubmit}>
-                <label>學號</label>
+                <label>使用者名稱</label>
                 <input type="text" name="ID_num" onChange={handleChange} required />
 
                 <label>密碼</label>

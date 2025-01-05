@@ -530,6 +530,46 @@ where teammate_id=%s"""
             return result[1]
 
         return "403"
+    def rateproject(self,rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness):
+        """
+
+        :param rater_u_id:  評審委員u_id
+        :param p_id:    project id
+        :param s_creativity:  創意性評分 int 1~10
+        :param s_usability:  可用性評分 int 1~10
+        :param s_design:    設計評分 int 1~10
+        :param s_completeness:   完成度評分 int 1~10
+        :return: 成功or失敗
+        """
+        base_query="""
+        insert into `review`(rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness)
+            values (%s,%s,%s,%s,%s,%s)
+        """
+        self.cursor.execute(base_query,(rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness))
+        self.connection.commit()
+        return "success"
+    def getrate(self,p_id,rater_u_id):
+        base_query="""
+        select * from `review`
+        where p_id = %s and rater_u_id = %s"""
+        self.cursor.execute(base_query,(p_id,rater_u_id))
+        result = self.cursor.fetchone()
+        return result
+
+
+    def modirate(self,rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness):
+        base_query="""
+        update `review`
+        set s_creativity = %s,
+        s_usability = %s,
+        s_design = %s,
+        s_completeness = %s
+        where p_id = %s and rater_u_id = %s
+        """
+        self.cursor.execute(base_query,(s_creativity,s_usability,s_design,s_completeness,p_id,rater_u_id))
+        self.connection.commit()
+        return "success"
+
 
     def close_connection(self):
         """
@@ -604,17 +644,36 @@ if __name__ == "__main__":
     #print(db.uploadfile("apic_awubd.webp",None))
     #print(db.uploadfile("apic_awubd.webp","5"))
 
+    #print(db.getfile(6,7)) #評審
+    #print(db.getfile(6,18)) #admin
+    #print(db.getfile(6,4)) #學生：隊長
+    #print(db.getfile(6,28)) #學生：隊員
+    #print(db.getfile(6,38)) #學生：非該隊學生
+    #print(db.getfile(6,39)) #老師：非指導老師
+    #print(db.getfile(6,10)) #老師：指導老師
 
 
 
 
-    print(db.getfile(6,7)) #評審
-    print(db.getfile(6,18)) #admin
-    print(db.getfile(6,4)) #學生：隊長
-    print(db.getfile(6,28)) #學生：隊員
-    print(db.getfile(6,38)) #學生：非該隊學生
-    print(db.getfile(6,39)) #老師：非指導老師
-    print(db.getfile(6,10)) #老師：指導老師
+
+##############################################
+########評分：
+    #db.rateproject()
+    #print(db.getrate(rater_u_id=,p_id=))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -635,14 +694,24 @@ if __name__ == "__main__":
     #    print(result)  # 輸出註冊結果
     #
     #result = db.userreg(
-    #        id_num="A102954995",
-    #        name="評分者1",
-    #        phone="0912345678#",
-    #        email="rater@example.com",
+    #        id_num="A102954775",
+    #        name="評分者2",
+    #        phone="0966444555",
+    #        email="rater2@example.com",
     #        password="securepassword",
-    #        address="台北市大安區",
+    #        address="福建省連江縣",
     #        user_type="rater",
-    #        rater_title="筑波大學電腦科學系副教授"
+    #        rater_title="金門大學電機工程學系教授"
+    #    )
+    #result = db.userreg(
+    #        id_num="K52156#6325",
+    #        name="評分者3",
+    #        phone="0966777555",
+    #        email="rater3@example.co.kr",
+    #        password="securepassword",
+    #        address="korea",
+    #        user_type="rater",
+    #        rater_title="韓國科學技術院信息和通訊工程系講座教授"
     #    )
     #print(result)
     #

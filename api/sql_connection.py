@@ -541,6 +541,17 @@ where teammate_id=%s"""
         :param s_completeness:   完成度評分 int 1~10
         :return: 成功or失敗
         """
+        #檢查是否已經評價過
+        check_rate_history="""
+        select water_id from `review`
+        where p_id=%s and rater_u_id=%s"""
+        self.cursor.execute(check_rate_history,(p_id,rater_u_id))
+        result_of_check_rate_history = self.cursor.fetchone()
+        if not  result_of_check_rate_history == None:
+            return "failed 該評委已對該作品進行評價"
+
+
+
         base_query="""
         insert into `review`(rater_u_id,p_id,s_creativity,s_usability,s_design,s_completeness)
             values (%s,%s,%s,%s,%s,%s)
@@ -658,9 +669,11 @@ if __name__ == "__main__":
 
 ##############################################
 ########評分：
-    #db.rateproject()
-    #print(db.getrate(rater_u_id=,p_id=))
-
+    print(db.rateproject(p_id=1,rater_u_id=40,s_creativity=4,s_usability=5,s_design=6,s_completeness=8))
+    #print(db.rateproject(p_id=1,rater_u_id=41,s_creativity=4,s_usability=5,s_design=7,s_completeness=9))
+    print(db.getrate(rater_u_id=40,p_id=1))
+    print(db.modirate(p_id=1,rater_u_id=40,s_creativity=9,s_usability=8,s_design=7,s_completeness=6))
+    print(db.getrate(rater_u_id=40,p_id=1))
 
 
 

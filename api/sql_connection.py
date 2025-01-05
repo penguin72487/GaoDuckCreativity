@@ -86,6 +86,8 @@ class SqlAPI:
                     return "電話號碼已存在，請確認或使用其他電話號碼。"
                 elif "email" in str(e):
                     return "電子郵件已存在，請確認或使用其他電子郵件。"
+                elif "stu_id" in str(e):
+                    return "學號已存在，請確認或使用其他學號。"
             return f"註冊失敗: {e}"
 
         except pymysql.MySQLError as e:

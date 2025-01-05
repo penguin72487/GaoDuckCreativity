@@ -22,3 +22,11 @@ py run.py
 cd react-frontend
 npm install
 npm start
+
+
+
+# database connect
+copy `/api/sql_config.sample.json` to `/api/sql_config.json`
+
+fill in IP, username, password, dbname
+

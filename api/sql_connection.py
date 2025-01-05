@@ -22,22 +22,8 @@ class SqlAPI:
             print("資料庫連線成功！")
         except (pymysql.MySQLError, FileNotFoundError, KeyError) as e:
 
-            try:
-                with open(os.path.join(os.path.dirname(__file__), "sql_config.json"), 'r') as file:
-                    config = json.load(file)
 
-                self.connection = pymysql.connect(
-                    host=config["host"],
-                    user=config["username"],
-                    port=config["port"],
-                    password=config["password"],
-                    database=config["database"]
-                )
-                self.cursor = self.connection.cursor()
-                print("資料庫連線成功！")
-
-            except (pymysql.MySQLError, FileNotFoundError, KeyError) as e:
-                print(f"檔案無法讀取: {e}")
+            print(f"檔案無法讀取: {e}")
 
         except (pymysql.MySQLError, FileNotFoundError, KeyError) as e:
 

@@ -29,6 +29,7 @@ def login():
     data = request.json
     ID_num = data.get("ID_num")
     password = data.get("password")
+    print("登入資料:", data)
     try:
         query = "SELECT * FROM user"
         db.cursor.execute(query)

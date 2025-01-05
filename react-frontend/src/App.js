@@ -10,6 +10,7 @@ import ProjectList from "./components/ProjectList";
 import RatingSystem from "./components/RatingSystem/RatingSystem";
 import PreviousProject from "./components/PreviousProject";
 import Login from "./components/Login";
+import ManageAnnouncement from "./components/Announcement/ManageAnnouncement"; // 確保導入 ManageAnnouncement 組件
 import "./App.css";
 import axios from "axios";
 
@@ -30,7 +31,7 @@ function App() {
     useEffect(() => {
         const interval = setInterval(() => {
             const token = localStorage.getItem("authToken");
-    
+
             if (token) {
                 axios
                     .get("http://127.0.0.1:5000/api/auth/protected", {
@@ -47,11 +48,10 @@ function App() {
                         setUserId("");
                     });
             }
-        }, 1000); // 每5秒檢查一次
-    
+        }, 1000); // 每秒檢查一次
+
         return () => clearInterval(interval); // 清理定時器
     }, []);
-    
 
     const handleLogout = () => {
         localStorage.removeItem("authToken"); // 清除令牌
@@ -72,9 +72,11 @@ function App() {
                             <li><Link to="/">首頁</Link></li>
                             <li><Link to="/announcements">最新公告</Link></li>
                             {userRole === "admin" && (
-                                <li><Link to="/account-management">帳號管理</Link></li>
+                                <>
+                                    <li><Link to="/account-management">帳號管理</Link></li>
+                                    <li><Link to="/manage-announcements">管理公告</Link></li>
+                                </>
                             )}
-                            
                             {!isAuthenticated && (
                                 <li><Link to="/register-account">註冊帳號</Link></li>
                             )}
@@ -107,7 +109,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/announcement" element={<Announcement />} />
-                            <Route path="/announcements" element={<AnnouncementPage />} />          
+                            <Route path="/announcements" element={<AnnouncementPage />} />
                             <Route
                                 path="/account-management"
                                 element={
@@ -129,6 +131,14 @@ function App() {
                             />
                             <Route path="/previous-project" element={<PreviousProject />} />
                             <Route path="/login" element={<Login />} />
+                            <Route
+                                path="/manage-announcements"
+                                element={
+                                    <ProtectedRoute isAuthenticated={isAuthenticated && userRole === "admin"}>
+                                        <ManageAnnouncement />
+                                    </ProtectedRoute>
+                                }
+                            />
                         </Routes>
                     </div>
                 </div>

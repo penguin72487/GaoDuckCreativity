@@ -67,26 +67,30 @@ const ManageAnnouncement = () => {
                 <button onClick={handleAddAnnouncement}>新增公告</button>
             </div>
             <div className="announcement-list">
-                {announcements.map(announcement => (
-                    <div key={announcement.id} className="announcement-item">
-                        {editAnnouncement.id === announcement.id ? (
-                            <div>
-                                <textarea
-                                    value={editAnnouncement.content}
-                                    onChange={(e) => setEditAnnouncement({ ...editAnnouncement, content: e.target.value })}
-                                />
-                                <button onClick={handleUpdateAnnouncement}>更新公告</button>
-                                <button onClick={() => setEditAnnouncement({ id: null, content: "" })}>取消</button>
-                            </div>
-                        ) : (
-                            <div>
-                                <p>{announcement.content}</p>
-                                <button onClick={() => handleEditAnnouncement(announcement.id, announcement.content)}>修改</button>
-                                <button onClick={() => handleDeleteAnnouncement(announcement.id)}>刪除</button>
-                            </div>
-                        )}
-                    </div>
-                ))}
+                {announcements.length > 0 ? (
+                    announcements.map(announcement => (
+                        <div key={announcement.id} className="announcement-item">
+                            {editAnnouncement.id === announcement.id ? (
+                                <div>
+                                    <textarea
+                                        value={editAnnouncement.content}
+                                        onChange={(e) => setEditAnnouncement({ ...editAnnouncement, content: e.target.value })}
+                                    />
+                                    <button onClick={handleUpdateAnnouncement}>更新公告</button>
+                                    <button onClick={() => setEditAnnouncement({ id: null, content: "" })}>取消</button>
+                                </div>
+                            ) : (
+                                <div>
+                                    <p>{announcement.content}</p>
+                                    <button onClick={() => handleEditAnnouncement(announcement.id, announcement.content)}>修改</button>
+                                    <button onClick={() => handleDeleteAnnouncement(announcement.id)}>刪除</button>
+                                </div>
+                            )}
+                        </div>
+                    ))
+                ) : (
+                    <p>目前沒有公告。</p>
+                )}
             </div>
         </div>
     );

@@ -10,7 +10,7 @@ server_data = {"message": "Initial data from /api/test endpoint"}
 
 @api.route('/api/data', methods=['GET'])
 def get_data():
-    return jsonify({"message": "Hello from Flask!1236"})
+    return jsonify({"message": "歡迎來到高雄大學激發學生創意競賽管理系統"})
 
 # 其他 API 路由
 # @api.route('/api/accounts', methods=['GET'])

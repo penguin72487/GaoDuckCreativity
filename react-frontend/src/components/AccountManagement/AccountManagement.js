@@ -13,45 +13,42 @@ const AccountManagement = () => {
         role: ""
     });
 
-    // Fetch accounts data on component mount
     useEffect(() => {
         axios
-            .get("http://127.0.0.1:5000/api/accounts")
-            .then(response => setAccounts(response.data.accounts))
+            .get("http://127.0.0.1:5000/api/accounts/get")
+            .then((response) => {
+                console.log(response.data.accounts);
+                setAccounts(response.data.accounts);
+            })
             .catch(error => console.error("Error fetching accounts:", error));
     }, []);
 
-    // Handle edit click
     const startEditing = (index) => {
         setEditingIndex(index);
         setEditFormData(accounts[index]);
     };
 
-    // Handle input changes in the edit form
     const updateEditForm = ({ target: { name, value } }) => {
         setEditFormData({ ...editFormData, [name]: value });
     };
 
-    // Submit updated account information
     const submitEditForm = (e) => {
         e.preventDefault();
         axios
-            .post("http://127.0.0.1:5000/api/accounts/edit", { ...editFormData, id: accounts[editingIndex].id })
+            .post("http://127.0.0.1:5000/api/accounts/edit", { ...editFormData, id: accounts[editingIndex].u_id })
             .then(() => {
                 const updatedAccounts = [...accounts];
-                updatedAccounts[editingIndex] = { ...editFormData, id: accounts[editingIndex].id };
+                updatedAccounts[editingIndex] = { ...editFormData, u_id: accounts[editingIndex].u_id };
                 setAccounts(updatedAccounts);
                 setEditingIndex(null);
             })
             .catch(error => console.error("Error updating account:", error));
     };
-    
 
-    // Handle delete actions
     const confirmDelete = () => {
         const accountToDelete = accounts[deletingIndex];
         axios
-            .post("http://127.0.0.1:5000/api/accounts/delete", { id: accountToDelete.id })
+            .post("http://127.0.0.1:5000/api/accounts/delete", { id: accountToDelete.u_id })
             .then(() => {
                 const updatedAccounts = accounts.filter((_, index) => index !== deletingIndex);
                 setAccounts(updatedAccounts);
@@ -59,7 +56,6 @@ const AccountManagement = () => {
             })
             .catch(error => console.error("Error deleting account:", error));
     };
-    
 
     const cancelDelete = () => setDeletingIndex(null);
 
@@ -70,7 +66,7 @@ const AccountManagement = () => {
                 <thead>
                     <tr>
                         <th>姓名</th>
-                        <th>學號</th>
+                        <th>使用者名稱</th>
                         <th>Email</th>
                         <th>身份類別</th>
                         <th>操作</th>
@@ -100,7 +96,7 @@ const AccountManagement = () => {
                             ) : (
                                 <>
                                     <td>{account.name}</td>
-                                    <td>{account.student_id}</td>
+                                    <td>{account.ID_num}</td>
                                     <td>{account.email}</td>
                                     <td>{account.role}</td>
                                     <td>
@@ -116,7 +112,6 @@ const AccountManagement = () => {
                                             </>
                                         )}
                                     </td>
-
                                 </>
                             )}
                         </tr>

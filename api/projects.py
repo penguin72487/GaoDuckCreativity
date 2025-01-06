@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from api.accounts import accounts
-
+from api.sql_connection import SqlAPI
+db = SqlAPI()
 # 定義 Blueprint
 api = Blueprint('projects_api', __name__)
 projects= [
@@ -302,6 +303,10 @@ def view_project():
 
 @api.route('/api/projects/list/<year>', methods=['GET'])
 def list_project(year):
+    query = "SELECT * FROM projects"
+    db.cursor.execute(query, (year,))
+    projects = db.cursor.fetchall()
+    print(projects)
     # 避免覆蓋全局變數
     filtered_projects = [project for project in projects if project["competition"].startswith(year)]
     return jsonify({"projects": filtered_projects})

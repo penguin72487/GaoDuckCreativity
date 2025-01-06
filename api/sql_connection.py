@@ -28,6 +28,19 @@ class SqlAPI:
         except (pymysql.MySQLError, FileNotFoundError, KeyError) as e:
 
             print(f"資料庫連線失敗或配置檔案錯誤: {e}")
+
+    def userlist(self):
+        query = "SELECT * FROM `user`"
+        try :
+            self.cursor.execute(query)
+            results = self.cursor.fetchall()
+            print(results)
+            return results
+        except pymysql.MySQLError as e:
+            print(f"查詢使用者列表時發生錯誤: {e}")
+            return []
+
+
     def getusertype(self,u_id):
         """
 

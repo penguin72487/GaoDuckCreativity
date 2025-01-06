@@ -29,11 +29,23 @@ accounts = [
 ]
 
 # 查詢帳號資訊
-@api.route('/api/accounts', methods=['GET'])
+@api.route('/api/accounts/get', methods=['GET'])
 def get_accounts():
-    return jsonify({
-        "accounts": accounts  # 確保返回的 key 與前端一致
-    })
+    print("get_accounts")
+    try:
+        print("get_accounts query")
+        query = "SELECT * FROM user"
+        db.cursor.execute(query)
+        result = db.cursor.fetchall()
+        # dto
+        result = [{"ID_num": r[1], "name": r[2], "email": r[4], "rater_title": r[6], "role": r[7], "stu_id": r[8]} for r in result]
+        print(result)
+        return jsonify({"accounts": result})  # 包裹在 accounts 对象中
+    except Exception as e:
+        print("Database error:", e)
+        return jsonify({"error": "Database connection failed"}), 500
+
+
 
 @api.route('/api/accounts/check', methods=['POST'])
 def check_account():

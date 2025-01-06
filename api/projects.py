@@ -375,19 +375,20 @@ def score_project():
     data = request.json
     tid = data.get("tid")
     rater_u_id = data.get("u_id")  # 登入者的 u_id
+    print(data)
     ch_fla = ["創意性", "實用性", "美觀度", "完整度"]
     
     # 檢查必填字段
-    required_fields = ["tid", "rater_u_id", "creativity", "usability", "design", "completeness"]
+    required_fields = ["tid", "u_id", "creativity", "usability", "design", "completeness"]
     for field in required_fields:
         if field not in data:
-            return jsonify({"message": f"缺少必要字段: {field}", "error": True}), 400
+            return jsonify({"message": f"缺少必要字段: {field}", "error": True}), 201
 
     # 檢查是否有評分字段的值為 0
     zero_fields = [field for field in ["creativity", "usability", "design", "completeness"] if data[field] == 0]
     zero_fields = [ch_fla[["creativity", "usability", "design", "completeness"].index(field)] for field in zero_fields]
     if zero_fields:
-        return jsonify({"message": f"未填寫以下分數: {', '.join(zero_fields)}", "error": True}), 400
+        return jsonify({"message": f"未填寫以下分數: {', '.join(zero_fields)}", "error": True}), 201
 
     try:
         # 保存評分數據到資料庫
@@ -404,7 +405,6 @@ def score_project():
             data["completeness"]
         ))
         db.connection.commit()
-
         return jsonify({"message": "評分提交成功！"}), 201
     except Exception as e:
         print(f"Error saving scores: {e}")

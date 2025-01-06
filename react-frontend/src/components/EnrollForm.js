@@ -86,6 +86,7 @@ const EnrollForm = () => {
 
                         axios.post("http://127.0.0.1:5000/api/submit_project", finalFormData) // 更新 API 路由
                             .then(response => {
+                                console.log("Submission response:", response.data);
                                 alert(response.data.message);
                                 setFormData({
                                     competition: "2025 創意競賽",

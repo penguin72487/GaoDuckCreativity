@@ -6,6 +6,7 @@ from api.auth import auth_api
 from api.announcement_control import announcement_api
 from api.accounts import api as accounts_api
 from api.projects import api as projects_api
+from api.submit_project import api as submit_project_api
 
 from werkzeug.exceptions import HTTPException
 
@@ -17,6 +18,8 @@ app.register_blueprint(auth_api, url_prefix='/api/auth')
 app.register_blueprint(announcement_api)
 app.register_blueprint(accounts_api)
 app.register_blueprint(projects_api)
+app.register_blueprint(submit_project_api)
+# app.register_blueprint
 CORS(app)  # 啟用 CORS
 
 @app.errorhandler(Exception)

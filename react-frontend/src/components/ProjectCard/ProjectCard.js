@@ -2,7 +2,6 @@ import React from "react";
 import RatingSystem from "../RatingSystem/RatingCard";
 
 const ProjectCard = ({ project }) => {
-    console.log(project);
     return (
         <div
             style={{

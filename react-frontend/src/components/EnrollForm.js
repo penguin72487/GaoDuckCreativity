@@ -189,7 +189,7 @@ const EnrollForm = () => {
                     onChange={handleChange}
                 />
 
-                <label>隊員3帳號</label>
+                <label>隊員3帳號(選填)</label>
                 <input
                     type="text"
                     name="team_member3"
@@ -198,7 +198,7 @@ const EnrollForm = () => {
                     onChange={handleChange}
                 />
 
-                <label>隊員4帳號</label>
+                <label>隊員4帳號(選填)</label>
                 <input
                     type="text"
                     name="team_member4"
@@ -207,7 +207,7 @@ const EnrollForm = () => {
                     onChange={handleChange}
                 />
 
-                <label>隊員5帳號</label>
+                <label>隊員5帳號(選填)</label>
                 <input
                     type="text"
                     name="team_member5"

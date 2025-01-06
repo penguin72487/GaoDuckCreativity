@@ -153,10 +153,10 @@ const EnrollForm = () => {
                 <label>作品海報</label>
                 <input type="file" name="poster" onChange={handleChange} />
                     
-                <label>作品Demo影片(Youtube連結)選填</label>
+                <label>作品Demo影片(Youtube連結)</label>
                 <input type="text" name="video" placeholder="輸入Youtube連結" value={formData.video} onChange={handleChange} />
 
-                <label>程式碼(Github連結)選填</label>
+                <label>程式碼(Github連結)</label>
                 <input type="text" name="code" placeholder="輸入Github連結" value={formData.code} onChange={handleChange} />
 
                 <label>指導教授帳號</label>

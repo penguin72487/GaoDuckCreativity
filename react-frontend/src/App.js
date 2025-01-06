@@ -21,6 +21,7 @@ const ProtectedRoute = ({ children, isAuthenticated }) => {
     }
     return children;
 };
+
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userRole, setUserRole] = useState(""); // 保存用戶角色
@@ -131,12 +132,12 @@ function App() {
                             />
                             <Route path="/register-account" element={<RegisterAccount />} />
                             <Route path="/enroll-form" element={<EnrollForm />} />
-                            <Route path="/project-list" element={<ProjectList />} />
+                            <Route path="/project-list" element={<ProjectList currentUser={currentUser} />} />
                             <Route
                                 path="/rating-system"
                                 element={
                                     <ProtectedRoute isAuthenticated={isAuthenticated && userRole !== "student"}>
-                                        <RatingSystem />
+                                        <RatingSystem currentUser={currentUser} />
                                     </ProtectedRoute>
                                 }
                             />

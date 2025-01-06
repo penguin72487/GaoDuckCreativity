@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const RatingCard = ({ tid }) => {
+const RatingCard = ({ tid, currentUser }) => {
     const [scores, setScores] = useState({ creativity: 0, usability: 0, design: 0, completeness: 0 });
     const [submitted, setSubmitted] = useState(false);
 
@@ -11,13 +11,21 @@ const RatingCard = ({ tid }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const payload = { tid, ...scores };
+        if (!currentUser || !currentUser.id) {
+            console.error("currentUser or currentUser.id is undefined");
+            alert("使用者未登入或使用者 ID 無效！");
+            return;
+        }
+        const payload = { tid, u_id: currentUser.id, ...scores };
+        console.log("Submitting payload:", payload); // 添加日誌以查看提交的 payload
         axios
             .post("http://127.0.0.1:5000/api/projects/score", payload)
             .then(response => {
                 alert(response.data.message);
                 setScores({ creativity: 0, usability: 0, design: 0, completeness: 0 });
                 setSubmitted(true); // 標記為已評分
+                // 提交後刷新頁面
+                window.location.reload();
             })
             .catch(error => {
                 console.error("Error submitting scores:", error);

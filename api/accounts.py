@@ -68,7 +68,7 @@ def check_account():
 
     except Exception as e:
         print("檢查帳號時發生錯誤:", e)
-        return jsonify({"message": "伺服器錯誤，請稍後再試", "error": True}), 500
+        return jsonify({"message": f"伺服器錯誤，請稍後再試: {str(e)}", "error": True}), 500
 
 @api.route('/api/accounts/edit', methods=['POST'])
 def edit_account():

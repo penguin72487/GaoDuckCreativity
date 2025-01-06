@@ -374,24 +374,38 @@ ratings = {}
 def score_project():
     data = request.json
     tid = data.get("tid")
-    ch_fla = ["創意性","實用性","美觀度","完整度"]
+    rater_u_id = data.get("u_id")  # 登入者的 u_id
+    ch_fla = ["創意性", "實用性", "美觀度", "完整度"]
+    
     # 檢查必填字段
-    required_fields = ["tid", "creativity", "usability", "design", "completeness"]
+    required_fields = ["tid", "rater_u_id", "creativity", "usability", "design", "completeness"]
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"message": f"缺少必要字段: {field}", "error": True}), 400
 
     # 檢查是否有評分字段的值為 0
     zero_fields = [field for field in ["creativity", "usability", "design", "completeness"] if data[field] == 0]
-    for i in range(len(zero_fields)):
-        zero_fields[i]= ch_fla[zero_fields.index(zero_fields[i])]
+    zero_fields = [ch_fla[["creativity", "usability", "design", "completeness"].index(field)] for field in zero_fields]
     if zero_fields:
-        return jsonify({"message": f"未填寫以下分數: {', '.join(zero_fields)}", "error": True}), 201
+        return jsonify({"message": f"未填寫以下分數: {', '.join(zero_fields)}", "error": True}), 400
 
-    # 保存評分數據
-    ratings[tid] = {
-        "creativity": data["creativity"],
-        "usability": data["usability"],
-        "design": data["design"],
-        "completeness": data["completeness"]
-    }
-    print(ratings[tid])
+    try:
+        # 保存評分數據到資料庫
+        query = """
+            INSERT INTO `review` (water_id, rater_u_id, p_id, s_creativity, s_usability, s_design, s_completeness)
+            VALUES (NULL, %s, %s, %s, %s, %s, %s)
+        """
+        db.cursor.execute(query, (
+            rater_u_id,
+            tid,
+            data["creativity"],
+            data["usability"],
+            data["design"],
+            data["completeness"]
+        ))
+        db.connection.commit()
 
-    return jsonify({"message": "評分提交成功！", "ratings": ratings}), 201
+        return jsonify({"message": "評分提交成功！"}), 201
+    except Exception as e:
+        print(f"Error saving scores: {e}")
+        return jsonify({"message": f"評分提交失敗: {str(e)}", "error": True}), 500

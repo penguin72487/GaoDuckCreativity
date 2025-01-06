@@ -88,7 +88,7 @@ function App() {
                                     <li><Link to="/manage-announcements">管理公告</Link></li>
                                 </>
                             )}
-                            {!isAuthenticated && (
+                            {userRole === "admin" && (
                                 <li><Link to="/register-account">註冊帳號</Link></li>
                             )}
                             {userRole !== "teacher" && (

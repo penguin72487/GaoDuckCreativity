@@ -28,6 +28,7 @@ const Login = () => {
                 // 更新成功消息並跳轉
                 setSuccessMessage(`歡迎, ${name}! 您的身份是: ${role}`);
                 setTimeout(() => navigate("/"), 1000); // 延時 1 秒後跳轉到首頁
+                window.location.reload();
             })
             .catch((error) => {
                 if (error.response && error.response.data) {

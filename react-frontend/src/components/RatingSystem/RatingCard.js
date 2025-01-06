@@ -11,23 +11,34 @@ const RatingCard = ({ tid, currentUser }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!currentUser || !currentUser.id) {
-            console.error("currentUser or currentUser.id is undefined");
-            alert("使用者未登入或使用者 ID 無效！");
+
+        // 確保 currentUser 和必要的字段都存在
+        if (!currentUser || !currentUser.id || !currentUser.userId) {
+            console.error("currentUser, id, or userId is undefined");
+            alert("使用者未登入或必要資料缺失！");
             return;
         }
-        const payload = { tid, u_id: currentUser.id, ...scores };
-        console.log("Submitting payload:", payload); // 添加日誌以查看提交的 payload
+
+        // 構建提交的 payload
+        const payload = {
+            tid,
+            u_id: currentUser.id,
+            ID_num: currentUser.userId, // 添加 ID_num
+            ...scores,
+        };
+
+        console.log("Submitting payload:", payload);
+
         axios
             .post("http://127.0.0.1:5000/api/projects/score", payload)
-            .then(response => {
+            .then((response) => {
                 alert(response.data.message);
                 setScores({ creativity: 0, usability: 0, design: 0, completeness: 0 });
-                setSubmitted(true); // 標記為已評分
+                setSubmitted(true);
                 // 提交後刷新頁面
                 window.location.reload();
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error("Error submitting scores:", error);
                 alert("提交評分失敗，請稍後再試！");
             });
@@ -42,7 +53,7 @@ const RatingCard = ({ tid, currentUser }) => {
                     cursor: "pointer",
                     margin: "0 5px",
                     color: idx + 1 <= currentValue ? "#f39c12" : "#ccc",
-                    fontSize: "24px"
+                    fontSize: "24px",
                 }}
             >
                 ●

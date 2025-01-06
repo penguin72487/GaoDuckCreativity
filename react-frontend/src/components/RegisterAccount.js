@@ -77,7 +77,7 @@ const RegisterAccount = () => {
                     <option value="student">學生</option>
                     <option value="teacher">老師</option>
                     <option value="rater">評委</option>
-                    <option value="admin">管理者</option>
+                    {/* <option value="admin">管理者</option> */}
                 </select>
 
                 <button type="submit">註冊</button>

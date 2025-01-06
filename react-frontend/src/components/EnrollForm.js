@@ -61,6 +61,7 @@ const EnrollForm = () => {
                 }
 
                 // 檢查隊員帳號
+                console.log("Valid team member IDs:", validTeamMemberIds);
                 const checkTeamMembers = validTeamMemberIds.map(id => 
                     axios.post("http://127.0.0.1:5000/api/accounts/check", { u_id: id })
                         .then(response => response.data.data)

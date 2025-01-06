@@ -9,6 +9,7 @@ const Announcement = () => {
         // 從後端獲取公告資料
         axios.get("http://127.0.0.1:5000/api/announcements")
             .then(response => {
+                console.log(response.data.announcements);
                 setAnnouncements(response.data.announcements); // 假設後端返回的資料是直接的列表
             })
             .catch(error => console.error("Error fetching announcements:", error));

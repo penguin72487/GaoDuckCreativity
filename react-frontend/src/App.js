@@ -21,39 +21,38 @@ const ProtectedRoute = ({ children, isAuthenticated }) => {
     }
     return children;
 };
-
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userRole, setUserRole] = useState(""); // 保存用戶角色
     const [userId, setUserId] = useState(""); // 保存用戶學號
     const [uId, setUId] = useState(""); // 保存用戶 u_id
+    const [loading, setLoading] = useState(true); // 新增 loading 狀態
 
     // 檢查登入狀態
     useEffect(() => {
-        const interval = setInterval(() => {
-            const token = localStorage.getItem("authToken");
+        const token = localStorage.getItem("authToken");
 
-            if (token) {
-                axios
-                    .get("http://127.0.0.1:5000/api/auth/protected", {
-                        headers: { Authorization: `Bearer ${token}` },
-                    })
-                    .then((response) => {
-                        setIsAuthenticated(true);
-                        setUserRole(response.data.data.role);
-                        setUserId(response.data.data.ID_num);
-                        setUId(response.data.data.u_id); // 假設 u_id 是從後端獲取的數據之一
-                    })
-                    .catch(() => {
-                        setIsAuthenticated(false);
-                        setUserRole("");
-                        setUserId("");
-                        setUId("");
-                    });
-            }
-        }, 1000); // 每秒檢查一次
-
-        return () => clearInterval(interval); // 清理定時器
+        if (token) {
+            axios
+                .get("http://127.0.0.1:5000/api/auth/protected", {
+                    headers: { Authorization: `Bearer ${token}` },
+                })
+                .then((response) => {
+                    setIsAuthenticated(true);
+                    setUserRole(response.data.data.role);
+                    setUserId(response.data.data.ID_num);
+                    setUId(response.data.data.u_id);
+                })
+                .catch(() => {
+                    setIsAuthenticated(false);
+                    setUserRole("");
+                    setUserId("");
+                    setUId("");
+                })
+                .finally(() => setLoading(false)); // 無論成功或失敗都結束加載
+        } else {
+            setLoading(false); // 如果沒有 token，也結束加載
+        }
     }, []);
 
     const handleLogout = () => {
@@ -65,7 +64,12 @@ function App() {
         console.log("已登出");
     };
 
-    const currentUser = { id: uId, role: userRole, userId: userId }; // 構建 currentUser 對象
+    const currentUser = { id: uId, role: userRole, userId: userId };
+
+    // 如果在加載中，顯示 Loading
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <Router>

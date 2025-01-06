@@ -131,7 +131,7 @@ const ManageAnnouncement = ({ currentUser }) => {
                                     <h3>{announcement.title}</h3>
                                     <p>{announcement.content}</p>
                                     <p>發布時間: {announcement.publish_timestamp}</p>
-                                    <p>最後更新時間: {announcement.last_update_timestamp}</p>
+                                    {/* <p>最後更新時間: {announcement.last_update_timestamp}</p> */}
                                     <div className="button-group">
                                         <button onClick={() => handleEditAnnouncement(announcement.id, announcement.title, announcement.content)}>修改</button>
                                         <button onClick={() => handleDeleteAnnouncement(announcement.id)}>刪除</button>

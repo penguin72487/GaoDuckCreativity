@@ -374,16 +374,13 @@ ratings = {}
 def score_project():
     data = request.json
     tid = data.get("tid")
-    print(data)
     ch_fla = ["創意性","實用性","美觀度","完整度"]
     # 檢查必填字段
     required_fields = ["tid", "creativity", "usability", "design", "completeness"]
 
     # 檢查是否有評分字段的值為 0
     zero_fields = [field for field in ["creativity", "usability", "design", "completeness"] if data[field] == 0]
-    print(zero_fields)
     for i in range(len(zero_fields)):
-        print(zero_fields.index(zero_fields[i]))
         zero_fields[i]= ch_fla[zero_fields.index(zero_fields[i])]
     if zero_fields:
         return jsonify({"message": f"未填寫以下分數: {', '.join(zero_fields)}", "error": True}), 201
@@ -395,5 +392,6 @@ def score_project():
         "design": data["design"],
         "completeness": data["completeness"]
     }
+    print(ratings[tid])
 
     return jsonify({"message": "評分提交成功！", "ratings": ratings}), 201

@@ -104,8 +104,11 @@ def edit_account():
         """
         db.cursor.execute(query, (name, email, role, rater_title, stu_id, ID_num))
 
+
+
         if db.cursor.rowcount > 0:  # 检查是否更新成功
             print("帳號更新成功")
+            db.connection.commit()
             return jsonify({"message": "帳號更新成功"}), 200
         else:
             print("未找到指定帳號")
@@ -120,12 +123,31 @@ def edit_account():
 @api.route('/api/accounts/delete', methods=['POST'])
 def delete_account():
     data = request.json
-    account_id = data.get("id")
+    print("Received data:", data)
+    ID_num = data.get("ID_num")  # 獲取前端傳來的 ID_num
 
-    global accounts
-    accounts = [acc for acc in accounts if acc["id"] != account_id]  # 過濾掉目標帳號
+    if not ID_num:
+        print("缺少 ID_num")
+        return jsonify({"message": "缺少 ID_num 欄位", "error": True}), 400
 
-    return jsonify({"message": "帳號刪除成功"})
+    try:
+        # 刪除帳號
+        query = "DELETE FROM user WHERE ID_num = %s"
+        db.cursor.execute(query, (ID_num,))
+
+
+        if db.cursor.rowcount > 0:  # 檢查是否刪除成功
+            print("帳號刪除成功")
+            db.connection.commit()
+            return jsonify({"message": "帳號刪除成功"}), 200
+        else:
+            print("未找到指定帳號")
+            return jsonify({"message": "未找到指定帳號", "error": True}), 404
+
+    except Exception as e:
+        print("刪除帳號時發生錯誤:", e)
+        return jsonify({"message": "伺服器錯誤，請稍後再試", "error": True}), 500
+
 
 @api.route('/api/accounts/register', methods=['POST'])
 def register_account():

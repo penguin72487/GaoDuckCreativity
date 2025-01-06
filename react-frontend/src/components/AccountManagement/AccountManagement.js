@@ -52,8 +52,9 @@ const AccountManagement = () => {
 
     const confirmDelete = () => {
         const accountToDelete = accounts[deletingIndex];
+        console.log("Deleting account:", accountToDelete);
         axios
-            .post("http://127.0.0.1:5000/api/accounts/delete", { id: accountToDelete.u_id })
+            .post("http://127.0.0.1:5000/api/accounts/delete", { ID_num: accountToDelete.ID_num }) // 确保字段名为 ID_num
             .then(() => {
                 const updatedAccounts = accounts.filter((_, index) => index !== deletingIndex);
                 setAccounts(updatedAccounts);
@@ -61,6 +62,7 @@ const AccountManagement = () => {
             })
             .catch(error => console.error("Error deleting account:", error));
     };
+    
 
     const cancelDelete = () => setDeletingIndex(null);
 

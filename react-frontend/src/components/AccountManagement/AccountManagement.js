@@ -8,7 +8,7 @@ const AccountManagement = () => {
     const [deletingIndex, setDeletingIndex] = useState(null);
     const [editFormData, setEditFormData] = useState({
         name: "",
-        student_id: "",
+        ID_num: "",
         email: "",
         role: ""
     });
@@ -18,6 +18,9 @@ const AccountManagement = () => {
             .get("http://127.0.0.1:5000/api/accounts/get")
             .then((response) => {
                 console.log(response.data.accounts);
+                for (let i = 0; i < response.data.accounts.length; i++) {
+                    response.data.accounts[i].role = response.data.accounts[i].role === 1 ? "student" : response.data.accounts[i].role === 2 ? "teacher" : response.data.accounts[i].role === 3 ? "Rater" : "admin";
+                }
                 setAccounts(response.data.accounts);
             })
             .catch(error => console.error("Error fetching accounts:", error));
@@ -34,11 +37,13 @@ const AccountManagement = () => {
 
     const submitEditForm = (e) => {
         e.preventDefault();
+        console.log(editFormData);
         axios
             .post("http://127.0.0.1:5000/api/accounts/edit", { ...editFormData, id: accounts[editingIndex].u_id })
             .then(() => {
                 const updatedAccounts = [...accounts];
                 updatedAccounts[editingIndex] = { ...editFormData, u_id: accounts[editingIndex].u_id };
+                console.log(updatedAccounts);
                 setAccounts(updatedAccounts);
                 setEditingIndex(null);
             })
@@ -78,7 +83,7 @@ const AccountManagement = () => {
                             {editingIndex === index ? (
                                 <>
                                     <td><input type="text" name="name" value={editFormData.name} onChange={updateEditForm} /></td>
-                                    <td><input type="text" name="student_id" value={editFormData.student_id} onChange={updateEditForm} /></td>
+                                    <td><input type="text" name="ID_num" value={editFormData.ID_num} onChange={updateEditForm} /></td>
                                     <td><input type="email" name="email" value={editFormData.email} onChange={updateEditForm} /></td>
                                     <td>
                                         <select name="role" value={editFormData.role} onChange={updateEditForm}>

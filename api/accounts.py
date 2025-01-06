@@ -37,9 +37,7 @@ def get_accounts():
         query = "SELECT * FROM user"
         db.cursor.execute(query)
         result = db.cursor.fetchall()
-        # dto
         result = [{"ID_num": r[1], "name": r[2], "email": r[4], "rater_title": r[6], "role": r[7], "stu_id": r[8]} for r in result]
-        print(result)
         return jsonify({"accounts": result})  # 包裹在 accounts 对象中
     except Exception as e:
         print("Database error:", e)
@@ -74,16 +72,50 @@ def check_account():
 
 @api.route('/api/accounts/edit', methods=['POST'])
 def edit_account():
+    print("edit_account")
     data = request.json
-    account_id = data.get("id")  # 確保前端傳遞帳號 ID
+    print("Received data:", data)
 
-    # 找到目標帳號
-    for account in accounts:
-        if account["id"] == account_id:
-            account.update(data)  # 更新帳號資料
-            return jsonify({"message": "帳號更新成功"})
+    # 获取前端传递的数据
+    ID_num = data.get("ID_num")
+    name = data.get("name")
+    email = data.get("email")
+    role = data.get("role")
+    if role == "student":
+        role = "1"
+    elif role == "teacher":
+        role = "2"
+    elif role == "rater":
+        role = "3"
+    elif role == "admin":
+        role = "99"
+    rater_title = data.get("rater_title") or None  # 空字符串处理为 None
+    stu_id = data.get("stu_id") or None  # 空字符串处理为 None
 
-    return jsonify({"message": "帳號未找到", "error": True}), 404
+    if not ID_num:
+        return jsonify({"message": "缺少 ID_num 欄位", "error": True}), 400
+
+    try:
+        # 参数化查询，更新用户信息
+        query = """
+            UPDATE user 
+            SET name = %s, email = %s, role = %s, rater_title = %s, stu_id = %s 
+            WHERE ID_num = %s
+        """
+        db.cursor.execute(query, (name, email, role, rater_title, stu_id, ID_num))
+
+        if db.cursor.rowcount > 0:  # 检查是否更新成功
+            print("帳號更新成功")
+            return jsonify({"message": "帳號更新成功"}), 200
+        else:
+            print("未找到指定帳號")
+            return jsonify({"message": "未找到指定帳號", "error": True}), 404
+
+    except Exception as e:
+        print("編輯帳號時發生錯誤:", e)
+        return jsonify({"message": "伺服器錯誤，請稍後再試", "error": True}), 500
+
+
 
 @api.route('/api/accounts/delete', methods=['POST'])
 def delete_account():

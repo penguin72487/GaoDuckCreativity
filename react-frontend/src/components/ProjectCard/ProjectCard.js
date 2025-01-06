@@ -2,6 +2,14 @@ import React from "react";
 import RatingSystem from "../RatingSystem/RatingCard";
 
 const ProjectCard = ({ project }) => {
+    const handleSubmit = () => {
+        // 執行提交操作
+        // 這裡可以添加提交的邏輯，例如發送請求到後端
+
+        // 提交後刷新頁面
+        window.location.reload();
+    };
+
     return (
         <div
             style={{
@@ -31,6 +39,7 @@ const ProjectCard = ({ project }) => {
             <p>
                 <strong>GitHub：</strong> {project.github || "無"}
             </p>
+            <button onClick={handleSubmit}>提交</button>
         </div>
     );
 };

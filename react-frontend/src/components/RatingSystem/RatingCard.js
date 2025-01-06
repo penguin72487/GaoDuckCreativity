@@ -1,9 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const RatingCard = ({ tid, currentUser }) => {
+const RatingCard = ({ tid }) => {
     const [scores, setScores] = useState({ creativity: 0, usability: 0, design: 0, completeness: 0 });
     const [submitted, setSubmitted] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null); // 用於存儲用戶信息
+    const [loading, setLoading] = useState(true); // 用於控制加載狀態
+
+    // 在組件加載時獲取用戶數據
+    useEffect(() => {
+        const token = localStorage.getItem("authToken");
+        if (token) {
+            axios
+                .get("http://127.0.0.1:5000/api/auth/protected", {
+                    headers: { Authorization: `Bearer ${token}` },
+                })
+                .then((response) => {
+                    const userData = response.data.data;
+                    setCurrentUser({
+                        id: userData.u_id,
+                        userId: userData.ID_num,
+                        role: userData.role,
+                    });
+                })
+                .catch((error) => {
+                    console.error("Failed to fetch user data:", error);
+                    setCurrentUser(null);
+                })
+                .finally(() => setLoading(false));
+        } else {
+            setLoading(false);
+        }
+    }, []);
 
     const handleScoreChange = (category, value) => {
         setScores({ ...scores, [category]: value });
@@ -12,18 +40,17 @@ const RatingCard = ({ tid, currentUser }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // 確保 currentUser 和必要的字段都存在
+        // 確保用戶數據已加載且有效
         if (!currentUser || !currentUser.id || !currentUser.userId) {
             console.error("currentUser, id, or userId is undefined");
             alert("使用者未登入或必要資料缺失！");
             return;
         }
 
-        // 構建提交的 payload
         const payload = {
             tid,
             u_id: currentUser.id,
-            ID_num: currentUser.userId, // 添加 ID_num
+            ID_num: currentUser.userId,
             ...scores,
         };
 
@@ -60,6 +87,11 @@ const RatingCard = ({ tid, currentUser }) => {
             </span>
         ));
     };
+
+    // 顯示加載提示
+    if (loading) {
+        return <div>Loading user data...</div>;
+    }
 
     return (
         <div>

@@ -9,20 +9,16 @@ const ManageAnnouncement = ({ currentUser }) => {
     const [message, setMessage] = useState("");
 
     useEffect(() => {
+        // 獲取現有公告
         axios.get("http://127.0.0.1:5000/api/announcements")
-            .then(response => {
-                console.log("API 回傳的公告:", response.data);
-                if (Array.isArray(response.data.announcements)) {
-                    setAnnouncements(response.data.announcements);
-                } else {
-                    console.error("API 回傳的格式錯誤:", response.data);
-                    setAnnouncements([]);
-                }
-            })
+            .then(response => setAnnouncements(response.data.announcements || [])) // 確保是數組
             .catch(error => console.error("Error fetching announcements:", error));
     }, []);
-    
-    
+
+    useEffect(() => {
+        console.log("currentUser:", currentUser);
+    }, [currentUser]);
+
     const handleAddAnnouncement = () => {
         if (!newAnnouncement.title.trim() || !newAnnouncement.content.trim()) {
             alert("公告標題和內容不能為空！");
@@ -36,9 +32,9 @@ const ManageAnnouncement = ({ currentUser }) => {
 
         axios.post("http://127.0.0.1:5000/api/announcements", { title: newAnnouncement.title, content: newAnnouncement.content, publisher_u_id: currentUser.id }) // 使用當前使用者的 ID
             .then(response => {
-                setAnnouncements([...announcements, response.data.announcement]);
                 setNewAnnouncement({ title: "", content: "" });
                 setMessage("公告新增成功！");
+                window.location.reload(); // 新增公告後重新載入頁面
             })
             .catch(error => {
                 console.error("Error adding announcement:", error);
@@ -49,8 +45,8 @@ const ManageAnnouncement = ({ currentUser }) => {
     const handleDeleteAnnouncement = (id) => {
         axios.delete(`http://127.0.0.1:5000/api/announcements/${id}`)
             .then(() => {
-                setAnnouncements(announcements.filter(announcement => announcement.id !== id));
                 setMessage("公告刪除成功！");
+                window.location.reload(); // 刪除公告後重新載入頁面
             })
             .catch(error => {
                 console.error("Error deleting announcement:", error);
@@ -80,11 +76,9 @@ const ManageAnnouncement = ({ currentUser }) => {
 
         axios.put(`http://127.0.0.1:5000/api/announcements/${editAnnouncement.id}`, { title: editAnnouncement.title, content: editAnnouncement.content, publisher_u_id: currentUser.id }) // 使用當前使用者的 ID
             .then(response => {
-                setAnnouncements(announcements.map(announcement => 
-                    announcement.id === editAnnouncement.id ? response.data.announcement : announcement
-                ));
                 setEditAnnouncement({ id: null, title: "", content: "" });
                 setMessage("公告更新成功！");
+                window.location.reload(); // 更新公告後重新載入頁面
             })
             .catch(error => {
                 console.error("Error updating announcement:", error);

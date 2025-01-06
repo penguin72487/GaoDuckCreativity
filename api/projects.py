@@ -303,13 +303,68 @@ def view_project():
 
 @api.route('/api/projects/list/<year>', methods=['GET'])
 def list_project(year):
-    query = "SELECT * FROM projects"
-    db.cursor.execute(query, (year,))
-    projects = db.cursor.fetchall()
-    print(projects)
-    # 避免覆蓋全局變數
-    filtered_projects = [project for project in projects if project["competition"].startswith(year)]
-    return jsonify({"projects": filtered_projects})
+    try:
+        query = "SELECT * FROM project WHERE YEAR(time) = %s"
+        db.cursor.execute(query, (year,))
+        projects = db.cursor.fetchall()  # 取得所有資料
+
+        # 獲取資料表的欄位名稱
+        columns = [desc[0] for desc in db.cursor.description]
+
+        # 將資料轉換為 dictionary 格式
+        formatted_projects = [
+            dict(zip(columns, project)) for project in projects
+        ]
+
+        # 查詢 user 資料
+        user_query = "SELECT u_id, name FROM user WHERE u_id IN %s"
+        all_ids = []
+        for project in formatted_projects:
+            all_ids.append(project["leader_id"])
+            all_ids.append(project["teacher_id"])
+            all_ids.extend([project.get(f"teammate{i}_id") for i in range(1, 7) if project.get(f"teammate{i}_id") is not None])
+
+        # 去除重複的 ID
+        all_ids = list(set(all_ids))
+
+        # 查詢所有相關的使用者資料
+        db.cursor.execute(user_query, (tuple(all_ids),))
+        user_data = db.cursor.fetchall()
+        user_map = {user[0]: user[1] for user in user_data}  # 將 u_id 映射到 name
+
+        # 組裝返回的項目資料
+        enriched_projects = []
+        for project in formatted_projects:
+            enriched_project = {
+                "tid": project["p_id"],
+                "name": project["p_name"],
+                "leader": {
+                    "id": project["leader_id"],
+                    "name": user_map.get(project["leader_id"], "未知")
+                },
+                "members": [
+                    {"id": project.get(f"teammate{i}_id"), "name": user_map.get(project.get(f"teammate{i}_id"), "未知")}
+                    for i in range(1, 7) if project.get(f"teammate{i}_id") is not None
+                ],
+                "teacher": {
+                    "id": project["teacher_id"],
+                    "name": user_map.get(project["teacher_id"], "未知")
+                },
+                "video": project["video_link"],
+                "github": project["github_link"]
+            }
+            enriched_projects.append(enriched_project)
+        print(enriched_projects)
+        return jsonify({"projects": enriched_projects}), 200
+    except Exception as e:
+        # 錯誤處理
+        print(f"Error fetching projects: {e}")
+        return jsonify({"message": f"Error fetching projects: {str(e)}", "error": True}), 500
+
+
+
+
+
 
 
 ratings = {}  

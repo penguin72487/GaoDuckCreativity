@@ -2,6 +2,7 @@ import React from "react";
 import RatingSystem from "../RatingSystem/RatingCard";
 
 const ProjectCard = ({ project }) => {
+    console.log(project);
     return (
         <div
             style={{
@@ -13,40 +14,24 @@ const ProjectCard = ({ project }) => {
             }}
         >
             <h3>{project.name}</h3>
-            {/* <p>
-                <strong>項目ID :</strong>
-                {project.tid}
-            </p> */}
             <p>
-                <strong>競賽名稱：</strong>
-                {project.competition}
+                <strong>隊長：</strong> {project.leader.name || "無"}
             </p>
             <p>
-                <strong>競賽組別：</strong>
-                {project.competition_group}
+                <strong>隊員：</strong>
+                {project.members.length > 0
+                    ? project.members.map(member => member.name).filter(Boolean).join(", ")
+                    : "無"}
             </p>
             <p>
-                <strong>隊長帳號：</strong>
-                {project.ID_num}
+                <strong>指導教授：</strong> {project.teacher.name || "無"}
             </p>
             <p>
-                <strong>指導教授：</strong>
-                {project.teacher.name} ({project.teacher.ID_num})
+                <strong>影片：</strong> {project.video || "無"}
             </p>
             <p>
-                <strong>隊員列表：</strong>
+                <strong>GitHub：</strong> {project.github || "無"}
             </p>
-            {project.team_members.length > 0 ? (
-                <ul>
-                    {project.team_members.map((member, idx) => (
-                        <li key={idx}>
-                            {member.name} ({member.ID_num})
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>無隊員</p>
-            )}
         </div>
     );
 };

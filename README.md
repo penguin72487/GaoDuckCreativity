@@ -32,3 +32,6 @@ copy `/api/sql_config.sample.json` to `/api/sql_config.json`
 
 fill in IP, username, password, dbname
 
+# Report
+
+[Report](./DB_Report_Final_for_pubilc.pdf)

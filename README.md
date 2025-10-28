@@ -10,10 +10,6 @@ National University of Kaohsiung Student Creativity Competition Management Syste
 conda create -n GaoDuck python=3.12
 conda activate GaoDuck
 
-conda install Flask
-conda install flask flask-cors
-
-pip install Flask
 pip install flask flask-cors
 ```
 

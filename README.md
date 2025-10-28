@@ -3,17 +3,20 @@ National University of Kaohsiung Student Creativity Competition Management Syste
 為國立高雄大學為鼓勵學生創新、創意、創業而舉辦的第 12 屆「激發學生創意競賽」設計的電子化的競賽管理系統
 
 
-# React + Flask + Pymsql
+# 環境設置
 
-環境設置
+## React + Flask + Pymsql
 ```
 conda create -n GaoDuck python=3.12
 conda activate GaoDuck
 
 pip install flask flask-cors
 ```
+## database connect
+MySQL 8.0.35  
+copy `/api/sql_config.sample.json` to `/api/sql_config.json`
 
-
+fill in IP, username, password, dbname
 # start
 ```
 py run.py
@@ -22,11 +25,6 @@ npm install
 npm start
 ```
 
-
-# database connect (server run MySQL 8.0.35)
-copy `/api/sql_config.sample.json` to `/api/sql_config.json`
-
-fill in IP, username, password, dbname
 
 # Report
 
